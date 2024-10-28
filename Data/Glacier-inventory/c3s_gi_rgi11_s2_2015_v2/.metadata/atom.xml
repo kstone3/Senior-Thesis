@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- pycsw 2.4.2 -->
+<csw:GetRecordByIdResponse xmlns:atom="http://www.w3.org/2005/Atom" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml" xmlns:ows="http://www.opengis.net/ows" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
+  <atom:entry xmlns:georss="http://www.georss.org/georss" xsi:schemaLocation="http://www.w3.org/2005/Atom http://www.kbcafe.com/rss/atom.xsd.xml">
+    <atom:author>
+      <atom:name>Philipp Rastner</atom:name>
+    </atom:author>
+    <atom:category term="glacier"/>
+    <atom:contributor>Philipp Rastner</atom:contributor>
+    <atom:id>cbe6808c-50c6-11eb-988c-0050568ea38e</atom:id>
+    <dc:identifier>cbe6808c-50c6-11eb-988c-0050568ea38e</dc:identifier>
+    <atom:link href="https://www.atlas.alpconv.org/download/226" type="WWW:DOWNLOAD-1.0-http--download" title="Alpine Glacier Inventory 2015 (Original Dataset Format)"/>
+    <atom:link href="https://www.atlas.alpconv.org/geoserver/ows?service=WMS&amp;request=GetMap&amp;layers=geonode%3Ac3s_gi_rgi11_s2_2015_v2&amp;format=image%2Fjpeg&amp;height=550&amp;width=550&amp;srs=EPSG%3A32632&amp;bbox=262757.125000000000000%2C4885560.000000000000000%2C849925.375000000000000%2C5270551.500000000000000" type="WWW:DOWNLOAD-1.0-http--download" title="Alpine Glacier Inventory 2015 (JPEG Format)"/>
+    <atom:link href="https://www.atlas.alpconv.org/geoserver/ows?service=WMS&amp;request=GetMap&amp;layers=geonode%3Ac3s_gi_rgi11_s2_2015_v2&amp;format=application%2Fpdf&amp;height=550&amp;width=550&amp;srs=EPSG%3A32632&amp;bbox=262757.125000000000000%2C4885560.000000000000000%2C849925.375000000000000%2C5270551.500000000000000" type="WWW:DOWNLOAD-1.0-http--download" title="Alpine Glacier Inventory 2015 (PDF Format)"/>
+    <atom:link href="https://www.atlas.alpconv.org/geoserver/ows?service=WMS&amp;request=GetMap&amp;layers=geonode%3Ac3s_gi_rgi11_s2_2015_v2&amp;format=image%2Fpng&amp;height=550&amp;width=550&amp;srs=EPSG%3A32632&amp;bbox=262757.125000000000000%2C4885560.000000000000000%2C849925.375000000000000%2C5270551.500000000000000" type="WWW:DOWNLOAD-1.0-http--download" title="Alpine Glacier Inventory 2015 (PNG Format)"/>
+    <atom:link href="https://www.atlas.alpconv.org/geoserver/ows?service=WFS&amp;version=1.0.0&amp;request=GetFeature&amp;typename=geonode%3Ac3s_gi_rgi11_s2_2015_v2&amp;outputFormat=SHAPE-ZIP&amp;srs=EPSG%3A32632&amp;format_options=charset%3AUTF-8" type="WWW:DOWNLOAD-1.0-http--download" title="Alpine Glacier Inventory 2015 (Zipped Shapefile Format)"/>
+    <atom:link href="https://www.atlas.alpconv.org/geoserver/ows?service=WFS&amp;version=1.0.0&amp;request=GetFeature&amp;typename=geonode%3Ac3s_gi_rgi11_s2_2015_v2&amp;outputFormat=gml2&amp;srs=EPSG%3A32632" type="WWW:DOWNLOAD-1.0-http--download" title="Alpine Glacier Inventory 2015 (GML 2.0 Format)"/>
+    <atom:link href="https://www.atlas.alpconv.org/geoserver/ows?service=WFS&amp;version=1.0.0&amp;request=GetFeature&amp;typename=geonode%3Ac3s_gi_rgi11_s2_2015_v2&amp;outputFormat=text%2Fxml%3B+subtype%3Dgml%2F3.1.1&amp;srs=EPSG%3A32632" type="WWW:DOWNLOAD-1.0-http--download" title="Alpine Glacier Inventory 2015 (GML 3.1.1 Format)"/>
+    <atom:link href="https://www.atlas.alpconv.org/geoserver/ows?service=WFS&amp;version=1.0.0&amp;request=GetFeature&amp;typename=geonode%3Ac3s_gi_rgi11_s2_2015_v2&amp;outputFormat=csv&amp;srs=EPSG%3A32632" type="WWW:DOWNLOAD-1.0-http--download" title="Alpine Glacier Inventory 2015 (CSV Format)"/>
+    <atom:link href="https://www.atlas.alpconv.org/geoserver/ows?service=WFS&amp;version=1.0.0&amp;request=GetFeature&amp;typename=geonode%3Ac3s_gi_rgi11_s2_2015_v2&amp;outputFormat=excel&amp;srs=EPSG%3A32632" type="WWW:DOWNLOAD-1.0-http--download" title="Alpine Glacier Inventory 2015 (Excel Format)"/>
+    <atom:link href="https://www.atlas.alpconv.org/geoserver/ows?service=WFS&amp;version=1.0.0&amp;request=GetFeature&amp;typename=geonode%3Ac3s_gi_rgi11_s2_2015_v2&amp;outputFormat=json&amp;srs=EPSG%3A32632&amp;srsName=EPSG%3A32632" type="WWW:DOWNLOAD-1.0-http--download" title="Alpine Glacier Inventory 2015 (GeoJSON Format)"/>
+    <atom:link href="https://www.atlas.alpconv.org/layers/geonode_data:geonode:c3s_gi_rgi11_s2_2015_v2" type="WWW:LINK-1.0-http--link" title="Web address (URL)"/>
+    <atom:link href="https://www.atlas.alpconv.org/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image/png&amp;WIDTH=20&amp;HEIGHT=20&amp;LAYER=geonode:c3s_gi_rgi11_s2_2015_v2&amp;STYLE=c3s_gi_rgi11_s2_2015_v2&amp;legend_options=fontAntiAliasing:true;fontSize:12;forceLabels:on" type="WWW:DOWNLOAD-1.0-http--download" title="Alpine Glacier Inventory 2015 (Legend Format)"/>
+    <atom:link href="47.54501967712272&amp;crs=EPSG:4326&amp;width=240&amp;height=200&amp;access_token=yOCrMkZbU2nrTTRyxt3L1Ca2oWo0OU" type="WWW:DOWNLOAD-1.0-http--download" title="Alpine Glacier Inventory 2015 (Remote Thumbnail Format)"/>
+    <atom:link href="https://www.atlas.alpconv.org/uploaded/thumbs/layer-cbe6808c-50c6-11eb-988c-0050568ea38e-thumb.png" type="WWW:DOWNLOAD-1.0-http--download" title="Alpine Glacier Inventory 2015 (Thumbnail Format)"/>
+    <atom:link href="https://www.atlas.alpconv.org/geoserver/ows" type="OGC:WMS" title="OGC WMS: geonode Service"/>
+    <atom:link href="https://www.atlas.alpconv.org/geoserver/ows" type="OGC:WFS" title="OGC WFS: geonode Service"/>
+    <atom:link href="https://www.atlas.alpconv.org/catalogue/csw?service=CSW&amp;version=2.0.2&amp;request=GetRepositoryItem&amp;id=cbe6808c-50c6-11eb-988c-0050568ea38e"/>
+    <atom:title>Alpine Glacier Inventory 2015</atom:title>
+    <atom:updated>2021-01-07T09:00:00Z</atom:updated>
+    <atom:published>2021-01-07T09:00:00Z</atom:published>
+    <atom:rights>Some limitations apply to the access or use of the data</atom:rights>
+    <atom:summary>Consistent, Alpine-wide glacier inventory (August 2015) with an unprecedented spatial resolution of 10 m (Sentinel 2).</atom:summary>
+    <georss:where>
+      <gml:Envelope srsName="http://www.opengis.net/def/crs/EPSG/0/4326">
+        <gml:lowerCorner>44.039679 5.84709</gml:lowerCorner>
+        <gml:upperCorner>47.54502 13.646181</gml:upperCorner>
+      </gml:Envelope>
+    </georss:where>
+  </atom:entry>
+</csw:GetRecordByIdResponse>

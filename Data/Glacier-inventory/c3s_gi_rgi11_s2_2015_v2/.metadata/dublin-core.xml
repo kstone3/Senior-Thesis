@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- pycsw 2.4.2 -->
+<csw:GetRecordByIdResponse xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dct="http://purl.org/dc/terms/" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gml="http://www.opengis.net/gml" xmlns:ows="http://www.opengis.net/ows" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/cat/csw/2.0.2 http://schemas.opengis.net/csw/2.0.2/CSW-discovery.xsd">
+  <csw:Record>
+    <dc:identifier>cbe6808c-50c6-11eb-988c-0050568ea38e</dc:identifier>
+    <dc:title>Alpine Glacier Inventory 2015</dc:title>
+    <dc:type>dataset</dc:type>
+    <dc:subject>glacier</dc:subject>
+    <dc:subject scheme="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_TopicCategoryCode">environment</dc:subject>
+    <dc:format>vector</dc:format>
+    <dct:references scheme="WWW:DOWNLOAD-1.0-http--download">https://www.atlas.alpconv.org/download/226</dct:references>
+    <dct:references scheme="WWW:DOWNLOAD-1.0-http--download">https://www.atlas.alpconv.org/geoserver/ows?service=WMS&amp;request=GetMap&amp;layers=geonode%3Ac3s_gi_rgi11_s2_2015_v2&amp;format=image%2Fjpeg&amp;height=550&amp;width=550&amp;srs=EPSG%3A32632&amp;bbox=262757.125000000000000%2C4885560.000000000000000%2C849925.375000000000000%2C5270551.500000000000000</dct:references>
+    <dct:references scheme="WWW:DOWNLOAD-1.0-http--download">https://www.atlas.alpconv.org/geoserver/ows?service=WMS&amp;request=GetMap&amp;layers=geonode%3Ac3s_gi_rgi11_s2_2015_v2&amp;format=application%2Fpdf&amp;height=550&amp;width=550&amp;srs=EPSG%3A32632&amp;bbox=262757.125000000000000%2C4885560.000000000000000%2C849925.375000000000000%2C5270551.500000000000000</dct:references>
+    <dct:references scheme="WWW:DOWNLOAD-1.0-http--download">https://www.atlas.alpconv.org/geoserver/ows?service=WMS&amp;request=GetMap&amp;layers=geonode%3Ac3s_gi_rgi11_s2_2015_v2&amp;format=image%2Fpng&amp;height=550&amp;width=550&amp;srs=EPSG%3A32632&amp;bbox=262757.125000000000000%2C4885560.000000000000000%2C849925.375000000000000%2C5270551.500000000000000</dct:references>
+    <dct:references scheme="WWW:DOWNLOAD-1.0-http--download">https://www.atlas.alpconv.org/geoserver/ows?service=WFS&amp;version=1.0.0&amp;request=GetFeature&amp;typename=geonode%3Ac3s_gi_rgi11_s2_2015_v2&amp;outputFormat=SHAPE-ZIP&amp;srs=EPSG%3A32632&amp;format_options=charset%3AUTF-8</dct:references>
+    <dct:references scheme="WWW:DOWNLOAD-1.0-http--download">https://www.atlas.alpconv.org/geoserver/ows?service=WFS&amp;version=1.0.0&amp;request=GetFeature&amp;typename=geonode%3Ac3s_gi_rgi11_s2_2015_v2&amp;outputFormat=gml2&amp;srs=EPSG%3A32632</dct:references>
+    <dct:references scheme="WWW:DOWNLOAD-1.0-http--download">https://www.atlas.alpconv.org/geoserver/ows?service=WFS&amp;version=1.0.0&amp;request=GetFeature&amp;typename=geonode%3Ac3s_gi_rgi11_s2_2015_v2&amp;outputFormat=text%2Fxml%3B+subtype%3Dgml%2F3.1.1&amp;srs=EPSG%3A32632</dct:references>
+    <dct:references scheme="WWW:DOWNLOAD-1.0-http--download">https://www.atlas.alpconv.org/geoserver/ows?service=WFS&amp;version=1.0.0&amp;request=GetFeature&amp;typename=geonode%3Ac3s_gi_rgi11_s2_2015_v2&amp;outputFormat=csv&amp;srs=EPSG%3A32632</dct:references>
+    <dct:references scheme="WWW:DOWNLOAD-1.0-http--download">https://www.atlas.alpconv.org/geoserver/ows?service=WFS&amp;version=1.0.0&amp;request=GetFeature&amp;typename=geonode%3Ac3s_gi_rgi11_s2_2015_v2&amp;outputFormat=excel&amp;srs=EPSG%3A32632</dct:references>
+    <dct:references scheme="WWW:DOWNLOAD-1.0-http--download">https://www.atlas.alpconv.org/geoserver/ows?service=WFS&amp;version=1.0.0&amp;request=GetFeature&amp;typename=geonode%3Ac3s_gi_rgi11_s2_2015_v2&amp;outputFormat=json&amp;srs=EPSG%3A32632&amp;srsName=EPSG%3A32632</dct:references>
+    <dct:references scheme="WWW:LINK-1.0-http--link">https://www.atlas.alpconv.org/layers/geonode_data:geonode:c3s_gi_rgi11_s2_2015_v2</dct:references>
+    <dct:references scheme="WWW:DOWNLOAD-1.0-http--download">https://www.atlas.alpconv.org/geoserver/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image/png&amp;WIDTH=20&amp;HEIGHT=20&amp;LAYER=geonode:c3s_gi_rgi11_s2_2015_v2&amp;STYLE=c3s_gi_rgi11_s2_2015_v2&amp;legend_options=fontAntiAliasing:true;fontSize:12;forceLabels:on</dct:references>
+    <dct:references scheme="WWW:DOWNLOAD-1.0-http--download">47.54501967712272&amp;crs=EPSG:4326&amp;width=240&amp;height=200&amp;access_token=yOCrMkZbU2nrTTRyxt3L1Ca2oWo0OU</dct:references>
+    <dct:references scheme="WWW:DOWNLOAD-1.0-http--download">https://www.atlas.alpconv.org/uploaded/thumbs/layer-cbe6808c-50c6-11eb-988c-0050568ea38e-thumb.png</dct:references>
+    <dct:references scheme="OGC:WMS">https://www.atlas.alpconv.org/geoserver/ows</dct:references>
+    <dct:references scheme="OGC:WFS">https://www.atlas.alpconv.org/geoserver/ows</dct:references>
+    <dct:modified>2021-01-07T09:00:00Z</dct:modified>
+    <dct:abstract>Consistent, Alpine-wide glacier inventory (August 2015) with an unprecedented spatial resolution of 10 m (Sentinel 2).</dct:abstract>
+    <dc:date>2021-01-07T09:00:00Z</dc:date>
+    <dc:creator>Philipp Rastner</dc:creator>
+    <dc:publisher>Philipp Rastner</dc:publisher>
+    <dc:contributor>Philipp Rastner</dc:contributor>
+    <dc:language>eng</dc:language>
+    <dc:rights>Some limitations apply to the access or use of the data</dc:rights>
+    <dct:alternative>geonode:c3s_gi_rgi11_s2_2015_v2</dct:alternative>
+    <dct:spatial scheme="http://www.opengis.net/def/crs">EPSG:32632</dct:spatial>
+    <ows:BoundingBox crs="urn:x-ogc:def:crs:EPSG:6.11:4326" dimensions="2">
+      <ows:LowerCorner>44.039679 5.84709</ows:LowerCorner>
+      <ows:UpperCorner>47.54502 13.646181</ows:UpperCorner>
+    </ows:BoundingBox>
+  </csw:Record>
+</csw:GetRecordByIdResponse>

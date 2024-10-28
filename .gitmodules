@@ -1,0 +1,3 @@
+[submodule "Data/glathida"]
+	path = Data/glathida
+	url = https://gitlab.com/wgms/glathida.git

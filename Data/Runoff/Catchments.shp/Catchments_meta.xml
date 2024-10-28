@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF
+  xmlns:hsterms="https://www.hydroshare.org/terms/"
+  xmlns:dc="http://purl.org/dc/elements/1.1/"
+  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:dcterms="http://purl.org/dc/terms/"
+>
+  <hsterms:GeographicFeatureAggregation rdf:about="http://www.hydroshare.org/resource/9302d66471e1481ebd8b5723dd3cda42/data/contents/Catchments_resmap.xml#aggregation">
+    <hsterms:FieldInformation>
+      <rdf:Description>
+        <hsterms:fieldType>Real</hsterms:fieldType>
+        <hsterms:fieldWidth rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">24</hsterms:fieldWidth>
+        <hsterms:fieldTypeCode>2</hsterms:fieldTypeCode>
+        <hsterms:fieldName>Outlet_X</hsterms:fieldName>
+        <hsterms:fieldPrecision rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">15</hsterms:fieldPrecision>
+      </rdf:Description>
+    </hsterms:FieldInformation>
+    <hsterms:FieldInformation>
+      <rdf:Description>
+        <hsterms:fieldWidth rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">24</hsterms:fieldWidth>
+        <hsterms:fieldName>Outlet_Y</hsterms:fieldName>
+        <hsterms:fieldType>Real</hsterms:fieldType>
+        <hsterms:fieldPrecision rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">15</hsterms:fieldPrecision>
+        <hsterms:fieldTypeCode>2</hsterms:fieldTypeCode>
+      </rdf:Description>
+    </hsterms:FieldInformation>
+    <dc:rights>
+      <rdf:Description>
+        <hsterms:URL rdf:resource="http://creativecommons.org/licenses/by/4.0/"/>
+        <hsterms:rightsStatement>This resource is shared under the Creative Commons Attribution CC BY.</hsterms:rightsStatement>
+      </rdf:Description>
+    </dc:rights>
+    <hsterms:FieldInformation>
+      <rdf:Description>
+        <hsterms:fieldType>String</hsterms:fieldType>
+        <hsterms:fieldPrecision rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">0</hsterms:fieldPrecision>
+        <hsterms:fieldWidth rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">80</hsterms:fieldWidth>
+        <hsterms:fieldName>ID</hsterms:fieldName>
+        <hsterms:fieldTypeCode>4</hsterms:fieldTypeCode>
+      </rdf:Description>
+    </hsterms:FieldInformation>
+    <dc:title>Catchments</dc:title>
+    <dc:type rdf:resource="https://www.hydroshare.org/terms/GeographicFeatureAggregation"/>
+    <dc:language>eng</dc:language>
+    <dc:coverage>
+      <dcterms:box>
+        <rdf:value>westlimit=4.323849900000003; northlimit=50.5739301458957; eastlimit=18.416652933586047; southlimit=43.128311083719375; projection=WGS 84 EPSG:4326; units=Decimal degrees</rdf:value>
+      </dcterms:box>
+    </dc:coverage>
+    <hsterms:GeometryInformation>
+      <rdf:Description>
+        <hsterms:featureCount rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">925</hsterms:featureCount>
+        <hsterms:geometryType>POLYGON</hsterms:geometryType>
+      </rdf:Description>
+    </hsterms:GeometryInformation>
+    <hsterms:FieldInformation>
+      <rdf:Description>
+        <hsterms:fieldWidth rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">24</hsterms:fieldWidth>
+        <hsterms:fieldName>Area_km2</hsterms:fieldName>
+        <hsterms:fieldTypeCode>2</hsterms:fieldTypeCode>
+        <hsterms:fieldPrecision rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">15</hsterms:fieldPrecision>
+        <hsterms:fieldType>Real</hsterms:fieldType>
+      </rdf:Description>
+    </hsterms:FieldInformation>
+    <hsterms:spatialReference>
+      <hsterms:box>
+        <rdf:value>northlimit=50.5739301458957; southlimit=43.128311083719375; westlimit=4.323849900000003; eastlimit=18.416652933586047; projection_string=GEOGCS["WGS 84",
+    DATUM["WGS_1984",
+        SPHEROID["WGS 84",6378137,298.257223563,
+            AUTHORITY["EPSG","7030"]],
+        AUTHORITY["EPSG","6326"]],
+    PRIMEM["Greenwich",0,
+        AUTHORITY["EPSG","8901"]],
+    UNIT["degree",0.0174532925199433,
+        AUTHORITY["EPSG","9122"]],
+    AUTHORITY["EPSG","4326"]]; projection_name=WGS 84; datum=WGS_1984; units=degree</rdf:value>
+      </hsterms:box>
+    </hsterms:spatialReference>
+    <hsterms:FieldInformation>
+      <rdf:Description>
+        <hsterms:fieldPrecision rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">15</hsterms:fieldPrecision>
+        <hsterms:fieldType>Real</hsterms:fieldType>
+        <hsterms:fieldWidth rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">24</hsterms:fieldWidth>
+        <hsterms:fieldName>elevmean</hsterms:fieldName>
+        <hsterms:fieldTypeCode>2</hsterms:fieldTypeCode>
+      </rdf:Description>
+    </hsterms:FieldInformation>
+  </hsterms:GeographicFeatureAggregation>
+  <rdf:Description rdf:about="http://www.hydroshare.org/terms/GeographicFeatureAggregation">
+    <rdfs:label>Geographic Feature Content: The multiple files that are part of a geographic shapefile</rdfs:label>
+    <rdfs:isDefinedBy rdf:resource="https://www.hydroshare.org/terms/"/>
+  </rdf:Description>
+</rdf:RDF>
