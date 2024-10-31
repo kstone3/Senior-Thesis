@@ -1,4 +1,4 @@
-steps=[4]
+steps=[3:4]
 addpath('../bin/')
 if any(steps==1)
     md=triangle(model, 'south_cascade_glacier.exp',0.1);
@@ -14,11 +14,12 @@ end
 if any(steps==3)
     md=loadmodel('southCascade');
     md=parameterize(md, 'southCascade.par')
+    %disp(md.mesh.x)
     save southCascade md
 end
 if any(steps==4)
     md=loadmodel('southCascade');
-    % md=extrude(md, 5,1)
+    %disp(md.geometry.base)
     plotmodel(md, 'data', md.geometry.base);
     save southCascade md
 end 

@@ -1,6 +1,7 @@
 x1=csvread('x_coordinates.csv')
 y1=csvread('y_coordinates.csv')
 topo=load('elevation_grid.mat').elevation_grid
+%disp(topo)
 md.geometry.base=InterpFromGridToMesh(x1,y1,topo,md.mesh.x,md.mesh.y,0);
 md.geometry.surface=0.0*md.geometry.base
 md.geometry.thickness=md.geometry.surface+md.geometry.base

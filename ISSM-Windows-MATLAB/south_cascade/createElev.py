@@ -16,7 +16,7 @@ polygon = gpd.read_file(polygon_path)
 
 # Reproject polygon to DEM CRS if necessary
 if dem.crs != polygon.crs:
-    polygon = polygon.to_crs(dem.crs)
+    dem = dem.to_crs(polygon.crs)
 
 # Define resolution
 resolution = 100
@@ -56,11 +56,26 @@ for point in grid_gdf.geometry:
         x_idx = np.where(x_points == point.x)[0][0]
         elevation_grid[y_idx, x_idx] = dem_data[row, col]
 
-# Save elevation grid as a .mat file
-savemat('elevation_grid.mat', {'elevation_grid': elevation_grid})
+# Remove rows and columns that are entirely NaN from elevation_grid
+non_nan_rows = ~np.isnan(elevation_grid).all(axis=1)
+non_nan_cols = ~np.isnan(elevation_grid).all(axis=0)
+elevation_grid = elevation_grid[non_nan_rows][:, non_nan_cols]
 
+# Update x_points and y_points to match the cleaned elevation_grid
+x_points = x_points[non_nan_cols]
+y_points = y_points[non_nan_rows]
+
+# Save the elevation grid as a .mat file
+savemat('elevation_grid.mat', {'elevation_grid': elevation_grid})
+elevation_grid_filled = np.nan_to_num(elevation_grid, nan=0.0)
+
+# Convert the elevation grid to a DataFrame
+elevation_df = pd.DataFrame(elevation_grid_filled)
+
+# Save the DataFrame to a CSV file
+elevation_df.to_csv('elevation_grid.csv', index=False, header=False)
 # Save x and y coordinates as separate CSV files
 pd.DataFrame(x_points, columns=['x_coord']).to_csv('x_coordinates.csv', index=False, header=False)
 pd.DataFrame(y_points, columns=['y_coord']).to_csv('y_coordinates.csv', index=False, header=False)
-print(elevation_grid.shape)
+
 print("Elevation grid saved as 'elevation_grid.mat', x_coords saved as 'x_coordinates.csv', y_coords saved as 'y_coordinates.csv'")
