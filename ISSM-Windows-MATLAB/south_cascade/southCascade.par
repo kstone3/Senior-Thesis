@@ -1,7 +1,24 @@
-x1=csvread('x_coordinates.csv')
-y1=csvread('y_coordinates.csv')
-topo=load('elevation_grid.mat').elevation_grid
-%disp(topo)
-md.geometry.base=InterpFromGridToMesh(x1,y1,topo,md.mesh.x,md.mesh.y,0);
-md.geometry.surface=0.0*md.geometry.base
-md.geometry.thickness=md.geometry.surface+md.geometry.base
+[elevationData, R] = geotiffread('elevations1970.tif');
+elevationData=double(elevationData);
+x = R.XWorldLimits(1) + (0:size(elevationData, 2) - 1) * R.CellExtentInWorldX;
+y = R.YWorldLimits(2) - (0:size(elevationData, 1) - 1) * R.CellExtentInWorldY;
+y = flip(y);               % Flip y-coordinates to be in increasing order
+elevationData = flipud(elevationData); %also need to flip elevation data 
+elevationData(elevationData == 0) = NaN;
+dx = R.CellExtentInWorldX; % x spacing from georeferencing info
+dy = R.CellExtentInWorldY; % y spacing from georeferencing info
+
+% Compute the gradient of the elevation data
+[dz_dx, dz_dy] = gradient(elevationData, dx, dy);
+
+% Calculate the slope in radians
+slope = atan(sqrt(dz_dx.^2 + dz_dy.^2));
+estimated_thickness=(917*9.81*slope)*(1/10^5);
+estimated_base=elevationData-estimated_thickness
+save('estimated_base.mat','estimated_base');
+disp(size(elevationData));
+disp(size(x));
+disp(y);
+%md.geometry.base=InterpFromGridToMesh(x,y,elevationData,md.mesh.x,md.mesh.y,0);
+%md.geometry.surface=0.0*md.geometry.base;
+%md.geometry.thickness=md.geometry.surface+md.geometry.base;
