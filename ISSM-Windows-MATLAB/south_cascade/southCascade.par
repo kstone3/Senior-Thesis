@@ -1,24 +1,61 @@
-[elevationData, R] = geotiffread('elevations1970.tif');
-elevationData=double(elevationData);
-x = R.XWorldLimits(1) + (0:size(elevationData, 2) - 1) * R.CellExtentInWorldX;
-y = R.YWorldLimits(2) - (0:size(elevationData, 1) - 1) * R.CellExtentInWorldY;
-y = flip(y);               % Flip y-coordinates to be in increasing order
-elevationData = flipud(elevationData); %also need to flip elevation data 
-elevationData(elevationData == 0) = NaN;
-dx = R.CellExtentInWorldX; % x spacing from georeferencing info
-dy = R.CellExtentInWorldY; % y spacing from georeferencing info
+%Code to load in and calculate elevationData
+%[elevationData, R] = geotiffread('Data/elevations1970_crs3413.tif');
+%elevationData=double(elevationData);
+%x = R.XWorldLimits(1) + (0:size(elevationData, 2) - 1) * R.CellExtentInWorldX;
+%y = R.YWorldLimits(2) - (0:size(elevationData, 1) - 1) * R.CellExtentInWorldY;
+%y = flip(y);               % Flip y-coordinates to be in increasing order
+%writematrix(y,'Data/y.csv');
+%writematrix(x,'Data/x.csv');
+%save('Data/x.mat','x');
+%save('Data/y.mat','y');
+%elevationData = flipud(elevationData); %also need to flip elevation data 
+%elevationData(elevationData == 0) = NaN;
 
-% Compute the gradient of the elevation data
-[dz_dx, dz_dy] = gradient(elevationData, dx, dy);
+%Code to calculate estimated ice thickness based on slope from elevationData
+%dx = R.CellExtentInWorldX; % x spacing from georeferencing info
+%dy = R.CellExtentInWorldY; % y spacing from georeferencing info
+%[dz_dx, dz_dy] = gradient(elevationData, dx, dy);
+%slope = atan(sqrt(dz_dx.^2 + dz_dy.^2));
+%estimated_thickness=(917*9.81*slope)*(1/10^5);
+%if ~(all(estimated_thickness(:) == 0) || all(isnan(estimated_thickness(:))))
+%    disp('Saving');
+%    estimated_base=elevationData-estimated_thickness;
+%    writematrix(estimated_base, 'Data/estimated_base.csv');
+%    save('Data/estimated_base.mat','estimated_base');
+%end
 
-% Calculate the slope in radians
-slope = atan(sqrt(dz_dx.^2 + dz_dy.^2));
-estimated_thickness=(917*9.81*slope)*(1/10^5);
-estimated_base=elevationData-estimated_thickness
-save('estimated_base.mat','estimated_base');
-disp(size(elevationData));
-disp(size(x));
-disp(y);
-%md.geometry.base=InterpFromGridToMesh(x,y,elevationData,md.mesh.x,md.mesh.y,0);
-%md.geometry.surface=0.0*md.geometry.base;
-%md.geometry.thickness=md.geometry.surface+md.geometry.base;
+%Loads in estimated_base and x and y coords from code above
+estimated_base=load('Data/estimated_base.mat').estimated_base;
+x=load('Data/x.mat').x;
+y=load('Data/y.mat').y;
+
+%Loads in velocity
+velx_coords=ncread('../../Data/SouthCascadeData/ALA_G0120_1985.nc','x');
+vely_coords=flip(ncread('../../Data/SouthCascadeData/ALA_G0120_1985.nc','y'));
+velx=flipud(ncread('../../Data/SouthCascadeData/ALA_G0120_1985.nc','vx')');
+vely=flipud(ncread('../../Data/SouthCascadeData/ALA_G0120_1985.nc','vy')');
+vel=flipud(ncread('../../Data/SouthCascadeData/ALA_G0120_1985.nc','v')');
+
+writematrix(velx_coords, 'Data/velx.csv');
+writematrix(vely_coords, 'Data/vely.csv');
+
+disp(size(velx_coords));
+disp(size(vely_coords));
+disp(size(velx));
+disp(size(vely));
+disp(size(vel));
+
+%Set model parameters
+md.miscellaneous.name='South Cascade';
+md.geometry.base=InterpFromGridToMesh(x,y,estimated_base,md.mesh.x,md.mesh.y,0);
+md.geometry.surface=0.0*md.geometry.base;
+md.geometry.thickness=md.geometry.surface+md.geometry.base;
+md.materials.rheology_n=3*ones(md.mesh.numberofelements,1);
+
+%Set velocity parameters
+md.inversion.vx_obs  = InterpFromGridToMesh(velx_coords,vely_coords,velx,md.mesh.x,md.mesh.y,0);
+md.inversion.vy_obs  = InterpFromGridToMesh(velx_coords,vely_coords,vely,md.mesh.x,md.mesh.y,0);
+md.inversion.vel_obs = InterpFromGridToMesh(velx_coords,vely_coords,vel,md.mesh.x,md.mesh.y,0);
+md.initialization.vx = md.inversion.vx_obs;
+md.initialization.vy = md.inversion.vy_obs;
+md.initialization.vel= md.inversion.vel_obs;
