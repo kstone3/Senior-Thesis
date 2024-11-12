@@ -49,4 +49,4 @@ end
 
 % Uncomment the following to make a copy of the binary input file for debugging 
 % purposes (can be fed into scripts/BinRead.py).
-% copyfile([md.miscellaneous.name '.bin'], [md.miscellaneous.name '.m.bin'])
+copyfile([md.miscellaneous.name '.bin'], [md.miscellaneous.name '.m.bin'])
