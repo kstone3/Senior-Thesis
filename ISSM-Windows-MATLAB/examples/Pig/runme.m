@@ -1,4 +1,4 @@
-steps=[1];
+steps=[1:3];
 
 if any(steps==1) %Mesh Generation #1 
 	%Mesh parameters
@@ -86,7 +86,7 @@ if any(steps==3) %Parameterization #3
 
 	% Use a MacAyeal flow model
 	md = setflowequation(md,'SSA','all');
-
+	plotmodel(md, 'data', md.smb.mass_balance)
 	% Save model
 	save ./Models/PIG_Parameterization md;
 end 

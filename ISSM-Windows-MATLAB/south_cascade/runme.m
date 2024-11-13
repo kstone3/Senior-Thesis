@@ -1,4 +1,4 @@
-steps=[1:4];
+steps=[5];
 addpath('../bin/')
 addpath('../execution/')
 if any(steps==1)
@@ -59,3 +59,8 @@ if any(steps==4)
     md=solve(md,'Stressbalance');
     save southCascade md
 end 
+if any(steps==5)
+    md=loadmodel('southCascade');
+    % disp(md.results.StressbalanceSolution)
+    plotmodel(md, 'data', md.results.StressbalanceSolution.BedSlopeX)
+end

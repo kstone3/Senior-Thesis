@@ -1,0 +1,52 @@
+estimated_base=load('Data/estimated_base.mat').estimated_base;
+surface=load('Data/surface.mat').elevationData;
+x=load('Data/x.mat').x;
+y=load('Data/y.mat').y;
+
+velx_coords=ncread('../../Data/SouthCascadeData/ALA_G0120_1985.nc','x');
+vely_coords=flip(ncread('../../Data/SouthCascadeData/ALA_G0120_1985.nc','y'));
+velx=flipud(ncread('../../Data/SouthCascadeData/ALA_G0120_1985.nc','vx')');
+vely=flipud(ncread('../../Data/SouthCascadeData/ALA_G0120_1985.nc','vy')');
+vel=flipud(ncread('../../Data/SouthCascadeData/ALA_G0120_1985.nc','v')');
+
+md.initialization.vx=InterpFromGridToMesh(velx_coords,vely_coords,velx,md.mesh.x,md.mesh.y,0);
+md.initialization.vy=InterpFromGridToMesh(velx_coords,vely_coords,vely,md.mesh.x,md.mesh.y,0);
+md.initialization.vel=InterpFromGridToMesh(velx_coords,vely_coords,vel,md.mesh.x,md.mesh.y,0);
+
+md.geometry.surface=InterpFromGridToMesh(x,y,surface,md.mesh.x,md.mesh.y,0);
+grad_x = gradient(md.geometry.surface, 1);  % Approximate gradient in x-direction
+grad_y = gradient(md.geometry.surface')';
+slope_magnitude = sqrt(grad_x.^2 + grad_y.^2);
+thickness = (md.initialization.vel ./ (1e-24 * (917 * 9.81 * slope_magnitude).^3)).^(1/3);
+pos8=find(thickness<1);
+thickness(pos8)=1;
+pos9=find(isnan(thickness));
+thickness(pos9)=0;
+pos10=find(isinf(thickness));
+thickness(pos10)=200;
+pos11=find(thickness>200);
+thickness(pos11)=200;
+md.geometry.base=md.geometry.surface-thickness;
+md.geometry.thickness=thickness;
+md.geometry.surface=md.geometry.thickness+md.geometry.base;
+
+md.initialization.pressure=md.materials.rho_ice*md.constants.g*md.geometry.thickness;
+
+md.materials.rheology_n=3*ones(md.mesh.numberofelements,1);
+md.materials.rheology_B=paterson(md.initialization.temperature);
+
+%TEMPORARY MASS BALANCE
+md.smb.mass_balance = ones(md.mesh.numberofvertices, 1);
+
+md.friction.coefficient=10*ones(md.mesh.numberofvertices,1);
+md.friction.p=ones(md.mesh.numberofelements,1);
+md.friction.q=ones(md.mesh.numberofelements,1);
+
+md.inversion=m1qn3inversion();
+md.inversion.vx_obs=md.initialization.vx;
+md.inversion.vy_obs=md.initialization.vy;
+md.inversion.vel_obs=md.initialization.vel;
+
+md.basalforcings.floatingice_melting_rate = zeros(md.mesh.numberofvertices,1);
+md.basalforcings.groundedice_melting_rate = zeros(md.mesh.numberofvertices,1);
+md.masstransport.spcthickness = NaN*ones(md.mesh.numberofvertices,1);
