@@ -1,4 +1,4 @@
-steps=[2];
+steps=[2:4];
 addpath('../bin/')
 addpath('../execution/')
 
@@ -54,46 +54,59 @@ if any(steps==2) %Parameterization #3
 	any(isnan(md.initialization.vel))
 	any(isnan(md.friction.coefficient))
 	any(md.friction.coefficient <= 0) % Invalid friction coefficients
-
+	max(md.initialization.vx)         % Should show a reasonable value
+	max(md.initialization.vy)
 	md=extrude(md,3,1);
 	md = setflowequation(md,'FS','all');
-	plotmodel(md, 'data', md.geometry.thickness);
+	plotmodel(md, 'data', md.initialization.vel);
 	save Models/southCascadePar md;
 end
 if any(steps==3)
 	md=loadmodel('Models/southCascadePar');
 	% plotmodel(md, 'data', md.geometry.base);
-	% md.timestepping.time_step=0.01;
-	% md.timestepping.final_time=10;
-	% md.settings.solver_residue_threshold=1e-5;
 	% % Solve
-	% md.toolkits=toolkits;
+	md.toolkits=toolkits;
+	md.timestepping.time_step = 0.1;    % Define time step (e.g., 0.1 years)
+	md.timestepping.final_time = 10;   % Define final simulation time (e.g., 10 years)
+	md = solve(md, 'Transient');       % Solve the transient problem
 	md.cluster=generic('name',oshostname,'np',2);
-	md.timestepping.time_step = 0; % Disable time stepping
-	md.timestepping.final_time = 0; % Steady state
+	% md.timestepping.time_step = 0; % Disable time stepping
+	% md.timestepping.final_time = 0; % Steady state
 	%md = solve(md, 'SteadyState'); % Solve in steady state
-	md=solve(md,'Transient');
 
-	save Models/southCascadeSolved md;
+	%save Models/southCascadeSolved md;
 end
 if any(steps==4)
 	md=loadmodel('Models/southCascadeSolved.mat')
-	disp(fieldnames(md.results))
-	time_steps = length(md.results.TransientSolution); % Number of time steps
-	times = [md.results.TransientSolution.time]; % Array of time values
+	fieldnames(md.results.TransientSolution)
+	times = [md.results.TransientSolution.time]; % Extract time points
+	n_steps = length(md.results.TransientSolution); % Number of time steps
+	filename = 'VelocityChangeOverTime.gif'; % Name of the GIF file
+	% Check one time step (e.g., first time step)
+	any(md.results.TransientSolution(1).Vel > 0) % Should return true if velocity is non-zero
 
-	% Initialize an array to store average velocity magnitude
-	avg_velocity = zeros(1, time_steps);
-
-	for t = 1:time_steps
-		vel_magnitude = md.results.TransientSolution(t).Vel; % Velocity magnitude at time step t
-		avg_velocity(t) = mean(vel_magnitude); % Calculate average velocity
+	% Check across all time steps
+	for t = 1:length(md.results.TransientSolution)
+		disp(['Time step ', num2str(t), ': Max Velocity = ', num2str(max(md.results.TransientSolution(t).Vel))]);
 	end
-	plot(times, avg_velocity, '-o');
-	xlabel('Time (years)');
-	ylabel('Average Velocity (m/year)');
-	title('Change in Average Velocity Over Time');
-	grid on;
 
+	% for t = 1:n_steps
+	% 	figure;
+	% 	plotmodel(md, 'data', md.results.TransientSolution(t).Vel, 'title', ...
+	% 		['Velocity Magnitude at Time Step ', num2str(t), ' (Time = ', num2str(times(t)), ' years)']);
+	% 	colorbar;
 
+	% 	% Capture the frame and convert it to an image
+	% 	frame = getframe(gcf);
+	% 	img = frame2im(frame);
+	% 	[imind, cm] = rgb2ind(img, 256);
+		
+	% 	% Write to GIF
+	% 	if t == 1
+	% 		imwrite(imind, cm, filename, 'gif', 'Loopcount', inf, 'DelayTime', 0.2);
+	% 	else
+	% 		imwrite(imind, cm, filename, 'gif', 'WriteMode', 'append', 'DelayTime', 0.2);
+	% 	end
+	% 	close;
+	% end
 end

@@ -46,8 +46,8 @@ pos15=find(md.geometry.thickness>200);
 md.geometry.thickness(pos15)=200;
 md.geometry.base=md.geometry.surface-md.geometry.thickness;
 % Set minimum thickness to avoid instability
-pos_invalid = find(md.geometry.thickness <= 0);
-md.geometry.thickness(pos_invalid) = 1; % Set a small positive value
+pos_invalid = find(md.geometry.thickness < 0.4);
+md.geometry.thickness(pos_invalid) = 0; % Set a small positive value
 md.geometry.base(pos_invalid) = md.geometry.surface(pos_invalid) - md.geometry.thickness(pos_invalid);
 
 
@@ -88,6 +88,7 @@ md.masstransport.spcthickness = NaN*ones(md.mesh.numberofvertices,1);
 md.mask.ocean_levelset = ones(md.mesh.numberofvertices, 1);
 md.mask.ice_levelset = ones(md.mesh.numberofvertices, 1); % Default ice-covered
 no_ice_vertices = find(md.geometry.thickness == 0); % Points with zero thickness
+disp(no_ice_vertices)
 md.mask.ice_levelset(no_ice_vertices) = -1; % Set these points as ice-free
 
 md.basalforcings.geothermalflux=zeros(md.mesh.numberofvertices,1);

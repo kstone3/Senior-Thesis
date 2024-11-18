@@ -1,0 +1,77 @@
+%Name and hemisphere
+md.mesh.hemisphere='n';
+md.miscellaneous.name='Negribreen';
+
+%Load data
+disp('   Loading data');
+
+vel = load('Data/2013-04-12_04-28_data_grid_gm.dat');
+% Covert velocity to m/year
+bed = load('Geometry/negri_bed_SPRI_UTM_on_4model_org.dat');
+surf = load(Geometry/negri_surf_SPRI_UTM_on_4model_org.dat');
+
+    
+% Don't want bed elevation to be less than surf (occurs near terminus)
+[m,n] = size(bed);
+for j = 1:n
+    for i = 1:m
+        if bed(i,j)+1 > surf(i,j) % want a minimum of 1 m thickness
+            surf(i,j)= bed(i,j) + 1;
+        end
+    end
+end
+
+thick = surf-bed;
+
+% Unit vectors
+velx = load('Data/2013-04-12_04-28_data_grid_gm1.dat');
+vely = load('Data/2013-04-12_04-28_data_grid_gm2.dat');
+
+vel = vel.*365.242;
+velx = velx.*vel;
+vely = vely.*vel;
+
+
+x1 = (352000:200:422000)';
+y1 = (6660000:200:6720000)';
+
+
+disp('   Interpolating surface');
+md.geometry.surface=InterpFromGridToMesh(x1,y1,surf',md.mesh.x,md.mesh.y,0);
+
+
+disp('   Interpolating bedrock topography');
+md.geometry.base = InterpFromGridToMesh(x1,y1,bed',md.mesh.x,md.mesh.y,0);
+
+disp('   Constructing thickness');
+md.geometry.thickness=md.geometry.surface-md.geometry.base;
+pos0=find(md.geometry.thickness<1);
+md.geometry.thickness(pos0)=1;
+
+disp('   Interpolating velocities');
+md.inversion.vx_obs  = InterpFromGridToMesh(x1,y1,velx',md.mesh.x,md.mesh.y,0);
+md.inversion.vy_obs  = InterpFromGridToMesh(x1,y1,vely',md.mesh.x,md.mesh.y,0);
+md.inversion.vel_obs = InterpFromGridToMesh(x1,y1,vel',md.mesh.x,md.mesh.y,0);
+md.initialization.vx = md.inversion.vx_obs;
+md.initialization.vy = md.inversion.vy_obs;
+md.initialization.vel= md.inversion.vel_obs;
+
+disp('   Defining temperatures');
+md.initialization.temperature=269.65*ones(md.mesh.numberofvertices,1); % -3.5C in Kelvin
+
+disp('   Construct basal friction parameters');
+md.friction.coefficient=sqrt(1e+10/(917*9.81))*ones(md.mesh.numberofvertices,1).*sqrt(1/421.75);%sqrt(1./md.geometry.thickness);
+md.friction.p=ones(md.mesh.numberofelements,1); % exp of tau_b
+md.friction.q=ones(md.mesh.numberofelements,1); %(neg) exp on N
+
+disp('   Construct ice rheological properties');
+md.materials.rheology_n=3*ones(md.mesh.numberofelements,1);
+md.materials.rheology_B=paterson(md.initialization.temperature);
+md.damage.D=zeros(md.mesh.numberofvertices,1);
+
+disp('    Boundary Conditions');
+md.stressbalance.spcvx = nan(md.mesh.numberofvertices,1); % nan = no constraint
+md.stressbalance.spcvy = nan(md.mesh.numberofvertices,1);
+md.stressbalance.spcvz = nan(md.mesh.numberofvertices,1);
+md.stressbalance.referential = nan(md.mesh.numberofvertices,6);
+md=SetIceSheetBC(md);
