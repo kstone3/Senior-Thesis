@@ -1,6 +1,20 @@
-steps=[2:3];
+steps=[2];
 addpath('../bin/')
 addpath('../execution/')
+
+% [elevationData, R] = geotiffread('Data/elevations1986_crs3413.tif');
+% elevationData=double(elevationData);
+% x = R.XWorldLimits(1) + (0:size(elevationData, 2) - 1) * R.CellExtentInWorldX;
+% y = R.YWorldLimits(2) - (0:size(elevationData, 1) - 1) * R.CellExtentInWorldY;
+% y = flip(y);               % Flip y-coordinates to be in increasing order
+% % writematrix(y,'Data/y.csv');
+% % writematrix(x,'Data/x.csv');
+% save('Data/x2.mat','x');
+% save('Data/y2.mat','y');
+% elevationData = flipud(elevationData); %also need to flip elevation data 
+% elevationData(elevationData == 0) = NaN;
+% save('Data/surface2.mat', 'elevationData');
+
 if any(steps==1)
     % domain =['Data/south_cascade_glacier.exp'];
 	% hinit=10000;	% element size for the initial mesh
@@ -31,6 +45,16 @@ end
 if any(steps==2) %Parameterization #3 
 	md=loadmodel('Models/southCascadeMesh');
 	md = parameterize(md,'southCascade2.par');
+	disp('Checking for nan')
+	any(isnan(md.geometry.surface))
+	any(isnan(md.geometry.base))
+	any(md.geometry.thickness <= 0) % Negative or zero thickness
+	any(isnan(md.initialization.vx))
+	any(isnan(md.initialization.vy))
+	any(isnan(md.initialization.vel))
+	any(isnan(md.friction.coefficient))
+	any(md.friction.coefficient <= 0) % Invalid friction coefficients
+
 	md=extrude(md,3,1);
 	md = setflowequation(md,'FS','all');
 	plotmodel(md, 'data', md.geometry.thickness);
@@ -39,13 +63,37 @@ end
 if any(steps==3)
 	md=loadmodel('Models/southCascadePar');
 	% plotmodel(md, 'data', md.geometry.base);
-	md.timestepping.time_step=0.01;
-	md.timestepping.final_time=10;
-	md.settings.solver_residue_threshold=1e-5;
-	% Solve
-	md.toolkits=toolkits;
+	% md.timestepping.time_step=0.01;
+	% md.timestepping.final_time=10;
+	% md.settings.solver_residue_threshold=1e-5;
+	% % Solve
+	% md.toolkits=toolkits;
 	md.cluster=generic('name',oshostname,'np',2);
+	md.timestepping.time_step = 0; % Disable time stepping
+	md.timestepping.final_time = 0; % Steady state
+	%md = solve(md, 'SteadyState'); % Solve in steady state
 	md=solve(md,'Transient');
 
 	save Models/southCascadeSolved md;
+end
+if any(steps==4)
+	md=loadmodel('Models/southCascadeSolved.mat')
+	disp(fieldnames(md.results))
+	time_steps = length(md.results.TransientSolution); % Number of time steps
+	times = [md.results.TransientSolution.time]; % Array of time values
+
+	% Initialize an array to store average velocity magnitude
+	avg_velocity = zeros(1, time_steps);
+
+	for t = 1:time_steps
+		vel_magnitude = md.results.TransientSolution(t).Vel; % Velocity magnitude at time step t
+		avg_velocity(t) = mean(vel_magnitude); % Calculate average velocity
+	end
+	plot(times, avg_velocity, '-o');
+	xlabel('Time (years)');
+	ylabel('Average Velocity (m/year)');
+	title('Change in Average Velocity Over Time');
+	grid on;
+
+
 end
