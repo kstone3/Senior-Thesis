@@ -86,7 +86,7 @@ md.materials.rheology_B=paterson(md.initialization.temperature);
 
 %Forcings
 disp('   Interpolating surface mass balance');
-mass_balance=InterpFromGridToMesh(x1,y1,smb,md.mesh.x,md.mesh.y,0);
+mass_balance=InterpFromGridToMesh(x1,y1,smb,md.mesh.x,md.ms,esh.y,0);
 md.smb.mass_balance=mass_balance*md.materials.rho_water/md.materials.rho_ice;
 clear smb;
 
