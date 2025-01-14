@@ -155,13 +155,13 @@ class glacierSim():
         self.snow_depth[x_temps>0]+=self.snow_melt_factor*temps[x_temps>0]
     
     def update_b(self):
-        if self.current_date>=datetime(1984,1,1):
+        if self.current_date>=datetime(1984,1,2):
             if self.current_date<datetime(2024,10,1): index=self.dates.index(pd.Timestamp(self.current_date.replace(hour=0, minute=0, second=0, microsecond=0)))
             else: index=self.dates.index(pd.Timestamp(datetime(2024, 9, 30)))
             x_temps=self.temps[index]+-0.004*(self.ice+self.topo-272)
             mb=np.zeros_like(x_temps)
             mb[x_temps>0]=self.ice_melt_factor*x_temps[x_temps>0]
-            mb[(x_temps>0)&(self.snow_depth>0)]=0
+            #mb[(x_temps>0)&(self.snow_depth>1)]=0
             #mb[x_temps<0]=self.accum_factor*self.precip[index]/1000*self.dx
             self.snow_model(index,x_temps)
             mb[x_temps<0]=self.snow_depth[x_temps<0]*self.accum_factor
