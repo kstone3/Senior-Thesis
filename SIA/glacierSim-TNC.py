@@ -1,14 +1,21 @@
-from datetime import datetime, timedelta
-import pandas as pd
 import matplotlib.pyplot as plt
+from scipy.optimize import minimize
+from scipy.optimize import differential_evolution
+import pandas as pd
+from matplotlib.animation import FuncAnimation
+from IPython.core.display import HTML
 import numpy as np
 import math
 from math import inf
+from datetime import datetime,timedelta
+import calendar
+import warnings
 import matplotlib
 matplotlib.use("TkAgg")
 
 class glacierSim():
-    def __init__(self, ela=2000,valley_length=3668, time=500,save=10,gamma=0.01,quiet=True, ice_meltfactor=0.00006, snow_meltfactor=0.00001, accumfactor=0.00006, initial_ice=None, start_time=0):
+    def __init__(self, ela=2000,valley_length=3668, time=500,save=10,gamma=0.01,quiet=True, tune_factors=[0.00006,0.00006,0.00001,15,0.00003,0.00003], initial_ice=None, start_time=0):
+        #tunefactors=[ice, snow, accum]
         #print("OBJ INIT")
         self.valley_length = valley_length
         self.run_time=start_time*365.25 #DAYS
@@ -34,8 +41,8 @@ class glacierSim():
         self.ice_volume=0
         self.volume_change=[]
         self.yearly_volume_change=np.zeros(41)
-        self.volume_validation=np.zeros(180)
-        self.volume_data=[]
+        self.daily_volume=np.zeros(180)
+        self.volume_valid=[]
         self.prev_volume=0
         self.initial_volume=0
         self.timestep_list=[] #days
@@ -59,17 +66,20 @@ class glacierSim():
         self.calculated_winter_mb=np.zeros(40, dtype=np.float64)
         self.calculated_summer_mb=np.zeros(40, dtype=np.float64)
         self.annual_mb_arr=np.zeros(len(self.b))
-        self.ice_melt_factor=ice_meltfactor
-        self.snow_melt_factor=snow_meltfactor
-        self.accum_factor=accumfactor
+        self.ice_melt_factor=tune_factors[0]
+        self.snow_melt_factor=tune_factors[1]
+        self.accum_factor=tune_factors[2]
+        self.snow_conv_factor=tune_factors[3]
+        self.snow_melt_amplitude=tune_factors[4]
+        self.ice_melt_amplitude=tune_factors[5]
         self.widths=np.zeros(self.num_cells)
         self.widths_over_time=[]
         self.ice_thickness_over_time=[]
         self.date_index={date: idx for idx, date in enumerate(list(pd.date_range("2002-10-01", "2002-12-05").to_pydatetime()) + list(pd.date_range("2003-06-09", "2003-09-30").to_pydatetime()))}
     
-    def init(self, ax,ela=6700,valley_length=3668, time=500,save=10,gamma=0.008, quiet=True, ice_meltfactor=0.00006, snow_meltfactor=0.00001,accumfactor=0.00006, initial_ice=None, start_time=0):
+    def init(self, ax,ela=6700,valley_length=3668, time=500,save=10,gamma=0.008, quiet=True, tune_factors=[0.00006,0.00006,0.00001,15,0.00003,0.00003], initial_ice=None, start_time=0):
         #print("INIT")
-        self.__init__(ela, valley_length, time, save, gamma, quiet, ice_meltfactor, snow_meltfactor, accumfactor, initial_ice, start_time)
+        self.__init__(ela, valley_length, time, save, gamma, quiet, tune_factors, initial_ice, start_time)
         self.calc_topo()
         self.calc_widths()
         self.load_mb_data()
@@ -85,7 +95,7 @@ class glacierSim():
         ax.set_aspect('equal', adjustable='datalim')
         ax.plot(self.x, self.topo, color="b", label="Topography")
         self.line = ax.plot(self.x, self.ice + self.topo, color="c", label="Ice Thickness")
-        self.snow_line = ax.plot(self.x, self.snow_depth + self.topo+self.ice, color="g", label="Snow")
+        self.snow_line = ax.plot(self.x, self.snow_depth + self.topo+self.ice, color="c", label="Snow")
         self.ela_line = ax.axhline(y=float(curr_ela), color="r", linestyle="dashed", label="ELA")
         ax.legend()
 
@@ -115,19 +125,28 @@ class glacierSim():
         #self.ice*=scale
         self.ice_volume=np.sum(self.ice*self.widths*self.dx)
         self.initial_volume=self.ice_volume
-        self.prev_volume=self.ice_volume
+        self.prev_volume=self.ice_volume.copy()
         self.volume_change.append(self.initial_volume)
         
     def calc_widths(self):
         df = pd.read_csv('Data/Input_SouthCascade_Area_Altitude_Distribution.csv')
         self.bins = df.columns[1:].astype(float).to_numpy()
         self.years = df.iloc[:, 0].astype(float).tolist()
-        self.areas = df.iloc[:, 1:].astype(float).values
-        self.widths=np.array([self.areas[0][np.array([np.argmin(np.abs(self.bins[:, None]-np.round(self.topo)), axis=0)])]][0][0])/0.05*1000
-        
+        self.areas = df.iloc[:, 1:].astype(float).values*1000000
+        self.bins=np.append(self.bins, self.bins[-1]+50)
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", category=RuntimeWarning)
+            self.widths = np.array(self.areas[0,:]/np.abs(np.diff(self.x[np.array([np.argmin(np.abs(self.topo+self.ice - bin_value)) for bin_value in self.bins])])))[np.searchsorted(self.bins, (self.topo+self.ice))]
+        self.widths[np.isinf(self.widths)]=0
+        #self.widths=(np.array([self.areas[0][np.array([np.argmin(np.abs(self.bins[:, None]-np.round(self.topo)), axis=0)])]][0][0])/0.05)*1000
+                
     def update_widths(self):
         prev_width=self.widths
-        self.widths=np.array([self.areas[self.current_date.year-1950][np.array([np.argmin(np.abs(self.bins[:, None]-np.round(self.topo)), axis=0)])]][0][0])/0.05*1000 # type: ignore
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", category=RuntimeWarning)
+            self.widths = np.array(self.areas[(self.current_date.year-1950),:]/np.abs(np.diff(self.x[np.array([np.argmin(np.abs(self.topo+self.ice - bin_value)) for bin_value in self.bins])])))[np.clip((np.searchsorted(self.bins, (self.topo+self.ice))),0,(len(self.areas[0])-1))]
+        self.widths[np.isinf(self.widths)]=0
+        #self.widths=np.array([self.areas[self.current_date.year-1950][np.array([np.argmin(np.abs(self.bins[:, None]-np.round(self.topo)), axis=0)])]][0][0])/0.05*1000 # type: ignore
         if np.abs(self.widths-prev_width).any()>0:
             self.widths_over_time.append(self.widths.copy())
             self.ice_thickness_over_time.append(self.ice.copy())
@@ -146,37 +165,36 @@ class glacierSim():
         self.calculated_annual_mb=np.array([0] * len(self.annual_mb), dtype=np.float64)
         self.calculated_winter_mb=np.array([0] * len(self.winter_mb), dtype=np.float64)
         self.calculated_summer_mb=np.array([0] * len(self.summer_mb), dtype=np.float64)
-        self.volume_data = pd.read_csv('Data/daily_average_runoff_with_dates.csv')['Volume'].to_numpy()
-        self.volume_validation=np.zeros(len(self.volume_data))
+        self.volume_valid = pd.read_csv('Data/daily_average_runoff_with_dates.csv')['Volume'].to_numpy()
+        self.daily_volume_change=np.zeros(len(self.volume_valid))
     
-    def snow_model(self, index, temps):
-        x_temps=self.temps[index]+-0.004*(self.ice+self.topo-272)
-        self.snow_depth[x_temps<0]+=((self.precip[index]*15)/1000) - (self.snow_depth[x_temps<0]*self.accum_factor)
-        self.snow_depth[x_temps>0]+=self.snow_melt_factor*temps[x_temps>0]
+    def snow_model(self, index, temps,timestep):
+        self.snow_depth[temps<0]+=((self.precip[index]*self.snow_conv_factor)/1000)*timestep
+        self.snow_depth[temps>0]+=self.snow_melt_factor*temps[temps>0] if int(self.current_date.month) in [12,1,2] else (self.snow_melt_amplitude/2*(1-math.cos(2*math.pi/8*((self.current_date.month+(self.current_date.day+1)/calendar.monthrange(self.current_date.year, self.current_date.month)[1])-11))) + self.snow_melt_factor)*temps[temps>0]
     
-    def update_b(self):
+    def update_b(self, timestep):
+        #fix nan temps(its probably using 0 for nan temps which is way wrong)
         if self.current_date>=datetime(1984,1,2):
             if self.current_date<datetime(2024,10,1): index=self.dates.index(pd.Timestamp(self.current_date.replace(hour=0, minute=0, second=0, microsecond=0)))
             else: index=self.dates.index(pd.Timestamp(datetime(2024, 9, 30)))
-            x_temps=self.temps[index]+-0.004*(self.ice+self.topo-272)
+            x_temps=self.temps[index]-0.0065*(self.ice+self.topo-272)
             mb=np.zeros_like(x_temps)
-            mb[x_temps>0]=self.ice_melt_factor*x_temps[x_temps>0]
-            #mb[(x_temps>0)&(self.snow_depth>1)]=0
+            mb[x_temps>0]= self.ice_melt_factor*x_temps[x_temps>0] if int(self.current_date.month) in [12,1,2] else (self.ice_melt_amplitude/2*(1-math.cos(2*math.pi/8*((self.current_date.month+(self.current_date.day+1)/calendar.monthrange(self.current_date.year, self.current_date.month)[1])-11))) + self.ice_melt_factor)*x_temps[x_temps>0]
+            mb[(x_temps>0)&(self.snow_depth>0.1)]=0
             #mb[x_temps<0]=self.accum_factor*self.precip[index]/1000*self.dx
-            self.snow_model(index,x_temps)
+            self.snow_model(index,x_temps,timestep)
             mb[x_temps<0]=self.snow_depth[x_temps<0]*self.accum_factor
+            self.snow_depth[x_temps<0]-=self.snow_depth[x_temps<0]*self.accum_factor
+            self.snow_depth=np.maximum(self.snow_depth,0)
             # if np.any(mb[x_temps<0]<0): print("NEGATIVE MB", mb[x_temps<0])
             # if np.any(np.isnan(mb[x_temps < 0])): print("NAN MB", self.precip[index])
             # if np.any(mb[x_temps<0]>100): print("MB TOO BIG", mb[x_temps<0])
-            #print(math.floor(self.run_time/365.25)-1000)
-            #date=math.floor((self.run_time-1000*365.25)/365.25)
             date=int(self.current_date.year-1984)
             self.calculated_annual_mb[date]+=np.sum(np.array(mb))
             self.calculated_winter_mb[date]+=np.sum(np.array(mb[mb>0]))
             self.calculated_summer_mb[date]+=np.sum(np.array(mb[mb<0]))
             if np.any(self.calculated_winter_mb<0): print("ERROR IN WINTER MB")
             if np.any(self.calculated_summer_mb>0): print("ERROR IN WINTER MB")
-            #print(self.calculated_annual_mb)
             return mb
         else: return ((self.topo+self.ice-self.curr_ela)*self.gamma)/365.25 #meters per day
         
@@ -275,10 +293,10 @@ class glacierSim():
             ax.set_aspect('equal', adjustable='datalim')
             ax.plot(self.x, self.topo, color="b", label="Topography")
             #ax.set_title('Time = ' + str(round((self.run_time/365.25),(str(self.save)[::-1].find('.')+1))) + ' years')
-            ax.set_title('Time = ' + str(self.current_date.year) + ' years')
+            ax.set_title('Year = ' + str(self.current_date.year))
             self.ela_line = ax.axhline(y=curr_ela, color="r", linestyle="dashed", label="ELA")
             self.line = ax.plot(self.x, self.ice + self.topo, color="c", label="Ice")
-            self.snow_line = ax.plot(self.x, self.snow_depth + self.topo+self.ice, color="g", label="Snow")
+            self.snow_line = ax.plot(self.x, self.snow_depth + self.topo+self.ice, color="c", label="Snow")
             ax.legend()
         elif i>0.0:
             iter_time=0.0 #years
@@ -295,14 +313,14 @@ class glacierSim():
                 current_date_key = self.current_date.replace(hour=0, minute=0, second=0, microsecond=0)
                 if current_date_key==datetime(2002,9,30) or  current_date_key==datetime(2003,6,8): self.prev_volume=self.ice_volume
                 if current_date_key in self.date_index:
-                    self.volume_validation[self.date_index[current_date_key]] += (self.ice_volume-self.prev_volume)
-                    self.prev_volume=self.ice_volume
+                    self.daily_volume_change[self.date_index[current_date_key]] += (self.prev_volume-self.ice_volume)
+                    self.prev_volume=self.ice_volume.copy()
                 iter_time+=timestep/365.25
                 self.run_time+=timestep
                 self.current_date+=timedelta(days=float(timestep))
-                self.b=self.update_b()
+                self.b=self.update_b(timestep)
                 if self.current_date.year>=1984: self.yearly_volume_change[self.current_date.year-1984]=self.ice_volume/1e9
-                if math.floor(self.run_time%365.25)==0: self.annual_mb_arr.fill(0)
+                if (self.current_date.month and self.current_date.day)==1: self.annual_mb_arr.fill(0)
                 self.annual_mb_arr+=self.b
                 self.b_max = max(np.max(self.b*365.25),self.b_max)
                 self.b_min = min(np.min(self.b*365.25),self.b_min)
@@ -322,13 +340,13 @@ class glacierSim():
             current_date_key = self.current_date.replace(hour=0, minute=0, second=0, microsecond=0)
             if current_date_key==datetime(2002,9,30) or  current_date_key==datetime(2003,6,8): self.prev_volume=self.ice_volume
             if current_date_key in self.date_index:
-                self.volume_validation[self.date_index[current_date_key]] += (self.ice_volume-self.prev_volume)
-                self.prev_volume=self.ice_volume
-            self.b=self.update_b()
-            if math.floor(self.run_time%365.25)==0: self.annual_mb_arr.fill(0)
+                self.daily_volume_change[self.date_index[current_date_key]] += (self.prev_volume-self.ice_volume)
+                self.prev_volume=self.ice_volume.copy()
+            self.b=self.update_b(timestep)
             self.annual_mb_arr+=self.b
             try: curr_ela=float(self.topo[np.where((self.annual_mb_arr[:-1] >= 0) & (self.annual_mb_arr[1:] < 0))[0][0]])
             except: curr_ela=float(self.topo[-1])
+            if self.current_date.month==1 and self.current_date.day==1: self.annual_mb_arr.fill(0)
             self.ela_list.append(curr_ela)
             ax.clear()
             ax.set_ylim(min(self.topo) - 100, max(self.topo) + 100)
@@ -338,13 +356,100 @@ class glacierSim():
             ax.set_aspect('equal', adjustable='datalim')
             ax.plot(self.x, self.topo, color="b", label="Topography")
             #ax.set_title('Time = ' + str(round((self.run_time/365.25),(str(self.save)[::-1].find('.')+1))) + ' years')
-            ax.set_title('Time = ' + str(self.current_date.year) + ' years')
+            ax.set_title('Year = ' + str(self.current_date.year))
             self.ela_line = ax.axhline(y=curr_ela, color="r", linestyle="dashed", label="ELA")
             self.line = ax.plot(self.x, self.ice + self.topo, color="c", label="Ice")
-            self.snow_line = ax.plot(self.x, self.snow_depth + self.topo+self.ice, color="g", label="Snow")
+            self.snow_line = ax.plot(self.x, self.snow_depth + self.topo+self.ice, color="c", label="Snow")
             ax.legend()
             if(round(self.run_time,2)==self.time*365.25): self.report_final_values(u)
         return self.line, self.ela_line, self.snow_line
 
 fig, ax = plt.subplots() #initialize plotting variables
 _ = plt.close(fig) #used to prevent an empty plot from displaying
+
+def optimize(parameter, input_params):
+    try:
+        print("ACCUMFACTOR: ", input_params[2])
+        print("ICE MELTFACTOR: ", input_params[0])
+        print("SNOW MELTFACTOR: ", input_params[1])
+        print("SNOW CONVERSION FACTOR: ", input_params[3])
+        print("SNOW MELT AMPLITUDE: ", input_params[4])
+        print("ICE MELT AMPLITUDE: ", input_params[5])
+        print(input_params)
+        ela = 1880
+        time = 1040
+        save = 10
+        gamma = 0.011
+        # accumfactor=0.1 #bounds approx 0.1-0.5
+        # ice_meltfactor= 0.005 #bounds approx 0.005-0.012
+        # snow_meltfactor=0.002 #bounds approx 0.002-0.006
+        # snow_conv_factor=5 #bounds 5-15
+        # snow_melt_amplitude=0.004
+        # ice_melt_amplitude=0.007
+        # tune_factors=[ice_meltfactor, snow_meltfactor, accumfactor, snow_conv_factor,snow_melt_amplitude,ice_melt_amplitude]
+        quiet = True
+        start_time = 1000
+        ice = [50.81674576, 58.0492316, 65.39974357, 69.26584673, 75.6541392, 84.5574082,
+            93.16036408, 112.38704694, 124.70816911, 131.82922523, 133.94461492, 128.04731581,
+            119.78368355, 114.48489418, 112.37514056, 119.75831875, 135.23782532, 160.12199208,
+            157.96061715, 146.35333828, 145.00609809, 144.29791671, 144.11173286, 146.38344403,
+            149.4198206, 157.63435841, 165.81155222, 172.08082136, 176.45849045, 177.06836948,
+            168.17467552, 149.15732577, 133.66691108, 119.98983147, 118.42297763, 122.25852634,
+            120.05965747, 116.45899098, 109.25399911, 102.33371904, 104.5723128, 96.17898237,
+            86.71000822, 75.76864291, 62.64653003, 45.85246872, 20.18519449, 0.0, 0.0, 0.0]
+        model = glacierSim(ela=ela, time=time, save=save,gamma=gamma,quiet=quiet, tune_factors=input_params, initial_ice=ice, start_time=start_time)
+        anim = FuncAnimation(fig, model.run_model, model.frames, init_func=model.init(ax,ela=ela, time=time, save=save,gamma=gamma,quiet=quiet, tune_factors=input_params, initial_ice=ice, start_time=start_time), blit=False, repeat=False)
+        vid = HTML(anim.to_jshtml())
+        try:
+            if parameter == 'summer':
+                print("Function result: ",np.sum((np.array(model.calculated_summer_mb) - np.array(model.summer_mb)) ** 2))
+                return np.sum((np.array(model.calculated_summer_mb) - np.array(model.summer_mb)) ** 2)
+            elif parameter == 'winter': 
+                print("Function result: ",np.sum((np.array(model.calculated_winter_mb) - np.array(model.winter_mb)) ** 2))
+                return np.sum((np.array(model.calculated_winter_mb) - np.array(model.winter_mb)) ** 2)
+            elif parameter == 'annual': 
+                print("Function result: ",np.sum((np.array(model.calculated_annual_mb) - np.array(model.annual_mb)) ** 2))
+                return np.sum((np.array(model.calculated_annual_mb) - np.array(model.annual_mb)) ** 2)
+            elif parameter == 'summer_winter':
+                print("Function result: ",np.sum((np.array(model.calculated_summer_mb) - np.array(model.summer_mb)) ** 2) + np.sum((np.array(model.calculated_winter_mb) - np.array(model.winter_mb)) ** 2))
+                return np.sum((np.array(model.calculated_summer_mb) - np.array(model.summer_mb)) ** 2) + np.sum((np.array(model.calculated_winter_mb) - np.array(model.winter_mb)) ** 2)
+            elif parameter == 'vol_change': 
+                # print("Function result: ",np.sum((model.volume_validation - model.volume_data) ** 2))
+                # return np.sum((model.volume_validation - model.volume_data) ** 2)
+                print("Function result: ",np.sum(model.daily_volume_change - model.volume_valid))
+                return np.sum(model.daily_volume_change - model.volume_valid)
+            else: raise ValueError("Invalid parameter. Choose from 'summer', 'winter', 'annual', 'summer_winter', 'vol_change'.")
+        except: 
+            print("Function result: INF")
+            return inf
+    except: 
+        print("Function result: INF")
+        return inf
+
+# Initialize the model
+# accumfactor=0.001 #bounds approx 0.1-0.5, might want to change to 0.001,0.004
+# ice_meltfactor= -0.005 #bounds approx -0.005--0.012
+# snow_meltfactor=-0.002 #bounds approx -0.002--0.006
+# snow_conv_factor=5 #bounds 5-15
+# snow_melt_amplitude=-0.004
+# ice_melt_amplitude=-0.007
+accumfactor=0.004731588686211069*1.2
+ice_meltfactor=-0.008472259912843966
+snow_meltfactor= -0.0036515609274413875
+snow_conv_factor=  5.310488160176582*1.2
+snow_melt_amplitude= -0.005747189439663826
+ice_melt_amplitude=  -0.002254212082875086
+initial_guess=[ice_meltfactor, snow_meltfactor, accumfactor, snow_conv_factor,snow_melt_amplitude,ice_melt_amplitude]
+#bounds = [(-0.012,-0.005), (-0.006,-0.002), (0.001, 0.005), (5, 15),(-0.01,-0.001),(-0.01,-0.001)]
+bounds=[(-1,0),(-1,0),(0,1),(0,15),(-1,0),(-1,0)]
+#result = differential_evolution(lambda x: optimize('summer_winter', x), bounds)
+result = minimize(lambda x: optimize('vol_change', x),initial_guess,method='TNC',bounds=bounds,options={'disp': True})
+result_ice_melt, result_snow_melt, result_accum, result_snow_conv, result_snow_amp, result_ice_amp=result.x
+print("Optimized accumulation factor:", result_accum)
+print("Optimized ice meltfactor:",result_ice_melt)
+print("Optimized snow meltfactor:",result_snow_melt)
+print("Optimized snow conversion factor:",result_snow_conv)
+print("Optimized snow melt amplitude:",result_snow_amp)
+print("Optimized ice melt amplitude:",result_ice_amp)
+print("Final objective function value:", result.fun)
+print(result.x)
