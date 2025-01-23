@@ -34,3 +34,22 @@ Optimized snow melt amplitude: -0.001
 Optimized ice melt amplitude: -0.001
 Final objective function value: 777.0169865454814
 [-1.e-02 -1.e-02  1.e-02  6.e+00 -1.e-03 -1.e-03]
+Optimized parameters for thick:
+Optimized accumulation factor: 0.011652748543555878
+Optimized ice meltfactor: -0.009790476206093078
+Optimized snow meltfactor: -0.00984938540069541
+Optimized snow conversion factor: 6.242876456470307
+Optimized snow melt amplitude: -0.001549270673291298
+Optimized ice melt amplitude: -0.0010119477923536324
+Final objective function value: 486.1597693496544
+[-9.79047621e-03 -9.84938540e-03  1.16527485e-02  6.24287646e+00
+ -1.54927067e-03 -1.01194779e-03]
+Optimized parameters for vol_change:
+Optimized accumulation factor: 0.0004461137295814015
+Optimized ice meltfactor: -0.0023187068734310846
+Optimized snow meltfactor: -0.001647581163280103
+Optimized snow conversion factor: 0.22697468055022504
+Optimized snow melt amplitude: -0.0002535778757002186
+Optimized ice melt amplitude: -0.00397905181044403
+Final objective function value: 127.91154967547939
+[-0.00231871 -0.00164758  0.00044611  0.22697468 -0.00025358 -0.00397905]

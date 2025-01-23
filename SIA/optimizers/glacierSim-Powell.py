@@ -541,9 +541,10 @@ bounds=[(-1,0),(-1,0),(0,1),(0,15),(-1,0),(-1,0)]
 # gamma=0.0065
 # bounds=[(0.005,0.007)]
 #result = differential_evolution(lambda x: optimize('summer_winter', x), bounds)
+initial_guess=[-1.e-02, -1.e-02,  1.e-02,  6.e+00, -1.e-03, -1.e-03]
 opt_method='Powell'
 with open(f"Results/{opt_method}-Results.txt", "a") as file:
-    for opt_var in ['annual','ela','extent','front_var','thick','vol_change']:
+    for opt_var in ['ela','extent','front_var','thick','vol_change']:
         result = minimize(lambda x: optimize(opt_var, x),initial_guess,method=opt_method,bounds=bounds,options={'disp': True})
         result_ice_melt, result_snow_melt, result_accum, result_snow_conv, result_snow_amp, result_ice_amp=result.x
         print("OPTIMIZED PARAMS FOR:", opt_var)

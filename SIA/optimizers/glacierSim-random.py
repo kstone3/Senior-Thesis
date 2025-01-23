@@ -603,7 +603,7 @@ with open(f"Results/{opt_method}-Results.txt", "a") as file:
         random_search = RandomizedSearchCV(
             estimator=model,
             param_distributions=param_distributions,
-            n_iter=20,
+            n_iter=100,
             scoring=None,
             cv=2,              # now valid, since we have 2 samples
             verbose=1,

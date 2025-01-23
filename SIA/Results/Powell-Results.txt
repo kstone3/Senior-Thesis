@@ -1,0 +1,10 @@
+Optimized parameters for annual:
+Optimized accumulation factor: 0.006240588331094729
+Optimized ice meltfactor: -0.019349951663459326
+Optimized snow meltfactor: -0.004943898486424085
+Optimized snow conversion factor: 6.40572149329547
+Optimized snow melt amplitude: -0.0021391819967867555
+Optimized ice melt amplitude: -0.005193959985623911
+Final objective function value: 1913565.237980551
+[-1.93499517e-02 -4.94389849e-03  6.24058833e-03  6.40572149e+00
+ -2.13918200e-03 -5.19395999e-03]

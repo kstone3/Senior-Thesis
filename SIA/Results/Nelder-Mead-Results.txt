@@ -1,0 +1,48 @@
+Optimized parameters for annual:
+Optimized accumulation factor: 0.0
+Optimized ice meltfactor: -8.353235391047109e-07
+Optimized snow meltfactor: 0.0
+Optimized snow conversion factor: 0.492410980693896
+Optimized snow melt amplitude: -0.0015395205159349672
+Optimized ice melt amplitude: -8.248038892238736e-05
+Final objective function value: 26.467173949060026
+[-8.35323539e-07  0.00000000e+00  0.00000000e+00  4.92410981e-01
+ -1.53952052e-03 -8.24803889e-05]
+Optimized parameters for ela:
+Optimized accumulation factor: 0.01
+Optimized ice meltfactor: -0.01
+Optimized snow meltfactor: -0.01
+Optimized snow conversion factor: 6.0
+Optimized snow melt amplitude: -0.001
+Optimized ice melt amplitude: -0.001
+Final objective function value: inf
+[-1.e-02 -1.e-02  1.e-02  6.e+00 -1.e-03 -1.e-03]
+Optimized parameters for extent:
+Optimized accumulation factor: 0.01
+Optimized ice meltfactor: -0.01
+Optimized snow meltfactor: -0.01
+Optimized snow conversion factor: 6.300000000000001
+Optimized snow melt amplitude: -0.001
+Optimized ice melt amplitude: -0.001
+Final objective function value: 0.0004568736292919016
+[-1.0e-02 -1.0e-02  1.0e-02  6.3e+00 -1.0e-03 -1.0e-03]
+Optimized parameters for front_var:
+Optimized accumulation factor: 0.010404781214346213
+Optimized ice meltfactor: -0.007947392090561362
+Optimized snow meltfactor: -0.008024490645872944
+Optimized snow conversion factor: 9.014133271614341
+Optimized snow melt amplitude: -0.0007814445222204017
+Optimized ice melt amplitude: -0.000997332457099345
+Final objective function value: 63.151462543416855
+[-7.94739209e-03 -8.02449065e-03  1.04047812e-02  9.01413327e+00
+ -7.81444522e-04 -9.97332457e-04]
+Optimized parameters for thick:
+Optimized accumulation factor: 0.01429985668704227
+Optimized ice meltfactor: -1.3296839087672698e-06
+Optimized snow meltfactor: -0.0069955420625551195
+Optimized snow conversion factor: 1.3847660908084727
+Optimized snow melt amplitude: -0.0014335272914771347
+Optimized ice melt amplitude: -0.001935704907630171
+Final objective function value: 194.6201310629816
+[-1.32968391e-06 -6.99554206e-03  1.42998567e-02  1.38476609e+00
+ -1.43352729e-03 -1.93570491e-03]
