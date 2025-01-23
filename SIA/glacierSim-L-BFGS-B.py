@@ -1,7 +1,6 @@
 import sys
 import matplotlib.pyplot as plt
 from scipy.optimize import minimize
-from scipy.optimize import differential_evolution
 import pandas as pd
 from matplotlib.animation import FuncAnimation
 from IPython.core.display import HTML
@@ -14,13 +13,13 @@ import warnings
 import matplotlib
 matplotlib.use("TkAgg")
 
-logfile = open("L-BFGS-B-Output.txt", "w")
+# logfile = open("powellOutput.txt", "w")
 
-# 2) Redirect stdout (and stderr if you want all errors to go here, too)
-original_stdout = sys.stdout
-original_stderr = sys.stderr
-sys.stdout = logfile
-sys.stderr = logfile
+# # 2) Redirect stdout (and stderr if you want all errors to go here, too)
+# original_stdout = sys.stdout
+# original_stderr = sys.stderr
+# sys.stdout = logfile
+# sys.stderr = logfile
 
 class glacierSim():
     def __init__(self, ela=1880,valley_length=3668, time=500,save=10,gamma=0.01,quiet=True, tune_factors=[0.00006,0.00006,0.00001,15,0.00003,0.00003], initial_ice=None, start_time=0):
@@ -48,9 +47,10 @@ class glacierSim():
         self.b_min = float(inf)
         self.gamma = gamma #for mass balance equation
         self.ice_volume=0
+        self.snow_melt_vol=0
         self.volume_change=[]
         self.yearly_volume_change=np.zeros(41)
-        self.daily_volume=np.zeros(180)
+        self.daily_volume_change=np.zeros(180)
         self.volume_valid=[]
         self.prev_volume=0
         self.initial_volume=0
@@ -74,7 +74,16 @@ class glacierSim():
         self.calculated_annual_mb=np.zeros(40, dtype=np.float64)
         self.calculated_winter_mb=np.zeros(40, dtype=np.float64)
         self.calculated_summer_mb=np.zeros(40, dtype=np.float64)
-        self.annual_mb_arr=np.zeros(len(self.b))
+        self.mb_arr=np.zeros(len(self.b))
+        self.thickness_change_verif=np.zeros(4)
+        self.thickness_change=np.zeros(4)
+        self.thickness_1986_verif=0
+        self.ice_1986=np.zeros(self.num_cells)
+        self.front_variation_verif=np.zeros(100)
+        self.front_variation_calc=np.zeros(100)
+        self.ela_verif=np.zeros(100)
+        self.prev_thickness=np.mean(self.ice)
+        self.prev_front=np.max(self.x[self.ice>1]) if np.any(self.ice>1) else 0
         self.ice_melt_factor=tune_factors[0]
         self.snow_melt_factor=tune_factors[1]
         self.accum_factor=tune_factors[2]
@@ -89,10 +98,10 @@ class glacierSim():
     def init(self, ax,ela=6700,valley_length=3668, time=500,save=10,gamma=0.008, quiet=True, tune_factors=[0.00006,0.00006,0.00001,15,0.00003,0.00003], initial_ice=None, start_time=0):
         #print("INIT")
         self.__init__(ela, valley_length, time, save, gamma, quiet, tune_factors, initial_ice, start_time)
+        self.load_verif_data()
         self.calc_topo()
         self.calc_widths()
         self.load_mb_data()
-        self.load_verif_data()
         try: curr_ela=self.topo[np.where((self.b[:-1] >= 0) & (self.b[1:] < 0))[0]][0]
         except: curr_ela=self.topo[-1]
         self.ela_list.append(curr_ela)
@@ -117,7 +126,7 @@ class glacierSim():
         latitudes = []
         longitudes = []
         topo = []
-        df = pd.read_csv('Data/centerlineBed.csv',skiprows=1)
+        df = pd.read_csv('Data/centerlineBed.csv')
         latitudes = df.iloc[:, 2].astype(float).tolist()  # Latitude is the second column (index 2)
         longitudes = df.iloc[:, 1].astype(float).tolist()  # Longitude is the third column (index 1)
         topo = df.iloc[:, 0].astype(float).tolist()  # Elevation is the first column (index 0)
@@ -136,6 +145,7 @@ class glacierSim():
         self.initial_volume=self.ice_volume
         self.prev_volume=self.ice_volume.copy()
         self.volume_change.append(self.initial_volume)
+        self.thickness_1986_verif=np.interp(np.linspace(cumulative_distances[0], cumulative_distances[-1], self.num_cells), cumulative_distances, self.thickness_1986_verif) if type(self.thickness_1986_verif) is not int else np.zeros(self.num_cells)
         
     def calc_widths(self):
         df = pd.read_csv('Data/Input_SouthCascade_Area_Altitude_Distribution.csv')
@@ -171,16 +181,24 @@ class glacierSim():
         self.annual_mb = df.iloc[:, 3].astype(float).tolist()
         self.summer_mb = df.iloc[:, 2].astype(float).tolist()
         self.winter_mb = df.iloc[:, 1].astype(float).tolist()
+        self.ela_verif=df.iloc[5:, 4].astype(float).to_numpy()
         self.calculated_annual_mb=np.array([0] * len(self.annual_mb), dtype=np.float64)
         self.calculated_winter_mb=np.array([0] * len(self.winter_mb), dtype=np.float64)
         self.calculated_summer_mb=np.array([0] * len(self.summer_mb), dtype=np.float64)
         self.volume_valid = pd.read_csv('Data/daily_average_runoff_with_dates.csv')['Volume'].to_numpy()
         self.daily_volume_change=np.zeros(len(self.volume_valid))
+        self.thickness_change_verif = pd.read_csv('Data/thickness_change.csv').iloc[0:, 11].astype(float).to_numpy()
+        self.front_variation_verif = pd.read_csv('Data/front_variation_change.csv').iloc[0:, 9].astype(float).to_numpy()
+        self.front_variation_calc = np.zeros(len(self.front_variation_verif))
+        df= pd.read_csv('Data/centerlineThickness.csv')
+        self.thickness_1986_verif=df.iloc[0:, 3].astype(float).to_numpy()-df.iloc[0:, 0].astype(float).to_numpy()
     
     def snow_model(self, index, temps,timestep):
         self.snow_depth[temps<0]+=((self.precip[index]*self.snow_conv_factor)/1000)*timestep
-        self.snow_depth[temps>0]+=self.snow_melt_factor*temps[temps>0] if int(self.current_date.month) in [12,1,2] else (self.snow_melt_amplitude/2*(1-math.cos(2*math.pi/8*((self.current_date.month+(self.current_date.day+1)/calendar.monthrange(self.current_date.year, self.current_date.month)[1])-11))) + self.snow_melt_factor)*temps[temps>0]
-    
+        snow_melt=(self.snow_melt_factor*temps[temps>0] if int(self.current_date.month) in [12,1,2] else (self.snow_melt_amplitude/2*(1-math.cos(2*math.pi/8*((self.current_date.month+(self.current_date.day+1)/calendar.monthrange(self.current_date.year, self.current_date.month)[1])-11))) + self.snow_melt_factor)*temps[temps>0])*timestep
+        self.snow_melt_vol=np.sum(snow_melt*self.dx*self.widths[temps>0])
+        self.snow_depth[temps>0]+=snow_melt
+        
     def update_b(self, timestep):
         #fix nan temps(its probably using 0 for nan temps which is way wrong)
         if self.current_date>=datetime(1984,1,2):
@@ -193,20 +211,23 @@ class glacierSim():
             #mb[x_temps<0]=self.accum_factor*self.precip[index]/1000*self.dx
             self.snow_model(index,x_temps,timestep)
             mb[x_temps<0]=self.snow_depth[x_temps<0]*self.accum_factor
-            self.snow_depth[x_temps<0]-=self.snow_depth[x_temps<0]*self.accum_factor
+            #mb+=self.snow_depth*self.accum_factor
+            self.snow_depth[x_temps<0]-=self.snow_depth[x_temps<0]*self.accum_factor*timestep
+            #self.snow_depth-=self.snow_depth*self.accum_factor
             self.snow_depth=np.maximum(self.snow_depth,0)
             # if np.any(mb[x_temps<0]<0): print("NEGATIVE MB", mb[x_temps<0])
             # if np.any(np.isnan(mb[x_temps < 0])): print("NAN MB", self.precip[index])
             # if np.any(mb[x_temps<0]>100): print("MB TOO BIG", mb[x_temps<0])
             date=int(self.current_date.year-1984)
-            self.calculated_annual_mb[date]+=np.sum(np.array(mb))
-            self.calculated_winter_mb[date]+=np.sum(np.array(mb[mb>0]))
-            self.calculated_summer_mb[date]+=np.sum(np.array(mb[mb<0]))
+            self.calculated_annual_mb[date]+=np.sum(np.array(mb*timestep))
+            self.calculated_winter_mb[date]+=np.sum(np.array(mb[mb>0]*timestep))
+            self.calculated_summer_mb[date]+=np.sum(np.array(mb[mb<0]*timestep))
             if np.any(self.calculated_winter_mb<0): print("ERROR IN WINTER MB")
             if np.any(self.calculated_summer_mb>0): print("ERROR IN WINTER MB")
             return mb
-        else: return ((self.topo+self.ice-self.curr_ela)*self.gamma)/365.25 #meters per day
-        #return ((self.topo+self.ice-self.curr_ela)*self.gamma)/365.25
+        else: 
+            return ((self.topo+self.ice-self.curr_ela)*self.gamma)/365.25 if self.current_date.year<1900 else ((self.topo+self.ice-self.curr_ela)*(self.gamma+0.002))/365.25 #meters per day
+            #return ((self.topo+self.ice-self.curr_ela)*self.gamma)/365.25
         
     # def update_b(self):
     #     if self.run_time>(1000*365.25):
@@ -284,17 +305,20 @@ class glacierSim():
             print("Final glacier length: " + str(np.max(ice_extent)) + 'm')
         else: print("Final glacier length: 0m (no ice extent)")
         print("Final max ice thickness: " + str(np.max(self.ice)) + 'm')
-        print('Final max velocity: ' +str(np.max(u)) + "m/yr")
-        if(self.default_b):
-            print('B min: ' + str(self.b_min))
-            print('B max: ' + str(self.b_max))
+        #print('Final max velocity: ' +str(np.max(u)) + "m/yr")
+        # if(self.default_b):
+        #     print('B min: ' + str(self.b_min))
+        #     print('B max: ' + str(self.b_max))
 
     def run_model(self,i):
         if i==0 and not self.initial_run:
             self.initial_run=True
-            try: curr_ela=float(self.topo[np.where((self.annual_mb_arr[:-1] >= 0) & (self.annual_mb_arr[1:] < 0))[0][0]])
-            except: curr_ela=float(self.topo[-1])
-            self.ela_list.append(curr_ela)
+            if self.current_date.year>=1984:
+                try: curr_ela=float(self.topo[np.where((self.mb_arr[:-1] >= 0) & (self.mb_arr[1:] < 0))[0][0]])
+                except: curr_ela=float(self.topo[-1])
+                if self.current_date.year>1989: self.ela_list.append(curr_ela)
+                self.mb_arr.fill(0)
+            else: curr_ela=self.start_ela
             ax.clear()
             ax.set_ylim(min(self.topo) - 100, max(self.topo) + 100)
             ax.set_xlim(0, float(self.valley_length))
@@ -317,21 +341,40 @@ class glacierSim():
                 u = (5.87e-19)*((self.p*self.g*np.sin(np.arctan(ice_slope)))**3)*(((self.ice)**4)/5)
                 timestep = round(np.clip(((self.dx / np.max(u)) * 0.2), 0.0001, 1),5) if np.any(u > 0) else 1
                 self.timestep_list.append(timestep)
+                self.b=self.update_b(timestep)
                 self.ice = np.maximum((self.ice + dqdx * timestep), 0.0)
                 self.ice_volume=np.sum(self.ice*self.dx*self.widths)
                 #self.volume_change.append(abs(self.ice_volume/1e9-self.initial_volume/1e9))
                 current_date_key = self.current_date.replace(hour=0, minute=0, second=0, microsecond=0)
                 if current_date_key==datetime(2002,9,30) or  current_date_key==datetime(2003,6,8): self.prev_volume=self.ice_volume.copy()
                 if current_date_key in self.date_index:
-                    self.daily_volume_change[self.date_index[current_date_key]] += (self.prev_volume-self.ice_volume)
+                    self.daily_volume_change[self.date_index[current_date_key]] += (self.prev_volume-self.ice_volume+self.snow_melt_vol)
                     self.prev_volume=self.ice_volume.copy()
+                if 1999 <= self.current_date.year < 2004: 
+                    avg_thickness=np.mean(self.ice)
+                    self.thickness_change[0]+=self.prev_thickness-avg_thickness
+                    self.prev_thickness=avg_thickness
+                elif 2004 <= self.current_date.year < 2009: 
+                    avg_thickness=np.mean(self.ice)
+                    self.thickness_change[1]+=self.prev_thickness-avg_thickness
+                    self.prev_thickness=avg_thickness
+                elif 2009 <= self.current_date.year < 2014: 
+                    avg_thickness=np.mean(self.ice)
+                    self.thickness_change[2]+=self.prev_thickness-avg_thickness
+                    self.prev_thickness=avg_thickness
+                if 2014 <= self.current_date.year < 2019: 
+                    avg_thickness=np.mean(self.ice)
+                    self.thickness_change[3]+=self.prev_thickness-avg_thickness
+                    self.prev_thickness=avg_thickness
+                if 1984<=self.current_date.year<2009: 
+                    self.front_variation_calc[int(self.current_date.year-1984)]+=self.prev_front-np.max(self.x[self.ice > 1])
+                    self.prev_front=np.max(self.x[self.ice > 1])
+                if self.current_date.year==1986: self.ice_1986=self.ice[~np.isnan(self.thickness_1986_verif)].copy()
                 iter_time+=float(timestep)
                 self.run_time+=timestep
                 self.current_date+=timedelta(days=float(timestep))
-                self.b=self.update_b(timestep)
                 if self.current_date.year>=1984: self.yearly_volume_change[self.current_date.year-1984]=self.ice_volume
-                if (self.current_date.month and self.current_date.day)==1: self.annual_mb_arr.fill(0)
-                self.annual_mb_arr+=self.b
+                self.mb_arr+=self.b*timestep
                 self.b_max = max(np.max(self.b*365.25),self.b_max)
                 self.b_min = min(np.min(self.b*365.25),self.b_min)
                 if self.current_date>=datetime(1950,1,1) and self.current_date.day==1 and self.current_date.month==1: self.update_widths()
@@ -344,6 +387,7 @@ class glacierSim():
                 if(self.current_date.day==31): timestep=float((datetime((self.current_date.year+1),1,1)-self.current_date).total_seconds()/ (24 * 3600))
                 else: timestep=float(self.save-iter_time)
                 #print(timestep)
+                self.b=self.update_b(timestep)
                 self.timestep_list.append(timestep)
                 self.ice = np.maximum((self.ice + dqdx * timestep), 0.0)
                 self.ice_volume=np.sum(self.ice*self.dx*self.widths)
@@ -354,15 +398,36 @@ class glacierSim():
                 current_date_key = self.current_date.replace(hour=0, minute=0, second=0, microsecond=0)
                 if current_date_key==datetime(2002,9,30) or  current_date_key==datetime(2003,6,8): self.prev_volume=self.ice_volume
                 if current_date_key in self.date_index:
-                    self.daily_volume_change[self.date_index[current_date_key]] += (self.prev_volume-self.ice_volume)
+                    self.daily_volume_change[self.date_index[current_date_key]] += (self.prev_volume-self.ice_volume+self.snow_melt_vol)
                     self.prev_volume=self.ice_volume.copy()
-                self.b=self.update_b(timestep)
-                self.annual_mb_arr+=self.b
-            #print(self.current_date)
-            try: curr_ela=float(self.topo[np.where((self.annual_mb_arr[:-1] >= 0) & (self.annual_mb_arr[1:] < 0))[0][0]])
-            except: curr_ela=float(self.topo[-1])
-            if self.current_date.month==1 and self.current_date.day==1: self.annual_mb_arr.fill(0)
-            self.ela_list.append(curr_ela)
+                if 1999 <= self.current_date.year < 2004: 
+                    avg_thickness=np.mean(self.ice)
+                    self.thickness_change[0]+=self.prev_thickness-avg_thickness
+                    self.prev_thickness=avg_thickness
+                elif 2004 <= self.current_date.year < 2009: 
+                    avg_thickness=np.mean(self.ice)
+                    self.thickness_change[1]+=self.prev_thickness-avg_thickness
+                    self.prev_thickness=avg_thickness
+                elif 2009 <= self.current_date.year < 2014: 
+                    avg_thickness=np.mean(self.ice)
+                    self.thickness_change[2]+=self.prev_thickness-avg_thickness
+                    self.prev_thickness=avg_thickness
+                if 2014 <= self.current_date.year < 2019: 
+                    avg_thickness=np.mean(self.ice)
+                    self.thickness_change[3]+=self.prev_thickness-avg_thickness
+                    self.prev_thickness=avg_thickness
+                if 1984<=self.current_date.year<2009: 
+                    self.front_variation_calc[int(self.current_date.year-1984)]+=self.prev_front-np.max(self.x[self.ice > 1])
+                    self.prev_front=np.max(self.x[self.ice > 1])
+                if self.current_date.year==1986: self.ice_1986=self.ice[~np.isnan(self.thickness_1986_verif)].copy()
+                self.mb_arr+=self.b*timestep
+            if self.current_date.year>=1984:
+                try: curr_ela=float(self.topo[np.where((self.mb_arr[:-1] >= 0) & (self.mb_arr[1:] < 0))[0][0]])
+                except: curr_ela=float(self.topo[-1])
+                if self.current_date.year>1989: self.ela_list.append(curr_ela)
+                self.mb_arr.fill(0)
+            else: curr_ela=self.start_ela
+            if self.current_date.month==1 and self.current_date.day==1: self.mb_arr.fill(0)
             ax.clear()
             ax.set_ylim(min(self.topo) - 100, max(self.topo) + 100)
             ax.set_xlim(0, float(self.valley_length))
@@ -376,7 +441,7 @@ class glacierSim():
             self.line = ax.plot(self.x, self.ice + self.topo, color="c", label="Ice")
             self.snow_line = ax.plot(self.x, self.snow_depth + self.topo+self.ice, color="c", label="Snow")
             ax.legend()
-            if(self.current_date.year==984+self.time and self.current_date.day==1 and self.current_date.month==1): self.report_final_values(u)
+            if(self.current_date.year==984+self.time): self.report_final_values(u)
         return self.line, self.ela_line, self.snow_line
 
 #Initialize plotting stuff outside of class
@@ -385,6 +450,7 @@ _ = plt.close(fig) #used to prevent an empty plot from displaying
 
 def optimize(parameter, input_params):
     try:
+        print("Optimizing: ", parameter)
         print("ACCUMFACTOR: ", input_params[2])
         print("ICE MELTFACTOR: ", input_params[0])
         print("SNOW MELTFACTOR: ", input_params[1])
@@ -395,7 +461,7 @@ def optimize(parameter, input_params):
         ela = 1880
         time = 1040
         save = 10
-        gamma=0.0154
+        gamma=0.0066
         # accumfactor=0.1 #bounds approx 0.1-0.5
         # ice_meltfactor= 0.005 #bounds approx 0.005-0.012
         # snow_meltfactor=0.002 #bounds approx 0.002-0.006
@@ -405,11 +471,15 @@ def optimize(parameter, input_params):
         # tune_factors=[ice_meltfactor, snow_meltfactor, accumfactor, snow_conv_factor,snow_melt_amplitude,ice_melt_amplitude]
         quiet = True
         start_time = 1000
-        ice = [62.99381692,69.4259217,77.95736407,88.11215242,97.48962295,116.20371803,129.6952834,137.70318801,142.01481697,
-       136.66539927,129.48832702,122.79277843,119.14119397,123.50649962,131.16747622,153.53799016,171.99250846,159.47117867,
-       152.19622057,150.54434084,149.85135219,149.77980725,151.5673042,154.73103296,162.1648134,169.37055632,174.86770553,
-       178.74399872,178.80486924,171.93461075,153.28862426,136.43399726,122.69460871,115.15493816,117.17725757,116.19166411,
-       111.1964949,104.03213502,94.30513549,90.44397642,83.85430169,71.26093391,55.72615104,34.70571877,0.,0.,0.,0.,0.,0.]
+        ice = [ 48.74268508,  55.56983843,  62.4461873,   65.79581569,  71.49671258,
+        79.62187778,  87.47315634, 105.98654032, 117.87370344, 124.66980319,
+        126.50008636, 120.30954968, 111.65086578, 105.76597865, 102.84450935,
+        109.19178517, 123.68286656, 147.83038364, 145.24364508, 133.1646632,
+        131.14879155, 129.69391645, 128.68534565, 130.06255841, 132.18570886,
+        139.49146139, 146.87870673, 152.47161505, 156.25451082, 156.32724925,
+        146.91225181, 127.26083926, 110.74220115,  95.4317669,   91.18638177,
+        91.77888562,  86.2535808,   78.6072642,   66.14750745,  50.99095991,
+        37.80374814,   1.5635936,  0.,0., 0.,0.,0., 0., 0., 0. ]
         model = glacierSim(ela=ela, time=time, save=save,gamma=gamma,quiet=quiet, tune_factors=input_params, initial_ice=ice, start_time=start_time)
         anim = FuncAnimation(fig, model.run_model, model.frames, init_func=model.init(ax,ela=ela, time=time, save=save,gamma=gamma,quiet=quiet, tune_factors=input_params, initial_ice=ice, start_time=start_time), blit=False, repeat=False)
         vid = HTML(anim.to_jshtml())
@@ -426,16 +496,28 @@ def optimize(parameter, input_params):
             elif parameter == 'summer_winter':
                 print("Function result: ",np.sum((np.array(model.calculated_summer_mb) - np.array(model.summer_mb)) ** 2) + np.sum((np.array(model.calculated_winter_mb) - np.array(model.winter_mb)) ** 2))
                 return np.sum((np.array(model.calculated_summer_mb) - np.array(model.summer_mb)) ** 2) + np.sum((np.array(model.calculated_winter_mb) - np.array(model.winter_mb)) ** 2)
+            elif parameter == 'ela':
+                print("Function result: ", np.sum(abs(model.ela_list - model.ela_verif) / abs(model.ela_verif) * 100))
+                return np.sum(abs(model.ela_list - model.ela_verif) / abs(model.ela_verif) * 100)
+            elif parameter=='extent':
+                print("Function result: ",abs(model.glacier_extent-3251)/3251)
+                return abs(model.glacier_extent-3251)/3251
+            elif parameter == 'front_var':
+                print("Function result: ",np.sum(abs(model.front_variation_calc-model.front_variation_verif)/abs(model.front_variation_verif)))
+                return np.sum(abs(model.front_variation_calc-model.front_variation_verif)/abs(model.front_variation_verif))
+            elif parameter == 'thick':
+                print("Function result: ",np.sum(abs(model.thickness_change_verif - model.thickness_change) / abs(model.thickness_change_verif) * 100))
+                return np.sum(abs(model.thickness_change_verif - model.thickness_change) / abs(model.thickness_change_verif) * 100)
             elif parameter == 'vol_change': 
-                # print("Function result: ",np.sum((model.volume_validation - model.volume_data) ** 2))
-                # return np.sum((model.volume_validation - model.volume_data) ** 2)
-                print("Function result: ",np.sum(model.daily_volume_change - model.volume_valid))
-                return np.sum(model.daily_volume_change - model.volume_valid)
+                print("Function result: ",np.sum(abs(model.volume_valid-model.daily_volume_change)/np.abs(model.volume_valid)))
+                return np.sum(abs(model.volume_valid-model.daily_volume_change)/np.abs(model.volume_valid))
             else: raise ValueError("Invalid parameter. Choose from 'summer', 'winter', 'annual', 'summer_winter', 'vol_change'.")
-        except: 
+        except Exception as e:
+            print("Error during function calculation:", e) 
             print("Function result: INF")
             return inf
-    except: 
+    except Exception as e:
+        print("Error during model execution:", e) 
         print("Function result: INF")
         return inf
 
@@ -446,29 +528,45 @@ def optimize(parameter, input_params):
 # snow_conv_factor=5 #bounds 5-15
 # snow_melt_amplitude=-0.004
 # ice_melt_amplitude=-0.007
-initial_guess=[-6.21530477e-03, -3.16373793e-03,  3.90806503e-03,  6.37238199e+00,-5.37087541e-03,-1.14816075e-03]
-# accumfactor=0.004731588686211069*1.2
-# ice_meltfactor=-0.008472259912843966
-# snow_meltfactor= -0.0036515609274413875
-# snow_conv_factor=  5.310488160176582*1.2
-# snow_melt_amplitude= -0.005747189439663826
-# ice_melt_amplitude=  -0.002254212082875086
-# initial_guess=[ice_meltfactor, snow_meltfactor, accumfactor, snow_conv_factor,snow_melt_amplitude,ice_melt_amplitude]
+#initial_guess=[-6.21530477e-03, -3.16373793e-03,  3.90806503e-03,  6.37238199e+00,-5.37087541e-03,-1.14816075e-03,0.0154]
+accumfactor=0.01 #bounds approx 0.001-0.005
+ice_meltfactor= -0.01 #bounds approx 0.005-0.012
+snow_meltfactor=-0.01 #bounds approx 0.002-0.006
+snow_conv_factor=6#bounds 5-15
+snow_melt_amplitude=-0.001
+ice_melt_amplitude=-0.001
+initial_guess=[ice_meltfactor, snow_meltfactor, accumfactor, snow_conv_factor,snow_melt_amplitude,ice_melt_amplitude]
 #bounds = [(-0.012,-0.005), (-0.006,-0.002), (0.001, 0.005), (5, 15),(-0.01,-0.001),(-0.01,-0.001)]
-bounds=[(-1,0),(-1,0),(0,1),(0,15),(0,0),(0,0)]
+bounds=[(-1,0),(-1,0),(0,1),(0,15),(-1,0),(-1,0)]
+# gamma=0.0065
+# bounds=[(0.005,0.007)]
 #result = differential_evolution(lambda x: optimize('summer_winter', x), bounds)
-result = minimize(lambda x: optimize('vol_change', x),initial_guess,method='L-BFGS-B',bounds=bounds,options={'disp': True})
-result_ice_melt, result_snow_melt, result_accum, result_snow_conv, result_snow_amp, result_ice_amp=result.x
-print("Optimized accumulation factor:", result_accum)
-print("Optimized ice meltfactor:",result_ice_melt)
-print("Optimized snow meltfactor:",result_snow_melt)
-print("Optimized snow conversion factor:",result_snow_conv)
-print("Optimized snow melt amplitude:",result_snow_amp)
-print("Optimized ice melt amplitude:",result_ice_amp)
-print("Final objective function value:", result.fun)
-print(result.x)
-sys.stdout = original_stdout
-sys.stderr = original_stderr
+opt_method='L-BFGS-B'
+with open(f"Results/{opt_method}-Results.txt", "a") as file:
+    for opt_var in ['annual','ela','extent','front_var','thick','vol_change']:
+        result = minimize(lambda x: optimize(opt_var, x),initial_guess,method=opt_method,bounds=bounds,options={'disp': True})
+        result_ice_melt, result_snow_melt, result_accum, result_snow_conv, result_snow_amp, result_ice_amp=result.x
+        print("OPTIMIZED PARAMS FOR:", opt_var)
+        print("Optimized accumulation factor:", result_accum)
+        print("Optimized ice meltfactor:",result_ice_melt)
+        print("Optimized snow meltfactor:",result_snow_melt)
+        print("Optimized snow conversion factor:",result_snow_conv)
+        print("Optimized snow melt amplitude:",result_snow_amp)
+        print("Optimized ice melt amplitude:",result_ice_amp)
+        print("Final objective function value:", result.fun)
+        print(result.x)
+        file.write(f"Optimized parameters for {opt_var}:\n")
+        file.write(f"Optimized accumulation factor: {result_accum}\n")
+        file.write(f"Optimized ice meltfactor: {result_ice_melt}\n")
+        file.write(f"Optimized snow meltfactor: {result_snow_melt}\n")
+        file.write(f"Optimized snow conversion factor: {result_snow_conv}\n")
+        file.write(f"Optimized snow melt amplitude: {result_snow_amp}\n")
+        file.write(f"Optimized ice melt amplitude: {result_ice_amp}\n")
+        file.write(f"Final objective function value: {result.fun}\n")
+        file.write(f"{result.x}\n")
+        file.flush()
+# sys.stdout = original_stdout
+# sys.stderr = original_stderr
 
-# 4) Close the file
-logfile.close()
+# # 4) Close the file
+# logfile.close()
