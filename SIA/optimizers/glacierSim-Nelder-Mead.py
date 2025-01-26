@@ -126,7 +126,7 @@ class glacierSim():
         latitudes = []
         longitudes = []
         topo = []
-        df = pd.read_csv('Data/centerlineBed.csv')
+        df = pd.read_csv('../Data/centerlineBed.csv')
         latitudes = df.iloc[:, 2].astype(float).tolist()  # Latitude is the second column (index 2)
         longitudes = df.iloc[:, 1].astype(float).tolist()  # Longitude is the third column (index 1)
         topo = df.iloc[:, 0].astype(float).tolist()  # Elevation is the first column (index 0)
@@ -148,7 +148,7 @@ class glacierSim():
         self.thickness_1986_verif=np.interp(np.linspace(cumulative_distances[0], cumulative_distances[-1], self.num_cells), cumulative_distances, self.thickness_1986_verif) if type(self.thickness_1986_verif) is not int else np.zeros(self.num_cells)
         
     def calc_widths(self):
-        df = pd.read_csv('Data/Input_SouthCascade_Area_Altitude_Distribution.csv')
+        df = pd.read_csv('../Data/Input_SouthCascade_Area_Altitude_Distribution.csv')
         self.bins = df.columns[1:].astype(float).to_numpy()
         self.years = df.iloc[:, 0].astype(float).tolist()
         self.areas = df.iloc[:, 1:].astype(float).values*1000000
@@ -171,13 +171,13 @@ class glacierSim():
             self.ice_thickness_over_time.append(self.ice.copy())
         
     def load_mb_data(self):
-        df = pd.read_csv('Data/Input_SouthCascade_Daily_Weather.csv')
+        df = pd.read_csv('../Data/Input_SouthCascade_Daily_Weather.csv')
         self.dates = pd.to_datetime(df.iloc[:, 0], format="%Y/%m/%d").tolist()
         self.temps = df.iloc[:, 1].astype(float).tolist()
         self.precip = df.iloc[:, 2].apply(lambda x: float(x) if not np.isnan(float(x)) else 0).to_numpy()
 
     def load_verif_data(self):
-        df = pd.read_csv('Data/Output_SouthCascade_Glacier_Wide_solutions_calibrated.csv', skiprows=25)
+        df = pd.read_csv('../Data/Output_SouthCascade_Glacier_Wide_solutions_calibrated.csv', skiprows=25)
         self.annual_mb = df.iloc[:, 3].astype(float).tolist()
         self.summer_mb = df.iloc[:, 2].astype(float).tolist()
         self.winter_mb = df.iloc[:, 1].astype(float).tolist()
@@ -185,12 +185,12 @@ class glacierSim():
         self.calculated_annual_mb=np.array([0] * len(self.annual_mb), dtype=np.float64)
         self.calculated_winter_mb=np.array([0] * len(self.winter_mb), dtype=np.float64)
         self.calculated_summer_mb=np.array([0] * len(self.summer_mb), dtype=np.float64)
-        self.volume_valid = pd.read_csv('Data/daily_average_runoff_with_dates.csv')['Volume'].to_numpy()
+        self.volume_valid = pd.read_csv('../Data/daily_average_runoff_with_dates.csv')['Volume'].to_numpy()
         self.daily_volume_change=np.zeros(len(self.volume_valid))
-        self.thickness_change_verif = pd.read_csv('Data/thickness_change.csv').iloc[0:, 11].astype(float).to_numpy()
-        self.front_variation_verif = pd.read_csv('Data/front_variation_change.csv').iloc[0:, 9].astype(float).to_numpy()
+        self.thickness_change_verif = pd.read_csv('../Data/thickness_change.csv').iloc[0:, 11].astype(float).to_numpy()
+        self.front_variation_verif = pd.read_csv('../Data/front_variation_change.csv').iloc[0:, 9].astype(float).to_numpy()
         self.front_variation_calc = np.zeros(len(self.front_variation_verif))
-        df= pd.read_csv('Data/centerlineThickness.csv')
+        df= pd.read_csv('../Data/centerlineThickness.csv')
         self.thickness_1986_verif=df.iloc[0:, 3].astype(float).to_numpy()-df.iloc[0:, 0].astype(float).to_numpy()
     
     def snow_model(self, index, temps,timestep):
@@ -503,14 +503,14 @@ def optimize(parameter, input_params):
                 print("Function result: ",abs(model.glacier_extent-3251)/3251)
                 return abs(model.glacier_extent-3251)/3251
             elif parameter == 'front_var':
-                print("Function result: ",np.sum(abs(model.front_variation_calc-model.front_variation_verif)/abs(model.front_variation_verif)))
-                return np.sum(abs(model.front_variation_calc-model.front_variation_verif)/abs(model.front_variation_verif))
+                print("Function result: ",np.sum((model.front_variation_calc-model.front_variation_verif)/model.front_variation_verif)*100)
+                return np.sum((model.front_variation_calc-model.front_variation_verif)/model.front_variation_verif)*100
             elif parameter == 'thick':
-                print("Function result: ",np.sum(abs(model.thickness_change_verif - model.thickness_change) / abs(model.thickness_change_verif) * 100))
-                return np.sum(abs(model.thickness_change_verif - model.thickness_change) / abs(model.thickness_change_verif) * 100)
+                print("Function result: ",np.sum((model.thickness_change - model.thickness_change_verif) / model.thickness_change_verif* 100))
+                return np.sum((model.thickness_change - model.thickness_change_verif) / model.thickness_change_verif* 100)
             elif parameter == 'vol_change': 
-                print("Function result: ",np.sum(abs(model.volume_valid-model.daily_volume_change)/np.abs(model.volume_valid)))
-                return np.sum(abs(model.volume_valid-model.daily_volume_change)/np.abs(model.volume_valid))
+                print("Function result: ",np.sum((model.volume_valid-model.daily_volume_change)/model.volume_valid)*100)
+                return np.sum((model.volume_valid-model.daily_volume_change)/model.volume_valid)*100
             else: raise ValueError("Invalid parameter. Choose from 'summer', 'winter', 'annual', 'summer_winter', 'vol_change'.")
         except Exception as e:
             print("Error during function calculation:", e) 
@@ -535,15 +535,16 @@ snow_meltfactor=-0.01 #bounds approx 0.002-0.006
 snow_conv_factor=6#bounds 5-15
 snow_melt_amplitude=-0.001
 ice_melt_amplitude=-0.001
-initial_guess=[ice_meltfactor, snow_meltfactor, accumfactor, snow_conv_factor,snow_melt_amplitude,ice_melt_amplitude]
+#initial_guess=[ice_meltfactor, snow_meltfactor, accumfactor, snow_conv_factor,snow_melt_amplitude,ice_melt_amplitude]
 #bounds = [(-0.012,-0.005), (-0.006,-0.002), (0.001, 0.005), (5, 15),(-0.01,-0.001),(-0.01,-0.001)]
 bounds=[(-1,0),(-1,0),(0,1),(0,15),(-1,0),(-1,0)]
 # gamma=0.0065
 # bounds=[(0.005,0.007)]
 #result = differential_evolution(lambda x: optimize('summer_winter', x), bounds)
+initial_guess=[-9.57979633e-03, -9.85185254e-03 , 1.05581961e-02,  6.34612522e+00,-1.00242107e-03, -1.05457432e-03]
 opt_method='Nelder-Mead'
-with open(f"Results/{opt_method}-Results.txt", "a") as file:
-    for opt_var in ['annual','ela','extent','front_var','thick','vol_change']:
+with open(f"../Results/{opt_method}-Results.txt", "a") as file:
+    for opt_var in ['front_var']:
         result = minimize(lambda x: optimize(opt_var, x),initial_guess,method=opt_method,bounds=bounds,options={'disp': True})
         result_ice_melt, result_snow_melt, result_accum, result_snow_conv, result_snow_amp, result_ice_amp=result.x
         print("OPTIMIZED PARAMS FOR:", opt_var)

@@ -127,7 +127,7 @@ class glacierSim():
         latitudes = []
         longitudes = []
         topo = []
-        df = pd.read_csv('Data/centerlineBed.csv')
+        df = pd.read_csv('../Data/centerlineBed.csv')
         latitudes = df.iloc[:, 2].astype(float).tolist()  # Latitude is the second column (index 2)
         longitudes = df.iloc[:, 1].astype(float).tolist()  # Longitude is the third column (index 1)
         topo = df.iloc[:, 0].astype(float).tolist()  # Elevation is the first column (index 0)
@@ -149,7 +149,7 @@ class glacierSim():
         self.thickness_1986_verif=np.interp(np.linspace(cumulative_distances[0], cumulative_distances[-1], self.num_cells), cumulative_distances, self.thickness_1986_verif) if type(self.thickness_1986_verif) is not int else np.zeros(self.num_cells)
         
     def calc_widths(self):
-        df = pd.read_csv('Data/Input_SouthCascade_Area_Altitude_Distribution.csv')
+        df = pd.read_csv('../Data/Input_SouthCascade_Area_Altitude_Distribution.csv')
         self.bins = df.columns[1:].astype(float).to_numpy()
         self.years = df.iloc[:, 0].astype(float).tolist()
         self.areas = df.iloc[:, 1:].astype(float).values*1000000
@@ -164,7 +164,7 @@ class glacierSim():
         prev_width=self.widths
         with warnings.catch_warnings():
             warnings.simplefilter("ignore", category=RuntimeWarning)
-            self.widths = np.array(self.areas[(self.current_date.year-1950),:]/np.abs(np.diff(self.x[np.array([np.argmin(np.abs(self.topo+self.ice - bin_value)) for bin_value in self.bins])])))[np.clip((np.searchsorted(self.bins, (self.topo+self.ice))),0,(len(self.areas[0])-1))]
+            self.widths = np.array(self.areas[self.current_date.year-1950,:]/np.abs(np.diff(self.x[np.array([np.argmin(np.abs(self.topo+self.ice - bin_value)) for bin_value in self.bins])])))[np.clip((np.searchsorted(self.bins, (self.topo+self.ice))),0,(len(self.areas[0])-1))]
         self.widths[np.isinf(self.widths)]=0
         #self.widths=np.array([self.areas[self.current_date.year-1950][np.array([np.argmin(np.abs(self.bins[:, None]-np.round(self.topo)), axis=0)])]][0][0])/0.05*1000 # type: ignore
         if np.abs(self.widths-prev_width).any()>0:
@@ -172,13 +172,13 @@ class glacierSim():
             self.ice_thickness_over_time.append(self.ice.copy())
         
     def load_mb_data(self):
-        df = pd.read_csv('Data/Input_SouthCascade_Daily_Weather.csv')
+        df = pd.read_csv('../Data/Input_SouthCascade_Daily_Weather.csv')
         self.dates = pd.to_datetime(df.iloc[:, 0], format="%Y/%m/%d").tolist()
         self.temps = df.iloc[:, 1].astype(float).tolist()
         self.precip = df.iloc[:, 2].apply(lambda x: float(x) if not np.isnan(float(x)) else 0).to_numpy()
 
     def load_verif_data(self):
-        df = pd.read_csv('Data/Output_SouthCascade_Glacier_Wide_solutions_calibrated.csv', skiprows=25)
+        df = pd.read_csv('../Data/Output_SouthCascade_Glacier_Wide_solutions_calibrated.csv', skiprows=25)
         self.annual_mb = df.iloc[:, 3].astype(float).tolist()
         self.summer_mb = df.iloc[:, 2].astype(float).tolist()
         self.winter_mb = df.iloc[:, 1].astype(float).tolist()
@@ -186,12 +186,12 @@ class glacierSim():
         self.calculated_annual_mb=np.array([0] * len(self.annual_mb), dtype=np.float64)
         self.calculated_winter_mb=np.array([0] * len(self.winter_mb), dtype=np.float64)
         self.calculated_summer_mb=np.array([0] * len(self.summer_mb), dtype=np.float64)
-        self.volume_valid = pd.read_csv('Data/daily_average_runoff_with_dates.csv')['Volume'].to_numpy()
+        self.volume_valid = pd.read_csv('../Data/daily_average_runoff_with_dates.csv')['Volume'].to_numpy()
         self.daily_volume_change=np.zeros(len(self.volume_valid))
-        self.thickness_change_verif = pd.read_csv('Data/thickness_change.csv').iloc[0:, 11].astype(float).to_numpy()
-        self.front_variation_verif = pd.read_csv('Data/front_variation_change.csv').iloc[0:, 9].astype(float).to_numpy()
+        self.thickness_change_verif = pd.read_csv('../Data/thickness_change.csv').iloc[0:, 11].astype(float).to_numpy()
+        self.front_variation_verif = pd.read_csv('../Data/front_variation_change.csv').iloc[0:, 9].astype(float).to_numpy()
         self.front_variation_calc = np.zeros(len(self.front_variation_verif))
-        df= pd.read_csv('Data/centerlineThickness.csv')
+        df= pd.read_csv('../Data/centerlineThickness.csv')
         self.thickness_1986_verif=df.iloc[0:, 3].astype(float).to_numpy()-df.iloc[0:, 0].astype(float).to_numpy()
     
     def snow_model(self, index, temps,timestep):
@@ -551,7 +551,7 @@ param_space = [
     Real(-1, 0,  name='ice_melt_amplitude'),   # x[5]
     ]
 opt_method = 'gp-minimize'
-with open(f"Results/{opt_method}-Results.txt", "a") as file:
+with open(f"../Results/{opt_method}-Results.txt", "a") as file:
     for opt_var in ['annual','ela','extent','front_var','thick','vol_change']:
         result = gp_minimize(func=lambda x: optimize(opt_var, x),dimensions=param_space,n_calls=50,random_state=0)
         result_ice_melt, result_snow_melt, result_accum, result_snow_conv, result_snow_amp, result_ice_amp=result.x
