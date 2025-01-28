@@ -104,7 +104,7 @@ class glacierSim():
         self.load_mb_data()
         try: curr_ela=self.topo[np.where((self.b[:-1] >= 0) & (self.b[1:] < 0))[0]][0]
         except: curr_ela=self.topo[-1]
-        self.ela_list.append(curr_ela)
+        #self.ela_list.append(curr_ela)
         ax.clear()
         ax.set_ylim(min(self.topo) - 100, max(self.topo) + 100)
         ax.set_xlim(0, self.valley_length)
@@ -316,7 +316,7 @@ class glacierSim():
             if self.current_date.year>=1984:
                 try: curr_ela=float(self.topo[np.where((self.mb_arr[:-1] >= 0) & (self.mb_arr[1:] < 0))[0][0]])
                 except: curr_ela=float(self.topo[-1])
-                if self.current_date.year>1989: self.ela_list.append(curr_ela)
+                if self.current_date.year>=1989: self.ela_list.append(curr_ela)
                 self.mb_arr.fill(0)
             else: curr_ela=self.start_ela
             ax.clear()
@@ -350,21 +350,22 @@ class glacierSim():
                 if current_date_key in self.date_index:
                     self.daily_volume_change[self.date_index[current_date_key]] += (self.prev_volume-self.ice_volume+self.snow_melt_vol)
                     self.prev_volume=self.ice_volume.copy()
+                if self.current_date==datetime(1998,12,31): self.prev_thickness=np.mean(self.ice)
                 if 1999 <= self.current_date.year < 2004: 
                     avg_thickness=np.mean(self.ice)
-                    self.thickness_change[0]+=self.prev_thickness-avg_thickness
+                    self.thickness_change[0]+=avg_thickness-self.prev_thickness
                     self.prev_thickness=avg_thickness
                 elif 2004 <= self.current_date.year < 2009: 
                     avg_thickness=np.mean(self.ice)
-                    self.thickness_change[1]+=self.prev_thickness-avg_thickness
+                    self.thickness_change[1]+=avg_thickness-self.prev_thickness
                     self.prev_thickness=avg_thickness
                 elif 2009 <= self.current_date.year < 2014: 
                     avg_thickness=np.mean(self.ice)
-                    self.thickness_change[2]+=self.prev_thickness-avg_thickness
+                    self.thickness_change[2]+=avg_thickness-self.prev_thickness
                     self.prev_thickness=avg_thickness
                 if 2014 <= self.current_date.year < 2019: 
                     avg_thickness=np.mean(self.ice)
-                    self.thickness_change[3]+=self.prev_thickness-avg_thickness
+                    self.thickness_change[3]+=avg_thickness-self.prev_thickness
                     self.prev_thickness=avg_thickness
                 if 1984<=self.current_date.year<2009: 
                     self.front_variation_calc[int(self.current_date.year-1984)]+=self.prev_front-np.max(self.x[self.ice > 1])
@@ -400,21 +401,22 @@ class glacierSim():
                 if current_date_key in self.date_index:
                     self.daily_volume_change[self.date_index[current_date_key]] += (self.prev_volume-self.ice_volume+self.snow_melt_vol)
                     self.prev_volume=self.ice_volume.copy()
+                if self.current_date==datetime(1998,12,31): self.prev_thickness=np.mean(self.ice)
                 if 1999 <= self.current_date.year < 2004: 
                     avg_thickness=np.mean(self.ice)
-                    self.thickness_change[0]+=self.prev_thickness-avg_thickness
+                    self.thickness_change[0]+=avg_thickness-self.prev_thickness
                     self.prev_thickness=avg_thickness
                 elif 2004 <= self.current_date.year < 2009: 
                     avg_thickness=np.mean(self.ice)
-                    self.thickness_change[1]+=self.prev_thickness-avg_thickness
+                    self.thickness_change[1]+=avg_thickness-self.prev_thickness
                     self.prev_thickness=avg_thickness
                 elif 2009 <= self.current_date.year < 2014: 
                     avg_thickness=np.mean(self.ice)
-                    self.thickness_change[2]+=self.prev_thickness-avg_thickness
+                    self.thickness_change[2]+=avg_thickness-self.prev_thickness
                     self.prev_thickness=avg_thickness
                 if 2014 <= self.current_date.year < 2019: 
                     avg_thickness=np.mean(self.ice)
-                    self.thickness_change[3]+=self.prev_thickness-avg_thickness
+                    self.thickness_change[3]+=avg_thickness-self.prev_thickness
                     self.prev_thickness=avg_thickness
                 if 1984<=self.current_date.year<2009: 
                     self.front_variation_calc[int(self.current_date.year-1984)]+=self.prev_front-np.max(self.x[self.ice > 1])
@@ -424,7 +426,7 @@ class glacierSim():
             if self.current_date.year>=1984:
                 try: curr_ela=float(self.topo[np.where((self.mb_arr[:-1] >= 0) & (self.mb_arr[1:] < 0))[0][0]])
                 except: curr_ela=float(self.topo[-1])
-                if self.current_date.year>1989: self.ela_list.append(curr_ela)
+                if self.current_date.year>=1989: self.ela_list.append(curr_ela)
                 self.mb_arr.fill(0)
             else: curr_ela=self.start_ela
             if self.current_date.month==1 and self.current_date.day==1: self.mb_arr.fill(0)
@@ -460,7 +462,7 @@ def optimize(parameter, input_params):
         print(input_params)
         ela = 1880
         time = 1040
-        save = 10
+        save = 1
         gamma=0.0066
         # accumfactor=0.1 #bounds approx 0.1-0.5
         # ice_meltfactor= 0.005 #bounds approx 0.005-0.012
@@ -497,20 +499,20 @@ def optimize(parameter, input_params):
                 print("Function result: ",np.sum((np.array(model.calculated_summer_mb) - np.array(model.summer_mb)) ** 2) + np.sum((np.array(model.calculated_winter_mb) - np.array(model.winter_mb)) ** 2))
                 return np.sum((np.array(model.calculated_summer_mb) - np.array(model.summer_mb)) ** 2) + np.sum((np.array(model.calculated_winter_mb) - np.array(model.winter_mb)) ** 2)
             elif parameter == 'ela':
-                print("Function result: ", np.sum(abs(model.ela_list - model.ela_verif) / abs(model.ela_verif) * 100))
-                return np.sum(abs(model.ela_list - model.ela_verif) / abs(model.ela_verif) * 100)
+                print("Function result: ", np.sum((model.ela_list-model.ela_verif)/np.abs(model.ela_verif)*100))
+                return np.sum((model.ela_list-model.ela_verif)/np.abs(model.ela_verif)*100)
             elif parameter=='extent':
                 print("Function result: ",abs(model.glacier_extent-3251)/3251)
                 return abs(model.glacier_extent-3251)/3251
             elif parameter == 'front_var':
-                print("Function result: ",np.sum((model.front_variation_calc-model.front_variation_verif)/model.front_variation_verif)*100)
-                return np.sum((model.front_variation_calc-model.front_variation_verif)/model.front_variation_verif)*100
+                print("Function result: ",np.sum((model.front_variation_verif - model.front_variation_calc) / np.abs(model.front_variation_verif) * 100))
+                return np.sum((model.front_variation_verif - model.front_variation_calc) / np.abs(model.front_variation_verif) * 100)
             elif parameter == 'thick':
-                print("Function result: ",np.sum((model.thickness_change - model.thickness_change_verif) / model.thickness_change_verif* 100))
-                return np.sum((model.thickness_change - model.thickness_change_verif) / model.thickness_change_verif* 100)
+                print("Function result: ",np.sum((model.thickness_change-model.thickness_change_verif) /np.abs(model.thickness_change_verif) * 100))
+                return np.sum((model.thickness_change-model.thickness_change_verif) /np.abs(model.thickness_change_verif) * 100)
             elif parameter == 'vol_change': 
-                print("Function result: ",np.sum((model.volume_valid-model.daily_volume_change)/model.volume_valid)*100)
-                return np.sum((model.volume_valid-model.daily_volume_change)/model.volume_valid)*100
+                print("Function result: ",np.sum((model.volume_valid - model.daily_volume_change) / np.abs(model.volume_valid)* 100))
+                return np.sum((model.volume_valid - model.daily_volume_change) / np.abs(model.volume_valid)* 100)
             else: raise ValueError("Invalid parameter. Choose from 'summer', 'winter', 'annual', 'summer_winter', 'vol_change'.")
         except Exception as e:
             print("Error during function calculation:", e) 
@@ -537,14 +539,16 @@ snow_melt_amplitude=-0.001
 ice_melt_amplitude=-0.001
 #initial_guess=[ice_meltfactor, snow_meltfactor, accumfactor, snow_conv_factor,snow_melt_amplitude,ice_melt_amplitude]
 #bounds = [(-0.012,-0.005), (-0.006,-0.002), (0.001, 0.005), (5, 15),(-0.01,-0.001),(-0.01,-0.001)]
-bounds=[(-1,0),(-1,0),(0,1),(0,15),(-1,0),(-1,0)]
+bounds=[(-0.012,-0.005),(-0.006,-0.002),(0.001,0.005),(5,15),(0,0),(0,0)]
 # gamma=0.0065
 # bounds=[(0.005,0.007)]
 #result = differential_evolution(lambda x: optimize('summer_winter', x), bounds)
-initial_guess=[-9.57979633e-03, -9.85185254e-03 , 1.05581961e-02,  6.34612522e+00,-1.00242107e-03, -1.05457432e-03]
+#initial_guess=[-9.57979633e-03, -9.85185254e-03 , 1.05581961e-02,  6.34612522e+00,-1.00242107e-03, -1.05457432e-03]
+initial_guess=[-0.012,-0.006,0.001,5,0,0]
 opt_method='Nelder-Mead'
 with open(f"../Results/{opt_method}-Results.txt", "a") as file:
-    for opt_var in ['front_var']:
+    file.write("-------------------No amplitude-----------\n")
+    for opt_var in ['ela','front_var','thick','vol_change']:
         result = minimize(lambda x: optimize(opt_var, x),initial_guess,method=opt_method,bounds=bounds,options={'disp': True})
         result_ice_melt, result_snow_melt, result_accum, result_snow_conv, result_snow_amp, result_ice_amp=result.x
         print("OPTIMIZED PARAMS FOR:", opt_var)

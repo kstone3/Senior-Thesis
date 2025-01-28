@@ -8,3 +8,12 @@ Optimized ice melt amplitude: -1.5491393068334247e-07
 Final objective function value: 24.531575109244145
 [-6.44609314e-05 -8.00675939e-01  8.17828410e-03  6.93373106e-02
  -1.74930874e-01 -1.54913931e-07]
+Optimized parameters for ela:
+Optimized accumulation factor: 0.36621754591302136
+Optimized ice meltfactor: -0.025387450184150118
+Optimized snow meltfactor: -0.4242972045416774
+Optimized snow conversion factor: 1.070627584012768
+Optimized snow melt amplitude: -0.6260707879386106
+Optimized ice melt amplitude: -0.6300463042114447
+Final objective function value: inf
+[-0.02538745 -0.4242972   0.36621755  1.07062758 -0.62607079 -0.6300463 ]
