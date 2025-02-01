@@ -1,4 +1,5 @@
 import sys
+import concurrent.futures
 import matplotlib.pyplot as plt
 from scipy.optimize import minimize
 import pandas as pd
@@ -119,7 +120,7 @@ class glacierSim():
         latitudes = []
         longitudes = []
         topo = []
-        df = pd.read_csv('../Data/centerlineBed.csv')
+        df = pd.read_csv('C:/Users/bookn/Downloads/Senior-Thesis/SIA/Data/centerlineBed.csv')
         latitudes = df.iloc[:, 2].astype(float).tolist()  # Latitude is the second column (index 2)
         longitudes = df.iloc[:, 1].astype(float).tolist()  # Longitude is the third column (index 1)
         topo = df.iloc[:, 0].astype(float).tolist()  # Elevation is the first column (index 0)
@@ -141,7 +142,7 @@ class glacierSim():
         self.thickness_1986_verif=np.interp(np.linspace(cumulative_distances[0], cumulative_distances[-1], self.num_cells), cumulative_distances, self.thickness_1986_verif) if type(self.thickness_1986_verif) is not int else np.zeros(self.num_cells)
         
     def calc_widths(self):
-        df = pd.read_csv('../Data/Input_SouthCascade_Area_Altitude_Distribution.csv')
+        df = pd.read_csv('C:/Users/bookn/Downloads/Senior-Thesis/SIA/Data/Input_SouthCascade_Area_Altitude_Distribution.csv')
         self.bins = df.columns[1:].astype(float).to_numpy()
         self.years = df.iloc[:, 0].astype(float).tolist()
         self.areas = df.iloc[:, 1:].astype(float).values*1000000
@@ -162,7 +163,7 @@ class glacierSim():
             self.ice_thickness_over_time.append(self.ice.copy())
         
     def load_mb_data(self):
-        df = pd.read_csv('../Data/Input_SouthCascade_Daily_Weather.csv')
+        df = pd.read_csv('C:/Users/bookn/Downloads/Senior-Thesis/SIA/Data/Input_SouthCascade_Daily_Weather.csv')
         self.dates = pd.to_datetime(df.iloc[:, 0], format="%Y/%m/%d").tolist()
         self.temps = df.iloc[:, 1].astype(float).to_numpy()
         self.precip = df.iloc[:, 2].apply(lambda x: float(x) if not np.isnan(float(x)) else 0).to_numpy()
@@ -172,7 +173,7 @@ class glacierSim():
         self.temps[nan_indices] = np.interp(x[nan_indices], x[~nan_indices], self.temps[~nan_indices])
 
     def load_verif_data(self):
-        df = pd.read_csv('../Data/Output_SouthCascade_Glacier_Wide_solutions_calibrated.csv', skiprows=25)
+        df = pd.read_csv('C:/Users/bookn/Downloads/Senior-Thesis/SIA/Data/Output_SouthCascade_Glacier_Wide_solutions_calibrated.csv', skiprows=25)
         self.annual_mb = df.iloc[:, 3].astype(float).tolist()
         self.summer_mb = df.iloc[:, 2].astype(float).tolist()
         self.winter_mb = df.iloc[:, 1].astype(float).tolist()
@@ -180,23 +181,29 @@ class glacierSim():
         self.calculated_annual_mb=np.array([0] * len(self.annual_mb), dtype=np.float64)
         self.calculated_winter_mb=np.array([0] * len(self.winter_mb), dtype=np.float64)
         self.calculated_summer_mb=np.array([0] * len(self.summer_mb), dtype=np.float64)
-        df = pd.read_csv('../Data/daily_average_runoff_with_dates.csv')
+        df = pd.read_csv('C:/Users/bookn/Downloads/Senior-Thesis/SIA/Data/daily_average_runoff_with_dates.csv')
         df['date'] = pd.to_datetime(df['date'])
         self.volume_valid = df.groupby(df['date'].dt.to_period('M'))['runoff'].sum().to_numpy()
         self.date_index = {date: idx for idx, date in enumerate(df['date'])}
         self.daily_volume_change=np.zeros(len(self.date_index))
-        self.thickness_change_verif = pd.read_csv('../Data/thickness_change.csv').iloc[0:, 11].astype(float).to_numpy()
-        self.front_variation_verif = pd.read_csv('../Data/front_variation_change.csv').iloc[0:, 9].astype(float).to_numpy()
+        self.thickness_change_verif = pd.read_csv('C:/Users/bookn/Downloads/Senior-Thesis/SIA/Data/thickness_change.csv').iloc[0:, 11].astype(float).to_numpy()
+        self.front_variation_verif = pd.read_csv('C:/Users/bookn/Downloads/Senior-Thesis/SIA/Data/front_variation_change.csv').iloc[0:, 9].astype(float).to_numpy()
         self.front_variation_calc = np.zeros(len(self.front_variation_verif))
-        df= pd.read_csv('../Data/centerlineThickness.csv')
+        df= pd.read_csv('C:/Users/bookn/Downloads/Senior-Thesis/SIA/Data/centerlineThickness.csv')
         self.thickness_1986_verif=df.iloc[0:, 3].astype(float).to_numpy()-df.iloc[0:, 0].astype(float).to_numpy()
     
     def snow_model(self, index, temps,timestep):
-        self.snow_depth[temps<0]+=((self.precip[index]*self.snow_conv_factor)/1000)*timestep
+        self.snow_depth[temps<0]+=(self.precip[index]/1000)*self.snow_conv_factor*timestep
+        precip=(self.precip[index]/1000)*self.snow_conv_factor*timestep
+        if np.any(precip<0):print("neg precip")
         snow_melt=(self.snow_melt_factor*temps[temps>0] if int(self.current_date.month) in [12,1,2] else (self.snow_melt_amplitude/2*(1-math.cos(2*math.pi/8*((self.current_date.month+(self.current_date.day+1)/calendar.monthrange(self.current_date.year, self.current_date.month)[1])-11))) + self.snow_melt_factor)*temps[temps>0])*timestep
+        snow_melt_diff=(snow_melt * -1) - self.snow_depth[temps > 0]
+        snow_melt[snow_melt_diff>0] = self.snow_depth[temps>0][snow_melt_diff>0]*-1 #Janky way of setting the maximum snow melt to the snow depth
+        if np.any(snow_melt>0): print("POSITIVE SNOW MELT")
         self.snow_melt_vol=np.sum(snow_melt*self.dx*self.widths[temps>0])
         self.snow_depth[temps>0]+=snow_melt
         
+
     def update_b(self, timestep):
         if self.current_date>=datetime(1984,1,2):
             if self.current_date<datetime(2024,10,1): index=self.dates.index(pd.Timestamp(self.current_date.replace(hour=0, minute=0, second=0, microsecond=0)))
@@ -204,13 +211,19 @@ class glacierSim():
             x_temps=self.temps[index]-0.0065*(self.ice+self.topo-272)
             mb=np.zeros_like(x_temps)
             mb[x_temps>0]= self.ice_melt_factor*x_temps[x_temps>0] if int(self.current_date.month) in [12,1,2] else (self.ice_melt_amplitude/2*(1-math.cos(2*math.pi/8*((self.current_date.month+(self.current_date.day+1)/calendar.monthrange(self.current_date.year, self.current_date.month)[1])-11))) + self.ice_melt_factor)*x_temps[x_temps>0]
-            mb[(x_temps>0)&(self.snow_depth>0.1)]=0
             #mb[x_temps<0]=self.accum_factor*self.precip[index]/1000*self.dx
             self.snow_model(index,x_temps,timestep)
+            mb[(x_temps>0)&(self.snow_depth>0.1)]=0
             mb[x_temps<0]=self.snow_depth[x_temps<0]*self.accum_factor
             #mb+=self.snow_depth*self.accum_factor
+            subtract_snow = (self.snow_depth[x_temps < 0] * self.accum_factor * timestep)
+
+            # Check if any of the potential new values are negative
+            if np.any(subtract_snow > self.snow_depth[x_temps < 0]):
+                print("THERE WILL BE NEGATIVE SNOW DEPTH")
             self.snow_depth[x_temps<0]-=self.snow_depth[x_temps<0]*self.accum_factor*timestep
-            #self.snow_depth-=self.snow_depth*self.accum_factor
+            if np.any(self.snow_depth[x_temps<0]<0): print("NEGATIVE SNOW DEPTH, NEGATIVE TEMP")
+            if np.any(self.snow_depth[x_temps>0]<0): print("NEGATIVE SNOW DEPTH, POSITIVE TEMP")
             self.snow_depth=np.maximum(self.snow_depth,0)
             # if np.any(mb[x_temps<0]<0): print("NEGATIVE MB", mb[x_temps<0])
             # if np.any(np.isnan(mb[x_temps < 0])): print("NAN MB", self.precip[index])
@@ -220,8 +233,7 @@ class glacierSim():
             self.calculated_winter_mb[date]+=np.sum(np.array(mb[mb>0]*timestep))
             self.calculated_summer_mb[date]+=np.sum(np.array(mb[mb<0]*timestep))
             if np.any(self.calculated_winter_mb<0): print("ERROR IN WINTER MB")
-            if np.any(self.calculated_summer_mb>0): print("ERROR IN WINTER MB")
-            if math.isnan(self.temps[index]):print(mb)
+            if np.any(self.calculated_summer_mb>0): print("ERROR IN SUMMER MB")
             return mb
         else: 
             return ((self.topo+self.ice-self.curr_ela)*self.gamma)/365.25 if self.current_date.year<1900 else ((self.topo+self.ice-self.curr_ela)*(self.gamma+0.002))/365.25 #meters per day
@@ -248,7 +260,6 @@ class glacierSim():
     #         return mb
     #     else: return ((self.topo+self.ice-self.curr_ela)*self.gamma)/365.25 #meters per day
     
-class glacierSim(glacierSim):
     def calc_q(self):
         self.ice_slope[:-1] = -(np.diff(self.ice+self.topo) / self.dx) #calculate ice slope
         if np.any(np.isnan(self.ice_slope)): #and not self.quiet:
@@ -456,7 +467,7 @@ def optimize(parameter, input_params):
         print(input_params)
         ela = 1880
         time = 1040
-        save = 1
+        save = 10
         gamma=0.0066
         # accumfactor=0.1 #bounds approx 0.1-0.5
         # ice_meltfactor= 0.005 #bounds approx 0.005-0.012
@@ -506,16 +517,19 @@ def optimize(parameter, input_params):
                 print("Function result: ",np.sum((model.thickness_change-model.thickness_change_verif) /np.abs(model.thickness_change_verif) * 100))
                 return np.sum((model.thickness_change-model.thickness_change_verif) /np.abs(model.thickness_change_verif) * 100)
             elif parameter == 'vol_change': 
-                print("Function result: ",np.sum((model.volume_valid - model.daily_volume_change) / np.abs(model.volume_valid)* 100))
-                return np.sum((model.volume_valid - model.daily_volume_change) / np.abs(model.volume_valid)* 100)
+                df = pd.DataFrame({'date': pd.to_datetime(list(model.date_index.keys())),'volume_change': model.daily_volume_change})
+                df['date'] = df['date'].dt.to_period('M') 
+                monthly_volume_change = df.groupby('date')['volume_change'].sum().to_numpy()
+                print("Function result: ",np.sum((monthly_volume_change-model.volume_valid) / np.abs(model.volume_valid)* 100))
+                return np.sum((monthly_volume_change-model.volume_valid) / np.abs(model.volume_valid)* 100)
             elif parameter == 'brute-force':
                 ela=np.sum((model.ela_list-model.ela_verif)/np.abs(model.ela_verif)*100)
-                front_var=np.sum((model.front_variation_verif - model.front_variation_calc) / np.abs(model.front_variation_verif) * 100)
+                front_var=np.sum((model.front_variation_calc-model.front_variation_verif) / np.abs(model.front_variation_verif) * 100)
                 thick=np.sum((model.thickness_change-model.thickness_change_verif) /np.abs(model.thickness_change_verif) * 100)
                 df = pd.DataFrame({'date': pd.to_datetime(list(model.date_index.keys())),'volume_change': model.daily_volume_change})
                 df['date'] = df['date'].dt.to_period('M')
                 monthly_volume_change = df.groupby('date')['volume_change'].sum().to_numpy()
-                vol_change=np.sum((model.volume_valid - monthly_volume_change) / np.abs(monthly_volume_change)* 100)
+                vol_change=np.sum((monthly_volume_change-model.volume_valid) / np.abs(model.volume_valid)* 100)
                 print("ELA Result: ",ela)
                 print("FRONT VAR Result: ",front_var)
                 print("THICK Result: ",thick)
@@ -562,31 +576,69 @@ min_thick=inf
 min_thick_vars=[]
 min_vol_change=inf
 min_vol_change_vars=[]
-initial_guess=[-0.012,-0.006,0.001,5,0,0]
+# initial_guess=[-0.012,-0.006,0.001,5,0,0]
 opt_method='brute-force'
+
+def optimize_and_check(ice_meltfactor, snow_meltfactor, accumfactor, snow_conv_factor):
+    ela, front_var, thick, vol_change = optimize("brute-force", [ice_meltfactor, snow_meltfactor, accumfactor, snow_conv_factor, 0, 0])
+    results = []
+    if abs(ela) < abs(min_ela):
+        results.append(("NEW MIN ELA", ela, [ice_meltfactor, snow_meltfactor, accumfactor, snow_conv_factor, 0, 0]))
+    if abs(front_var) < abs(min_front_var):
+        results.append(("NEW MIN FRONT VAR", front_var, [ice_meltfactor, snow_meltfactor, accumfactor, snow_conv_factor, 0, 0]))
+    if abs(thick) < abs(min_thick):
+        results.append(("NEW MIN THICK", thick, [ice_meltfactor, snow_meltfactor, accumfactor, snow_conv_factor, 0, 0]))
+    if abs(vol_change) < abs(min_vol_change):
+        results.append(("NEW MIN VOL CHANGE", vol_change, [ice_meltfactor, snow_meltfactor, accumfactor, snow_conv_factor, 0, 0]))
+    return results
+
 with open(f"../Results/{opt_method}-Results.txt", "a") as file:
     #file.write("-------------------No amplitude-----------\n")
-    for accumfactor in [0.001,0.002,0.003,0.004,0.005]:
-        for ice_meltfactor in [-0.005,-0.006,-0.007,-0.008,-0.009,-0.01,-0.011,-0.012]:
-            for snow_meltfactor in [-0.002,-0.003,-0.004,-0.005,-0.006]:
-                for snow_conv_factor in [5,6,7,8,9,10,11,12,13,14,15]:
-                    ela, front_var,thick,vol_change = optimize("brute-force",[ice_meltfactor, snow_meltfactor,accumfactor,snow_conv_factor,0,0])
-                    if abs(ela)<abs(min_ela): 
-                        min_ela=ela
-                        min_ela_vars=[ice_meltfactor, snow_meltfactor,accumfactor,snow_conv_factor,0,0]
-                        print("NEW MIN ELA: ",min_ela," VARS: ",min_ela_vars)
-                    if abs(front_var)<abs(min_front_var): 
-                        min_front_var=front_var
-                        min_front_var_vars=[ice_meltfactor, snow_meltfactor,accumfactor,snow_conv_factor,0,0]
-                        print("NEW MIN FRONT VAR: ",min_front_var," VARS: ",min_front_var_vars)
-                    if abs(thick)<abs(min_thick): 
-                        min_thick=thick
-                        min_thick_vars=[ice_meltfactor, snow_meltfactor,accumfactor,snow_conv_factor,0,0]
-                        print("NEW MIN THICK: ",min_thick," VARS: ",min_thick_vars)
-                    if abs(vol_change)<abs(min_vol_change): 
-                        min_vol_change=vol_change
-                        min_vol_change_vars=[ice_meltfactor, snow_meltfactor,accumfactor,snow_conv_factor,0,0]
-                        print("NEW MIN VOL CHANGE: ",min_vol_change," VARS: ",min_vol_change_vars)  
+    # for accumfactor in [0.001,0.002,0.003,0.004,0.005]:
+    #     for ice_meltfactor in [-0.005,-0.006,-0.007,-0.008,-0.009,-0.01,-0.011,-0.012]:
+    #         for snow_meltfactor in [-0.002,-0.003,-0.004,-0.005,-0.006]:
+    #             for snow_conv_factor in [5,6,7,8,9,10,11,12,13,14,15]:
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        futures = []
+        for accumfactor in [0.003, 0.004, 0.005,0.006,0.007,0.008,0.009,0.01]:
+            for ice_meltfactor in [-0.005, -0.006, -0.007, -0.008, -0.009, -0.01, -0.011, -0.012]:
+                for snow_meltfactor in [-0.005, -0.006, -0.007, -0.008, -0.009, -0.01, -0.011, -0.012]:
+                    for snow_conv_factor in [5, 6, 7, 8, 9, 10]:
+                        futures.append(executor.submit(optimize_and_check, ice_meltfactor, snow_meltfactor, accumfactor, snow_conv_factor))
+                    # ela, front_var,thick,vol_change = optimize("brute-force",[ice_meltfactor, snow_meltfactor,accumfactor,snow_conv_factor,0,0])
+                    # if abs(ela)<abs(min_ela): 
+                    #     min_ela=ela
+                    #     min_ela_vars=[ice_meltfactor, snow_meltfactor,accumfactor,snow_conv_factor,0,0]
+                    #     print("NEW MIN ELA: ",min_ela," VARS: ",min_ela_vars)
+                    # if abs(front_var)<abs(min_front_var): 
+                    #     min_front_var=front_var
+                    #     min_front_var_vars=[ice_meltfactor, snow_meltfactor,accumfactor,snow_conv_factor,0,0]
+                    #     print("NEW MIN FRONT VAR: ",min_front_var," VARS: ",min_front_var_vars)
+                    # if abs(thick)<abs(min_thick): 
+                    #     min_thick=thick
+                    #     min_thick_vars=[ice_meltfactor, snow_meltfactor,accumfactor,snow_conv_factor,0,0]
+                    #     print("NEW MIN THICK: ",min_thick," VARS: ",min_thick_vars)
+                    # if abs(vol_change)<abs(min_vol_change): 
+                    #     min_vol_change=vol_change
+                    #     min_vol_change_vars=[ice_meltfactor, snow_meltfactor,accumfactor,snow_conv_factor,0,0]
+                    #     print("NEW MIN VOL CHANGE: ",min_vol_change," VARS: ",min_vol_change_vars)  
+                    for future in concurrent.futures.as_completed(futures):
+                        results = future.result()
+                        for result in results:
+                            label, value, vars = result
+                            print(f"{label}: {value} VARS: {vars}")
+                            if label == "NEW MIN ELA":
+                                min_ela = value
+                                min_ela_vars = vars
+                            elif label == "NEW MIN FRONT VAR":
+                                min_front_var = value
+                                min_front_var_vars = vars
+                            elif label == "NEW MIN THICK":
+                                min_thick = value
+                                min_thick_vars = vars
+                            elif label == "NEW MIN VOL CHANGE":
+                                min_vol_change = value
+                                min_vol_change_vars = vars
                         
     print("OPTIMIZED PARAMS FOR: ELA")
     print("Optimized accumulation factor:", min_ela_vars[2] )
@@ -672,3 +724,63 @@ with open(f"../Results/{opt_method}-Results.txt", "a") as file:
 
 # # 4) Close the file
 # logfile.close()
+
+# ela=1880
+# time=1040
+# start_time=1000
+# save=1
+# gamma=0.0066
+# quiet=True
+# # accumfactor=0.004731588686211069*1.2
+# # ice_meltfactor=-0.008472259912843966
+# # snow_meltfactor= -0.0036515609274413875
+# # snow_conv_factor=  5.310488160176582*1.2
+# # snow_melt_amplitude= -0.005747189439663826
+# # ice_melt_amplitude=  -0.002254212082875086
+# accumfactor=0.001 #bounds approx 0.001-0.005
+# ice_meltfactor= -0.012 #bounds approx 0.005-0.012
+# snow_meltfactor=-0.006 #bounds approx 0.002-0.006
+# snow_conv_factor=6#bounds 5-15
+# snow_melt_amplitude=-0.00
+# ice_melt_amplitude=-0.00
+# #tune_factors=[-6.21530477e-03, -3.16373793e-03,  3.90806503e-03,  6.37238199e+00,-5.37087541e-03,-1.14816075e-03]
+# tune_factors=[ice_meltfactor, snow_meltfactor, accumfactor, snow_conv_factor,snow_melt_amplitude,ice_melt_amplitude]
+# #tune_factors=[-7.94739209e-03 ,-8.02449065e-03 , 1.04047812e-02,  9.01413327e+00,-7.81444522e-04, -9.97332457e-04]
+# ice = [ 48.74268508,  55.56983843,  62.4461873,   65.79581569,  71.49671258,
+#   79.62187778,  87.47315634, 105.98654032, 117.87370344, 124.66980319,
+#  126.50008636, 120.30954968, 111.65086578, 105.76597865, 102.84450935,
+#  109.19178517, 123.68286656, 147.83038364, 145.24364508, 133.1646632,
+#  131.14879155, 129.69391645, 128.68534565, 130.06255841, 132.18570886,
+#  139.49146139, 146.87870673, 152.47161505, 156.25451082, 156.32724925,
+#  146.91225181, 127.26083926, 110.74220115,  95.4317669,   91.18638177,
+#   91.77888562,  86.2535808,   78.6072642,   66.14750745,  50.99095991,
+#   37.80374814,   1.5635936,  0.,0., 0.,0.,0., 0., 0., 0. ]
+# def frame_generator(): 
+#   for i in range(0,model.frames): yield i
+# model = glacierSim(ela=ela, time=time, save=save,gamma=gamma,quiet=quiet, tune_factors=tune_factors, initial_ice=ice, start_time=start_time)
+# model.init(ax,ela=ela, time=time, save=save,gamma=gamma,quiet=quiet, tune_factors=tune_factors, initial_ice=ice, start_time=start_time)
+# for i in range(0,model.frames):
+#   model.run_model(i)
+# anim = FuncAnimation(fig, model.func, frames=frame_generator, blit=False, repeat=False, save_count=model.frames)
+# vid = HTML(anim.to_jshtml())
+# df = pd.DataFrame({'date': pd.to_datetime(list(model.date_index.keys())),'volume_change': model.daily_volume_change})
+# df['date'] = df['date'].dt.to_period('M')
+# monthly_volume_change = df.groupby('date')['volume_change'].sum().to_numpy()
+# print("Final Year: ", model.current_date.year)
+# print("ICE: ",model.ice)
+# #print("SLOPE: ",model.ice_slope)
+# #print("MASS BALANCE: ",model.b)
+# # print("WINTER MB DIFF: ", model.winter_mb-model.calculated_winter_mb)
+# # print("SUMMER MB DIFF: ", model.summer_mb-model.calculated_summer_mb)
+# #print('CALCULATED ANNUAL MB: ', model.calculated_annual_mb)
+# print('ANNUAL MB DIFF: ',np.array(model.calculated_annual_mb)-np.array(model.annual_mb))
+# # print("VOLUME DIFF: ", np.sum(model.daily_volume_change-model.volume_valid))
+# print("VOL:", np.sum((model.volume_valid - monthly_volume_change) / abs(model.volume_valid)* 100))
+# print("THICK: ", np.sum((model.thickness_change-model.thickness_change_verif) /abs(model.thickness_change_verif) * 100))
+# print("FRONT VAR: ", np.sum((model.front_variation_verif - model.front_variation_calc) / np.abs(model.front_variation_verif) * 100))
+# print("ELA: ",np.sum((model.ela_list-model.ela_verif)/abs(model.ela_verif)*100))
+# print("DONE")
+# # plt.plot(model.yearly_volume_change)
+# # plt.show()
+# # plt.plot(abs(model.volume_valid-model.daily_volume_change)/abs(model.volume_valid)*100)
+# # plt.show()
