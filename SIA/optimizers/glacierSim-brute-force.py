@@ -467,7 +467,7 @@ def optimize(parameter, input_params):
         print(input_params)
         ela = 1880
         time = 1040
-        save = 10
+        save = 1 #Needs to be 1 to calculate ela list
         gamma=0.0066
         # accumfactor=0.1 #bounds approx 0.1-0.5
         # ice_meltfactor= 0.005 #bounds approx 0.005-0.012
