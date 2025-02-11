@@ -1,214 +1,52 @@
-Optimized parameters for annual:
-Optimized accumulation factor: 0.0
-Optimized ice meltfactor: -8.353235391047109e-07
-Optimized snow meltfactor: 0.0
-Optimized snow conversion factor: 0.492410980693896
-Optimized snow melt amplitude: -0.0015395205159349672
-Optimized ice melt amplitude: -8.248038892238736e-05
-Final objective function value: 26.467173949060026
-[-8.35323539e-07  0.00000000e+00  0.00000000e+00  4.92410981e-01
- -1.53952052e-03 -8.24803889e-05]
-Optimized parameters for ela:
-Optimized accumulation factor: 0.01
-Optimized ice meltfactor: -0.01
-Optimized snow meltfactor: -0.01
-Optimized snow conversion factor: 6.0
-Optimized snow melt amplitude: -0.001
-Optimized ice melt amplitude: -0.001
-Final objective function value: inf
-[-1.e-02 -1.e-02  1.e-02  6.e+00 -1.e-03 -1.e-03]
-Optimized parameters for extent:
-Optimized accumulation factor: 0.01
-Optimized ice meltfactor: -0.01
-Optimized snow meltfactor: -0.01
-Optimized snow conversion factor: 6.300000000000001
-Optimized snow melt amplitude: -0.001
-Optimized ice melt amplitude: -0.001
+Final Gamma:  [0.017]
+Final objective function value: -0.46316948244281897
+[0.017]
+Final Gamma:  [0.01742391]
 Final objective function value: 0.0004568736292919016
-[-1.0e-02 -1.0e-02  1.0e-02  6.3e+00 -1.0e-03 -1.0e-03]
-Optimized parameters for front_var:
-Optimized accumulation factor: 0.010404781214346213
-Optimized ice meltfactor: -0.007947392090561362
-Optimized snow meltfactor: -0.008024490645872944
-Optimized snow conversion factor: 9.014133271614341
-Optimized snow melt amplitude: -0.0007814445222204017
-Optimized ice melt amplitude: -0.000997332457099345
-Final objective function value: 63.151462543416855
-[-7.94739209e-03 -8.02449065e-03  1.04047812e-02  9.01413327e+00
- -7.81444522e-04 -9.97332457e-04]
-Optimized parameters for thick:
-Optimized accumulation factor: 0.01429985668704227
-Optimized ice meltfactor: -1.3296839087672698e-06
-Optimized snow meltfactor: -0.0069955420625551195
-Optimized snow conversion factor: 1.3847660908084727
-Optimized snow melt amplitude: -0.0014335272914771347
-Optimized ice melt amplitude: -0.001935704907630171
-Final objective function value: 194.6201310629816
-[-1.32968391e-06 -6.99554206e-03  1.42998567e-02  1.38476609e+00
- -1.43352729e-03 -1.93570491e-03]
-Optimized parameters for vol_change:
-Optimized accumulation factor: 0.0133698253121989
-Optimized ice meltfactor: -0.008254397898204792
-Optimized snow meltfactor: -0.004486272450946448
-Optimized snow conversion factor: 6.158019150891885
-Optimized snow melt amplitude: -0.001111560928453033
-Optimized ice melt amplitude: -0.0011112553318606256
-Final objective function value: 207.42325438429086
-[-8.25439790e-03 -4.48627245e-03  1.33698253e-02  6.15801915e+00
- -1.11156093e-03 -1.11125533e-03]
--------------------New opt functions and new bounds-----------
-Optimized parameters for ela:
-Optimized accumulation factor: 0.001
-Optimized ice meltfactor: -0.011999999999999983
-Optimized snow meltfactor: -0.0059999999999999915
-Optimized snow conversion factor: 10.11882716049384
-Optimized snow melt amplitude: -0.005
-Optimized ice melt amplitude: -0.005
-Final objective function value: -757.5160340270696
-[-1.20000000e-02 -6.00000000e-03  1.00000000e-03  1.01188272e+01
- -5.00000000e-03 -5.00000000e-03]
-Optimized parameters for front_var:
-Optimized accumulation factor: 0.0010500000000000002
-Optimized ice meltfactor: -0.012
-Optimized snow meltfactor: -0.006
-Optimized snow conversion factor: 5.0
-Optimized snow melt amplitude: -0.005
-Optimized ice melt amplitude: -0.005
-Final objective function value: -16250.238430392263
-[-1.20e-02 -6.00e-03  1.05e-03  5.00e+00 -5.00e-03 -5.00e-03]
-Optimized parameters for thick:
-Optimized accumulation factor: 0.005
-Optimized ice meltfactor: -0.011999999999999886
-Optimized snow meltfactor: -0.005999999999999943
-Optimized snow conversion factor: 5.0
-Optimized snow melt amplitude: -0.004999999999999994
-Optimized ice melt amplitude: -0.004999999999999994
-Final objective function value: -1733.0170157058915
-[-1.2e-02 -6.0e-03  5.0e-03  5.0e+00 -5.0e-03 -5.0e-03]
-Optimized parameters for vol_change:
-Optimized accumulation factor: 0.005
-Optimized ice meltfactor: -0.011999999999999934
-Optimized snow meltfactor: -0.005999999999999967
-Optimized snow conversion factor: 5.0
-Optimized snow melt amplitude: -0.004999999999999999
-Optimized ice melt amplitude: -0.004999999999999999
-Final objective function value: 18504.252535592317
-[-1.2e-02 -6.0e-03  5.0e-03  5.0e+00 -5.0e-03 -5.0e-03]
--------------------No amplitude-----------
-Optimized parameters for ela:
-Optimized accumulation factor: 0.001
-Optimized ice meltfactor: -0.011999999999999997
-Optimized snow meltfactor: -0.005999999999999998
-Optimized snow conversion factor: 6.056241426611802
-Optimized snow melt amplitude: 0.0
-Optimized ice melt amplitude: 0.0
-Final objective function value: -757.5160340270696
-[-1.20000000e-02 -6.00000000e-03  1.00000000e-03  6.05624143e+00
-  0.00000000e+00  0.00000000e+00]
-Optimized parameters for front_var:
-Optimized accumulation factor: 0.0010222222222222221
-Optimized ice meltfactor: -0.011999999999999997
-Optimized snow meltfactor: -0.005999999999999998
-Optimized snow conversion factor: 5.1111111111111125
-Optimized snow melt amplitude: 0.0
-Optimized ice melt amplitude: 0.0
-Final objective function value: 1607.551533695514
-[-1.20000000e-02 -6.00000000e-03  1.02222222e-03  5.11111111e+00
-  0.00000000e+00  0.00000000e+00]
-Optimized parameters for thick:
-Optimized accumulation factor: 0.001
-Optimized ice meltfactor: -0.011999999999999997
-Optimized snow meltfactor: -0.005999999999999998
-Optimized snow conversion factor: 5.0
-Optimized snow melt amplitude: 0.0
-Optimized ice melt amplitude: 0.0
-Final objective function value: 2539.5172218656435
-[-1.2e-02 -6.0e-03  1.0e-03  5.0e+00  0.0e+00  0.0e+00]
-Optimized parameters for vol_change:
-Optimized accumulation factor: 0.0010286387431140246
-Optimized ice meltfactor: -0.011999999999999997
-Optimized snow meltfactor: -0.005999999999999998
-Optimized snow conversion factor: 5.0
-Optimized snow melt amplitude: 0.0
-Optimized ice melt amplitude: 0.0
-Final objective function value: 42783.62639975788
-[-1.20000000e-02 -6.00000000e-03  1.02863874e-03  5.00000000e+00
-  0.00000000e+00  0.00000000e+00]
--------------------------Expanded Bounds------------------------
-Optimized parameters for ela:
-Optimized accumulation factor: 0.001
-Optimized ice meltfactor: -0.012
-Optimized snow meltfactor: -0.006
-Optimized snow conversion factor: 5.0
-Optimized snow melt amplitude: 0.0
-Optimized ice melt amplitude: 0.0
-Final objective function value: inf
-[-1.2e-02 -6.0e-03  1.0e-03  5.0e+00  0.0e+00  0.0e+00]
-Optimized parameters for front_var:
-Optimized accumulation factor: 0.001
-Optimized ice meltfactor: -0.012
-Optimized snow meltfactor: -0.006
-Optimized snow conversion factor: 5.0
-Optimized snow melt amplitude: 0.0
-Optimized ice melt amplitude: 0.0
-Final objective function value: inf
-[-1.2e-02 -6.0e-03  1.0e-03  5.0e+00  0.0e+00  0.0e+00]
-Optimized parameters for thick:
-Optimized accumulation factor: 0.001
-Optimized ice meltfactor: -0.012
-Optimized snow meltfactor: -0.006
-Optimized snow conversion factor: 5.0
-Optimized snow melt amplitude: 0.0
-Optimized ice melt amplitude: 0.0
-Final objective function value: inf
-[-1.2e-02 -6.0e-03  1.0e-03  5.0e+00  0.0e+00  0.0e+00]
-Optimized parameters for vol_change:
-Optimized accumulation factor: 0.001
-Optimized ice meltfactor: -0.012
-Optimized snow meltfactor: -0.006
-Optimized snow conversion factor: 5.0
-Optimized snow melt amplitude: 0.0
-Optimized ice melt amplitude: 0.0
-Final objective function value: inf
-[-1.2e-02 -6.0e-03  1.0e-03  5.0e+00  0.0e+00  0.0e+00]
--------------------No amplitude-----------
-Optimized parameters for ela:
-Optimized accumulation factor: 0.0010222222222222221
-Optimized ice meltfactor: -0.01213333333333333
-Optimized snow meltfactor: -0.005288888888888885
-Optimized snow conversion factor: 5.444444444444443
-Optimized snow melt amplitude: 0.0
-Optimized ice melt amplitude: 0.0
-Final objective function value: -757.5160340270696
-[-1.21333333e-02 -5.28888889e-03  1.02222222e-03  5.44444444e+00
-  0.00000000e+00  0.00000000e+00]
-Optimized parameters for front_var:
-Optimized accumulation factor: 0.0010072916666666668
-Optimized ice meltfactor: -0.012087499999999998
-Optimized snow meltfactor: -0.0060625
-Optimized snow conversion factor: 5.0
-Optimized snow melt amplitude: 0.0
-Optimized ice melt amplitude: 0.0
-Final objective function value: -31884.752054941913
-[-1.20875000e-02 -6.06250000e-03  1.00729167e-03  5.00000000e+00
-  0.00000000e+00  0.00000000e+00]
-Optimized parameters for thick:
-Optimized accumulation factor: 0.0010009132574052282
-Optimized ice meltfactor: -0.008864017714195663
-Optimized snow meltfactor: -0.014997074767909785
-Optimized snow conversion factor: 5.0
-Optimized snow melt amplitude: 0.0
-Optimized ice melt amplitude: 0.0
-Final objective function value: -1994.5951127266244
-[-8.86401771e-03 -1.49970748e-02  1.00091326e-03  5.00000000e+00
-  0.00000000e+00  0.00000000e+00]
-Optimized parameters for vol_change:
-Optimized accumulation factor: 0.001
-Optimized ice meltfactor: -0.006805986716435198
-Optimized snow meltfactor: -0.00777369519799004
-Optimized snow conversion factor: 9.85536791349168
-Optimized snow melt amplitude: 0.0
-Optimized ice melt amplitude: 0.0
-Final objective function value: -2177.6011016175266
-[-6.80598672e-03 -7.77369520e-03  1.00000000e-03  9.85536791e+00
-  0.00000000e+00  0.00000000e+00]
+[0.01742391]
+-------------------ELA 1950-----------
+Final Gamma:  [0.0166]
+Final objective function value: 0.0004568736292919016
+[0.0166]
+-------------------ELA 1950-----------
+Final Gamma:  [0.016]
+Final objective function value: 0.0004568736292919016
+[0.016]
+-------------------ELA 1950-----------
+Final Gamma:  [0.014]
+Final objective function value: 0.024858260790981995
+[0.014]
+-------------------ELA 1950-----------
+Final Gamma:  [0.014]
+Final objective function value: 0.024858260790981995
+[0.014]
+-------------------ELA 1950-----------
+Final Gamma:  [0.013]
+Final objective function value: 0.0004568736292919016
+[0.013]
+-------------------Optimize Summer MB-----------
+-------------------Optimize Summer MB-----------
+Optimized ice meltfactor: -0.001
+Optimized lapse rate: 0.008
+[-0.001  0.008]
+-------------------Optimize Summer MB-----------
+Optimized ice meltfactor: -0.009999999999999995
+Final objective function value: 129124.62161332223
+Optimized lapse rate: 0.01
+[-0.01  0.01]
+-------------------Optimize Winter MB-----------
+Optimized accumulation factor: [0.001]
+Final objective function value: 378626.87161762407
+[0.001]
+-------------------Optimize Winter MB-----------
+Optimized accumulation factor: [1.58595215]
+Final objective function value: 766.4285517967323
+[1.58595215]
+-------------------Optimize Summer MB-----------
+Optimized accumulation factor: [-0.006  -0.0018]
+Final objective function value: -2955.2233983842216
+[-0.006  -0.0018]
+-------------------Optimize Summer MB-----------
+Optimized accumulation factor: [-0.003     -0.0021375]
+Final objective function value: -663.1027933971395
+[-0.003     -0.0021375]

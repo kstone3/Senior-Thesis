@@ -34,3 +34,12 @@ Optimized snow melt amplitude: 0
 Optimized ice melt amplitude: 0
 Final objective function value: 1099.386369004095
 [-0.009, -0.006, 0.002, 7, 0, 0]
+Optimized parameters for WINTER MB:
+Optimized accumulation factor: 0.03229999999999998
+Final objective function value: 18.45140554175697
+Optimized parameters for WINTER MB:
+Optimized accumulation factor: 0.031899999999999956
+Final objective function value: 774.4613560270024
+Optimized parameters for WINTER MB:
+Optimized accumulation factor: 0.031900000000000005
+Final objective function value: 774.4613560270027
