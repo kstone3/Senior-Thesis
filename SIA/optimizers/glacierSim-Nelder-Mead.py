@@ -230,7 +230,7 @@ class glacierSim():
         if current_date_key==datetime(2002,9,30) or  current_date_key==datetime(2003,6,8): self.prev_volume=self.ice_volume.copy()
         #If date is in the list of volume verification dates, calculate the volume change
         if current_date_key in self.date_index:
-            self.daily_runoff[self.date_index[current_date_key]] += (self.prev_volume-self.ice_volume+self.snow_melt_vol)
+            self.daily_runoff[self.date_index[current_date_key]] += (self.prev_volume-self.ice_volume)
             self.prev_volume=self.ice_volume.copy()
         #If date is the date before thickness change verification data starts then set prev_thickness to calculate thickness change
         if self.current_date==datetime(1998,12,31): self.prev_thickness=np.mean(self.ice)
@@ -301,8 +301,10 @@ class glacierSim():
             x_temps=self.temps[index]-self.temp_lapse_rate*(self.ice+self.topo-272) #weather station elevation is 272m
             mb=np.zeros_like(x_temps) #initialize mass balance
             #Melts ice for temps greater than 0
-            mb[np.where((x_temps>0)&((self.ice+self.topo)>self.curr_ela))[0]]=self.snow_melt_factor*x_temps[np.where((x_temps>0)&((self.ice+self.topo)>self.curr_ela))[0]]
-            mb[np.where((x_temps>0)&((self.ice+self.topo)<self.curr_ela))[0]]=self.ice_melt_factor*x_temps[np.where((x_temps>0)&((self.ice+self.topo)<self.curr_ela))[0]]
+            melt_arr=self.snow_melt_factor+((self.curr_ela-(self.ice+self.topo))/(self.curr_ela-np.nanmin(self.topo+self.ice)))*(self.ice_melt_factor-self.snow_melt_factor)
+            melt_arr[melt_arr>self.snow_melt_factor]=self.snow_melt_factor
+            mb[np.where((x_temps>0)&((self.ice+self.topo)>=self.curr_ela))[0]]=self.snow_melt_factor*x_temps[np.where((x_temps>0)&((self.ice+self.topo)>self.curr_ela))[0]]
+            mb[np.where((x_temps>0)&((self.ice+self.topo)<self.curr_ela))[0]]=melt_arr[np.where((x_temps>0)&((self.ice+self.topo)<self.curr_ela))[0]]*x_temps[np.where((x_temps>0)&((self.ice+self.topo)<self.curr_ela))[0]]
             #mb[x_temps>0]= self.ice_melt_factor*x_temps[x_temps>0] if int(self.current_date.month) in [12,1,2] else (self.ice_melt_amplitude/2*(1-math.cos(2*math.pi/8*((self.current_date.month+(self.current_date.day+1)/calendar.monthrange(self.current_date.year, self.current_date.month)[1])-11))) + self.ice_melt_factor)*x_temps[x_temps>0]
             #Calculates snow melt and accumulation
             # self.snow_model(index,x_temps,timestep)
@@ -320,6 +322,11 @@ class glacierSim():
             # if np.any(subtract_snow > self.snow_depth[x_temps < 0]): print("THERE WILL BE NEGATIVE SNOW DEPTH")
             # self.snow_depth[x_temps<0]-=subtract_snow
             #Double check for accidental negative snow depth
+            # if np.any(mb==0):
+            #     print(self.current_date)
+            #     print(x_temps)
+            #     print(self.precip[index])
+            #     print(mb)
             if np.any(self.snow_depth[x_temps<0]<0): print("NEGATIVE SNOW DEPTH, NEGATIVE TEMP")
             if np.any(self.snow_depth[x_temps>0]<0): print("NEGATIVE SNOW DEPTH, POSITIVE TEMP")
             #Make sure there is no negative snow, everything before this should make this impossible
@@ -529,7 +536,7 @@ def optimize(parameter, input_params):
         ela = 1880
         ela_1900=1910
         time = 540
-        save = 10 #Needs to be 1 to calculate ela list
+        save = 1 #Needs to be 1 to calculate ela list
         gamma=0.016
         # accumfactor=0.1 #bounds approx 0.1-0.5
         # ice_meltfactor= 0.005 #bounds approx 0.005-0.012
@@ -539,7 +546,8 @@ def optimize(parameter, input_params):
         # ice_melt_amplitude=0.007
         # tune_factors=[ice_meltfactor, snow_meltfactor, accumfactor, snow_conv_factor,snow_melt_amplitude,ice_melt_amplitude]
         #input_params=[-6.21530477e-03, -3.16373793e-03,  3.90806503e-03,  6.37238199e+00,-5.37087541e-03,-1.14816075e-03]
-        input_params=[-0.003,-0.002,0.0065,input_params[0],input_params[1]]
+        # input_params=[-0.003,-0.002,0.0065,input_params[0],input_params[1]]
+        input_params=[input_params[0],input_params[1],0.0065,1.3,2]
         quiet = True
         start_time = 500
         ice = [ 53.89550985, 61.2302675, 68.52805603, 72.16752233, 78.19477103,
@@ -581,11 +589,11 @@ def optimize(parameter, input_params):
                 print("Function result: ",np.sum((model.thickness_change-model.thickness_change_verif) /np.abs(model.thickness_change_verif) * 100))
                 return np.sum((model.thickness_change-model.thickness_change_verif) /np.abs(model.thickness_change_verif) * 100)
             elif parameter == 'vol_change':
-                df = pd.DataFrame({'date': pd.to_datetime(list(model.date_index.keys())),'volume_change': model.daily_volume_change})
-                df['date'] = df['date'].dt.to_period('M') 
+                df = pd.DataFrame({'date': pd.to_datetime(list(model.date_index.keys())),'volume_change': model.daily_runoff})
+                df['date'] = df['date'].dt.to_period('M')
                 monthly_volume_change = df.groupby('date')['volume_change'].sum().to_numpy()
-                print("Function result: ",np.sum((monthly_volume_change-model.volume_valid) / np.abs(model.volume_valid)* 100))
-                return np.sum((monthly_volume_change-model.volume_valid) / np.abs(model.volume_valid)* 100)
+                print("Function result: ",abs(np.sum((monthly_volume_change- model.runoff_verif) / (model.runoff_verif)* 100)))
+                return abs(np.sum((monthly_volume_change- model.runoff_verif) / (model.runoff_verif)* 100))
             else: raise ValueError("Invalid parameter. Choose from 'summer', 'winter', 'annual', 'summer_winter', 'vol_change'.")
         except Exception as e:
             print("Error during function calculation:", e) 
@@ -616,27 +624,28 @@ ice_melt_amplitude=-0.001
 # bounds=[(0.013,0.014)]
 # bounds=[(-0.01,-0.00001),(0.0001,0.01)]
 # gamma=0.0065
-bounds=[(1.3,1.6),(1.5,2)]
+bounds=[(-0.005,-0.003),(-0.004,-0.002)]
 # bounds=[(0.005,0.007)]
 #result = differential_evolution(lambda x: optimize('summer_winter', x), bounds)
 #initial_guess=[-9.57979633e-03, -9.85185254e-03 , 1.05581961e-02,  6.34612522e+00,-1.00242107e-03, -1.05457432e-03]
 # initial_guess=[-0.012,-0.006,0.001,5,0,0]
 # initial_guess=[-0.01,0.0065]
-initial_guess=[1.5,1.9]
+initial_guess=[-0.004,-0.003]
 opt_method='Nelder-Mead'
 with open(f"../Results/{opt_method}-Results.txt", "a") as file:
-    file.write("-------------------Optimize Winter MB-----------\n")
+    file.write("-------------------Optimize Volume-----------\n")
     # for opt_var in ['ela','front_var','thick','vol_change']:
-    for opt_var in ['winter']:
+    for opt_var in ['vol_change']:
         result = minimize(lambda x: optimize(opt_var, x),initial_guess,method=opt_method,bounds=bounds,options={'disp': True})
         # result_ice_melt, result_snow_melt, result_accum, result_snow_conv, result_snow_amp, result_ice_amp=result.x
-        result_accum=result.x
+        # result_accum=result.x
+        result_ice_melt,result_snow_melt=result.x
         # print("Final Gamma: ", result.x)
         # print("Final objective function value:", result.fun)
         # print("OPTIMIZED PARAMS FOR:", opt_var)
-        print("Optimized accumulation factor:", result_accum)
-        # print("Optimized ice meltfactor:",result_ice_melt)
-        # print("Optimized snow meltfactor:",result_snow_melt)
+        # print("Optimized accumulation factor:", result_accum)
+        print("Optimized ice meltfactor:",result_ice_melt)
+        print("Optimized snow meltfactor:",result_snow_melt)
         # print("Optimized snow conversion factor:",result_snow_conv)
         # print("Optimized snow melt amplitude:",result_snow_amp)
         # print("Optimized ice melt amplitude:",result_ice_amp)
@@ -644,9 +653,9 @@ with open(f"../Results/{opt_method}-Results.txt", "a") as file:
         print("Final objective function value:", result.fun)
         print(result.x)
         # file.write(f"Optimized parameters for {opt_var}:\n")
-        file.write(f"Optimized accumulation factor: {result_accum}\n")
-        # file.write(f"Optimized ice meltfactor: {result_ice_melt}\n")
-        # file.write(f"Optimized snow meltfactor: {result_snow_melt}\n")
+        # file.write(f"Optimized accumulation factor: {result_accum}\n")
+        file.write(f"Optimized ice meltfactor: {result_ice_melt}\n")
+        file.write(f"Optimized snow meltfactor: {result_snow_melt}\n")
         # file.write(f"Optimized snow conversion factor: {result_snow_conv}\n")
         # file.write(f"Optimized snow melt amplitude: {result_snow_amp}\n")
         # file.write(f"Optimized ice melt amplitude: {result_ice_amp}\n")

@@ -50,3 +50,13 @@ Final objective function value: -2955.2233983842216
 Optimized accumulation factor: [-0.003     -0.0021375]
 Final objective function value: -663.1027933971395
 [-0.003     -0.0021375]
+-------------------Optimize Summer MB-----------
+Optimized accumulation factor: [-0.00351897 -0.00211401]
+Final objective function value: 403.05403685643046
+[-0.00351897 -0.00211401]
+-------------------Optimize Winter MB-----------
+Optimized accumulation factor: [1.3        1.91802637]
+Final objective function value: 640.1576577710646
+[1.3        1.91802637]
+-------------------Optimize Volume-----------
+-------------------Optimize Volume-----------
