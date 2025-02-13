@@ -590,9 +590,9 @@ def optimize(parameter, input_params):
     try:
         # print("Optimizing: ", parameter)
         #print("ACCUMFACTOR: ", input_params[0])
-        # print("ICE MELTFACTOR: ", input_params[0])
-        # print("SNOW MELTFACTOR: ", input_params[1])
-        print("SNOW CONVERSION FACTOR: ", input_params[0])
+        print("ICE MELTFACTOR: ", input_params[0])
+        print("SNOW MELTFACTOR: ", input_params[1])
+        # print("SNOW CONVERSION FACTOR: ", input_params[0])
         # print("SNOW MELT AMPLITUDE: ", input_params[4])
         # print("ICE MELT AMPLITUDE: ", input_params[5])
         # print("LAPSE RATE: ", input_params[1])
@@ -614,7 +614,7 @@ def optimize(parameter, input_params):
         # tune_factors=[ice_meltfactor, snow_meltfactor, accumfactor, snow_conv_factor,snow_melt_amplitude,ice_melt_amplitude]
         #input_params=[-6.21530477e-03, -3.16373793e-03,  3.90806503e-03,  6.37238199e+00,-5.37087541e-03,-1.14816075e-03]
         # input_params=[-0.003,-0.002,0.0065,input_params[0],input_params[1]]
-        input_params=[-0.0035,-0.0035,0.0065,1.3,2,input_params[0]]
+        input_params=[input_params[0],input_params[1],0.0065,1.31,1.97,8.97]
         quiet = True
         start_time = 500
         ice = [ 53.89550985, 61.2302675, 68.52805603, 72.16752233, 78.19477103,
@@ -632,11 +632,17 @@ def optimize(parameter, input_params):
             model.run_model(i)
         try:
             if parameter == 'summer':
-                print("Function result: ",np.sum(np.abs(model.calculated_summer_mb - model.summer_mb)/np.abs(model.summer_mb))*100)
-                return np.sum(np.abs(model.calculated_summer_mb - model.summer_mb)/np.abs(model.summer_mb))*100
+                rmse= np.sqrt(np.mean((model.calculated_summer_mb - model.summer_mb) ** 2))
+                # print("Function result: ",np.sum(np.abs(model.calculated_summer_mb - model.summer_mb)/np.abs(model.summer_mb))*100)
+                # return np.sum(np.abs(model.calculated_summer_mb - model.summer_mb)/np.abs(model.summer_mb))*100
+                print("Function result: ", rmse)
+                return rmse
             elif parameter == 'winter': 
-                print("Function result: ",np.sum(np.abs(model.calculated_winter_mb-model.winter_mb)/model.winter_mb*100))
-                return np.sum(np.abs(model.calculated_winter_mb-model.winter_mb)/model.winter_mb*100)
+                rmse= np.sqrt(np.mean((model.calculated_winter_mb - model.winter_mb) ** 2))
+                # print("Function result: ",np.sum(np.abs(model.calculated_winter_mb-model.winter_mb)/model.winter_mb*100))
+                # return np.sum(np.abs(model.calculated_winter_mb-model.winter_mb)/model.winter_mb*100)
+                print("Function result: ", rmse)
+                return rmse
             elif parameter == 'annual': 
                 print("Function result: ",np.sum((np.array(model.calculated_annual_mb) - np.array(model.annual_mb)) ** 2))
                 return np.sum((np.array(model.calculated_annual_mb) - np.array(model.annual_mb)) ** 2)
@@ -694,30 +700,33 @@ ice_melt_amplitude=-0.001
 # bounds=[(0.013,0.014)]
 # bounds=[(-0.01,-0.00001),(0.0001,0.01)]
 # gamma=0.0065
-bounds=[(8,11)]
+bounds=[(-0.005,-0.002),(-0.005,-0.001)]
 # bounds=[(0.005,0.007)]
 #result = differential_evolution(lambda x: optimize('summer_winter', x), bounds)
 #initial_guess=[-9.57979633e-03, -9.85185254e-03 , 1.05581961e-02,  6.34612522e+00,-1.00242107e-03, -1.05457432e-03]
 # initial_guess=[-0.012,-0.006,0.001,5,0,0]
 # initial_guess=[-0.01,0.0065]
-initial_guess=[9]
+initial_guess=[-0.0035,-0.0025]
 opt_method='Nelder-Mead'
 with open(f"../Results/{opt_method}-Results.txt", "a") as file:
-    file.write("-------------------Optimize Volume-----------\n")
+    file.write("-------------------Optimize Summer MB-----------\n")
     # for opt_var in ['ela','front_var','thick','vol_change']:
-    for opt_var in ['vol_change']:
+    for opt_var in ['summer']:
         result = minimize(lambda x: optimize(opt_var, x),initial_guess,method=opt_method,bounds=bounds,options={'disp': True})
         # result_ice_melt, result_snow_melt, result_accum, result_snow_conv, result_snow_amp, result_ice_amp=result.x
         # result_accum=result.x
-        # result_ice_melt,result_snow_melt=result.x
-        result_snow_conv=result.x
+        result_ice_melt,result_snow_melt=result.x
+        # result_snow_conv=result.x
+        # result_accum_lower, result_accumt_upper=result.x
         # print("Final Gamma: ", result.x)
         # print("Final objective function value:", result.fun)
         # print("OPTIMIZED PARAMS FOR:", opt_var)
         # print("Optimized accumulation factor:", result_accum)
-        # print("Optimized ice meltfactor:",result_ice_melt)
-        # print("Optimized snow meltfactor:",result_snow_melt)
-        print("Optimized snow conversion factor:",result_snow_conv)
+        # print("Optimized accumulation factor lower:", result_accum_lower)
+        # print("Optimized accumulation factor upper:", result_accumt_upper)
+        print("Optimized ice meltfactor:",result_ice_melt)
+        print("Optimized snow meltfactor:",result_snow_melt)
+        # print("Optimized snow conversion factor:",result_snow_conv)
         # print("Optimized snow melt amplitude:",result_snow_amp)
         # print("Optimized ice melt amplitude:",result_ice_amp)
         # print("Optimized lapse rate: ", result_lapse_rate)
@@ -725,9 +734,11 @@ with open(f"../Results/{opt_method}-Results.txt", "a") as file:
         print(result.x)
         # file.write(f"Optimized parameters for {opt_var}:\n")
         # file.write(f"Optimized accumulation factor: {result_accum}\n")
-        # file.write(f"Optimized ice meltfactor: {result_ice_melt}\n")
-        # file.write(f"Optimized snow meltfactor: {result_snow_melt}\n")
-        file.write(f"Optimized snow conversion factor: {result_snow_conv}\n")
+        # file.write(f"Optimized accumulation factor lower: {result_accum_lower}\n")
+        # file.write(f"Optimized accumulation factor upper: {result_accumt_upper}\n")
+        file.write(f"Optimized ice meltfactor: {result_ice_melt}\n")
+        file.write(f"Optimized snow meltfactor: {result_snow_melt}\n")
+        # file.write(f"Optimized snow conversion factor: {result_snow_conv}\n")
         # file.write(f"Optimized snow melt amplitude: {result_snow_amp}\n")
         # file.write(f"Optimized ice melt amplitude: {result_ice_amp}\n")
         file.write(f"Final objective function value: {result.fun}\n")

@@ -60,3 +60,7 @@ Final objective function value: 640.1576577710646
 [1.3        1.91802637]
 -------------------Optimize Volume-----------
 -------------------Optimize Volume-----------
+-------------------Optimize Volume-----------
+Optimized snow conversion factor: [8.97052917]
+Final objective function value: 461371.57363487384
+[8.97052917]
