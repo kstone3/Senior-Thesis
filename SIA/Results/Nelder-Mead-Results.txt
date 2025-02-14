@@ -64,3 +64,12 @@ Final objective function value: 640.1576577710646
 Optimized snow conversion factor: [8.97052917]
 Final objective function value: 461371.57363487384
 [8.97052917]
+-------------------Optimize Summer MB-----------
+Optimized ice meltfactor: -0.003924789428710942
+Optimized snow meltfactor: -0.003505844116210935
+Final objective function value: 0.4613233673615493
+[-0.00392479 -0.00350584]
+-------------------Optimize Volume-----------
+Optimized snow conversion factor: [15.]
+Final objective function value: 0.026099632816272963
+[15.]
