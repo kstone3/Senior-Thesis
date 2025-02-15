@@ -73,3 +73,35 @@ Final objective function value: 0.4613233673615493
 Optimized snow conversion factor: [15.]
 Final objective function value: 0.026099632816272963
 [15.]
+-------------------Optimize Volume-----------
+Optimized snow conversion factor: [15.]
+Final objective function value: 0.16155380780493217
+[15.]
+-------------------Optimize Summer-----------
+Optimized snow conversion factor: [-0.0039 -0.0035]
+Final objective function value: 0.01380443984538741
+[-0.0039 -0.0035]
+-------------------Optimize Summer with lapse rate-----------
+Optimized snow conversion factor: [-0.00401419 -0.00415771  0.007     ]
+Final objective function value: 0.01280157759158509
+[-0.00401419 -0.00415771  0.007     ]
+-------------------Optimize Vol with lapse rate-----------
+Optimized snow conversion factor: [7.96863588e+00 7.00000000e-03]
+Final objective function value: 0.1394540605970822
+[7.96863588e+00 7.00000000e-03]
+-------------------Optimize Winter with lapse rate-----------
+Optimized snow conversion factor: [1.12791695 2.         0.00699959]
+Final objective function value: 0.04483679786760049
+[1.12791695 2.         0.00699959]
+-------------------Optimize Summer with lapse rate list-----------
+Optimized snow conversion factor: [-0.00456422 -0.002     ]
+Final objective function value: 0.01580409573195161
+[-0.00456422 -0.002     ]
+-------------------Optimize Summer with lapse rate list-----------
+Optimized snow conversion factor: [-0.005 -0.001]
+Final objective function value: 0.08169755742607707
+[-0.005 -0.001]
+-------------------Optimize Winter with lapse rate list-----------
+Optimized snow conversion factor: [1.17837891 2.4942688 ]
+Final objective function value: 0.03883890561002576
+[1.17837891 2.4942688 ]

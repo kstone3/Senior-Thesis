@@ -115,7 +115,7 @@ class glacierSim():
         self.daily_runoff_training=[] #holds daily runoff data for training
         self.daily_runoff_verif=[] #holds daily runoff data for verification
         self.daily_runoff_all_data=[]
-        self.daily_runoff_all_run=np.zeros(math.ceil((self.time-start_time)*365.25)) #holds daily runoff data for all data
+        self.monthly_runoff_all=np.zeros(math.ceil((self.time-start_time)*365.25)) #holds daily runoff data for all data
         
         #PREV VARS:
         self.prev_thickness=np.mean(self.ice) #previous avg ice thickness used to calculate thickness change
@@ -268,7 +268,7 @@ class glacierSim():
         self.date_index_verif = {date: idx for idx, date in enumerate(verif_data['date'])}
         self.daily_runoff_verif = np.zeros(len(self.date_index_verif))
         self.date_index_all = {date: idx for idx, date in enumerate(df['date'])}
-        self.measured_runoff_data = df.groupby(df['date'].dt.to_period('M'))['runoff'].sum().to_numpy()
+        self.measured_runoff_all = df.groupby(df['date'].dt.to_period('M'))['runoff'].sum().to_numpy()
         self.daily_runoff_all_data = np.zeros(len(self.date_index_all))
         # df = pd.read_csv('C:/Users/bookn/Downloads/Senior-Thesis/SIA/Data/Daily_Runoff_Data_2005-2006_.csv')
         # df['date'] = pd.to_datetime(df['date'], format='%m/%d/%Y')
@@ -293,7 +293,7 @@ class glacierSim():
         if current_date_key in self.date_index_all: self.daily_runoff_all_data[self.date_index_all[current_date_key]] += (self.glacial_melt+self.snow_melt_vol)
         if current_date_key in self.date_index_training: self.daily_runoff_training[self.date_index_training[current_date_key]] += (self.glacial_melt+self.snow_melt_vol)
         if current_date_key in self.date_index_verif: self.daily_runoff_verif[self.date_index_verif[current_date_key]] += (self.glacial_melt+self.snow_melt_vol)
-        self.daily_runoff_all_run[(1984-self.current_date.year)+(self.current_date.month-1)] += (self.glacial_melt+self.snow_melt_vol)
+        self.monthly_runoff_all[(1984-self.current_date.year)+(self.current_date.month-1)] += (self.glacial_melt+self.snow_melt_vol)
         #If date is the date before thickness change verification data starts then set prev_thickness to calculate thickness change
         if self.current_date==datetime(1998,12,31): self.prev_thickness=np.mean(self.ice)
         #Calculate thickness change data
@@ -354,7 +354,8 @@ class glacierSim():
     #     self.snow_depth[temps>0]+=snow_melt
     
     def snow_model(self, index,timestep):
-        snow_temps=self.temps[index]-self.temp_lapse_rate*(self.snow_elev_bins-272)
+        if type(self.temp_lapse_rate) is int: snow_temps=self.temps[index]+self.temp_lapse_rate*(self.snow_elev_bins-272)
+        else: snow_temps=self.temps[index]+self.temp_lapse_rate[self.current_date.month-1]*(self.snow_elev_bins-272)
         self.snow_depth[snow_temps<0]+=(self.precip[index]/1000)*self.snow_conv_factor*timestep
         self.snow_melt_amt.fill(0)
         self.snow_melt_amt[snow_temps>0]=self.snow_melt_factor*self.snow_depth[snow_temps>0]*timestep
@@ -367,7 +368,8 @@ class glacierSim():
             if self.current_date<datetime(2024,10,1): index=self.dates.index(pd.Timestamp(self.current_date.replace(hour=0, minute=0, second=0, microsecond=0)))
             else: index=self.dates.index(pd.Timestamp(datetime(2024, 9, 30)))
             #Calculates temperatures for every self.x value and varies temp with elevation
-            x_temps=self.temps[index]-self.temp_lapse_rate*(self.ice+self.topo-272) #weather station elevation is 272m
+            if type(self.temp_lapse_rate) is int: x_temps=self.temps[index]+self.temp_lapse_rate*(self.ice+self.topo-272) #weather station elevation is 272m
+            else: x_temps=self.temps[index]+self.temp_lapse_rate[self.current_date.month-1]*(self.ice+self.topo-272)
             mb=np.zeros_like(x_temps) #initialize mass balance
             #Melts ice for temps greater than 0
             melt_arr=self.snow_melt_factor+((self.curr_ela-(self.ice+self.topo))/(self.curr_ela-np.nanmin(self.topo+self.ice)))*(self.ice_melt_factor-self.snow_melt_factor)
@@ -601,12 +603,12 @@ def optimize(parameter, input_params):
         #print("ACCUMFACTOR: ", input_params[0])
         # print("ICE MELTFACTOR: ", input_params[0])
         # print("SNOW MELTFACTOR: ", input_params[1])
-        print("SNOW CONVERSION FACTOR: ", input_params[0])
+        # print("SNOW CONVERSION FACTOR: ", input_params[0])
         # print("SNOW MELT AMPLITUDE: ", input_params[4])
         # print("ICE MELT AMPLITUDE: ", input_params[5])
         # print("LAPSE RATE: ", input_params[1])
-        # print("ACCUMFACTOR LOWER: ", input_params[0])
-        # print("ACCUMFACTOR UPPER: ", input_params[1])
+        print("ACCUMFACTOR LOWER: ", input_params[0])
+        print("ACCUMFACTOR UPPER: ", input_params[1])
         print(input_params)
         #print("GAMMA: ", input_params[0])
         ela = 1880
@@ -614,6 +616,7 @@ def optimize(parameter, input_params):
         time = 540
         save = 1 #Needs to be 1 to calculate ela list
         gamma=0.016
+        lapse_rate=[-0.00334774, -0.00544884, -0.00577458, -0.00679377, -0.00661499, -0.00627995, -0.00529508, -0.00534911, -0.00495446, -0.00494315, -0.00472614, -0.00452499]
         # accumfactor=0.1 #bounds approx 0.1-0.5
         # ice_meltfactor= 0.005 #bounds approx 0.005-0.012
         # snow_meltfactor=0.002 #bounds approx 0.002-0.006
@@ -623,7 +626,11 @@ def optimize(parameter, input_params):
         # tune_factors=[ice_meltfactor, snow_meltfactor, accumfactor, snow_conv_factor,snow_melt_amplitude,ice_melt_amplitude]
         #input_params=[-6.21530477e-03, -3.16373793e-03,  3.90806503e-03,  6.37238199e+00,-5.37087541e-03,-1.14816075e-03]
         # input_params=[-0.003,-0.002,0.0065,input_params[0],input_params[1]]
-        input_params=[-0.0039,-0.0035,0.0065,1.31,1.97,input_params[0]]
+        # input_params=[-0.0039,-0.0035,0.0065,1.31,1.97,input_params[0]]
+        # tune_factors=[-0.0039,-0.0035,input_params[2],input_params[0],input_params[1],8.94]
+        # tune_factors=[input_params[0],input_params[1],input_params[2],1.31,1.97,8.94]
+        # tune_factors=[input_params[0],input_params[1],lapse_rate,1.3,1.9,8.94]
+        tune_factors=[-0.0039,-0.0035,lapse_rate,input_params[0],input_params[1],8.94]
         quiet = True
         start_time = 500
         ice = [ 53.89550985, 61.2302675, 68.52805603, 72.16752233, 78.19477103,
@@ -635,23 +642,34 @@ def optimize(parameter, input_params):
             142.71479768, 122.66643947, 105.65745331, 89.73132543, 84.64598526,
             84.39967405, 78.27781775, 70.24575207, 57.81117783, 43.58883439,
             34.64893057, 15.29705107, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ]
-        model = glacierSim(ela=ela, ela_1900=ela_1900,time=time, save=save,gamma=gamma,quiet=quiet, tune_factors=input_params, initial_ice=ice, start_time=start_time)
-        model.init(ax,ela=ela, ela_1900=ela_1900,time=time, save=save,gamma=gamma,quiet=quiet, tune_factors=input_params, initial_ice=ice, start_time=start_time)
+        model = glacierSim(ela=ela, ela_1900=ela_1900,time=time, save=save,gamma=gamma,quiet=quiet, tune_factors=tune_factors, initial_ice=ice, start_time=start_time)
+        model.init(ax,ela=ela, ela_1900=ela_1900,time=time, save=save,gamma=gamma,quiet=quiet, tune_factors=tune_factors, initial_ice=ice, start_time=start_time)
         for i in range(0,model.frames):
             model.run_model(i)
         try:
             if parameter == 'summer':
-                rmse= np.sqrt(np.mean((model.calculated_summer_mb - model.summer_mb) ** 2))
+                summer_min=min(np.nanmin(model.calculated_summer_mb),np.nanmin(model.summer_mb))
+                summer_max=max(np.nanmax(model.calculated_summer_mb),np.nanmax(model.summer_mb))
+                calc_summer_mb_norm=(model.calculated_summer_mb-summer_min)/(summer_max-summer_min)
+                meas_summer_mb_norm= (np.array(model.summer_mb)-summer_min)/(summer_max-summer_min)
+                mse=np.mean((calc_summer_mb_norm-meas_summer_mb_norm)**2)
+                rmse=np.sqrt(np.mean((calc_summer_mb_norm-meas_summer_mb_norm)**2))
                 # print("Function result: ",np.sum(np.abs(model.calculated_summer_mb - model.summer_mb)/np.abs(model.summer_mb))*100)
                 # return np.sum(np.abs(model.calculated_summer_mb - model.summer_mb)/np.abs(model.summer_mb))*100
-                print("Function result: ", rmse)
-                return rmse
-            elif parameter == 'winter': 
-                rmse= np.sqrt(np.mean((model.calculated_winter_mb - model.winter_mb) ** 2))
+                print("Function result: ", mse)
+                return mse
+            elif parameter == 'winter':
+                winter_min=min(np.nanmin(model.calculated_winter_mb),np.nanmin(model.winter_mb))
+                winter_max=max(np.nanmax(model.calculated_winter_mb),np.nanmax(model.winter_mb))
+                calc_winter_mb_norm=(model.calculated_winter_mb-winter_min)/(winter_max-winter_min)
+                meas_winter_mb_norm= (np.array(model.winter_mb)-winter_min)/(winter_max-winter_min)
+                mse=np.mean((calc_winter_mb_norm-meas_winter_mb_norm)**2)
+                rmse=np.sqrt(np.mean((calc_winter_mb_norm-meas_winter_mb_norm)**2))
+                # rmse= np.sqrt(np.mean((model.calculated_winter_mb - model.winter_mb) ** 2))
                 # print("Function result: ",np.sum(np.abs(model.calculated_winter_mb-model.winter_mb)/model.winter_mb*100))
                 # return np.sum(np.abs(model.calculated_winter_mb-model.winter_mb)/model.winter_mb*100)
-                print("Function result: ", rmse)
-                return rmse
+                print("Function result: ", mse)
+                return mse
             elif parameter == 'annual': 
                 print("Function result: ",np.sum((np.array(model.calculated_annual_mb) - np.array(model.annual_mb)) ** 2))
                 return np.sum((np.array(model.calculated_annual_mb) - np.array(model.annual_mb)) ** 2)
@@ -673,13 +691,12 @@ def optimize(parameter, input_params):
             elif parameter == 'vol_change':
                 df = pd.DataFrame({'date': pd.to_datetime(list(model.date_index_training.keys())),'volume_change': model.daily_runoff_training})
                 df['date'] = df['date'].dt.to_period('M')
-                calc_min=np.nanmin(df.groupby('date')['volume_change'].sum().to_numpy())
-                calc_max=np.nanmax(df.groupby('date')['volume_change'].sum().to_numpy())
-                monthly_volume_change_normalized = (df.groupby('date')['volume_change'].sum().to_numpy()-calc_min)/(calc_max-calc_min)
-                meas_min=np.nanmin(model.measured_runoff_training)
-                meas_max=np.nanmax(model.measured_runoff_training)
-                measured_runoff_training_normalized= (model.measured_runoff_training-meas_min)/(meas_max-meas_min)
-                mse=np.mean((monthly_volume_change_normalized-measured_runoff_training_normalized)**2)
+                train_min=min(np.nanmin(df.groupby('date')['volume_change'].sum().to_numpy()),np.nanmin(model.measured_runoff_training))
+                train_max=max(np.nanmax(df.groupby('date')['volume_change'].sum().to_numpy()),np.nanmax(model.measured_runoff_training))
+                monthly_volume_change_train_normalized = (df.groupby('date')['volume_change'].sum().to_numpy()-train_min)/(train_max-train_min)
+                measured_runoff_train_normalized= (model.measured_runoff_training-train_min)/(train_max-train_min)
+                mse=np.mean((monthly_volume_change_train_normalized-measured_runoff_train_normalized)**2)
+                rmse=np.sqrt(np.mean((monthly_volume_change_train_normalized-measured_runoff_train_normalized)**2))
                 # print("Function result: ",abs(np.sum((monthly_volume_change- model.runoff_verif) / (model.runoff_verif)* 100)))
                 # return abs(np.sum((monthly_volume_change- model.runoff_verif) / (model.runoff_verif)* 100))
                 print("Function result: ",mse)
@@ -714,18 +731,20 @@ ice_melt_amplitude=-0.001
 # bounds=[(0.013,0.014)]
 # bounds=[(-0.01,-0.00001),(0.0001,0.01)]
 # gamma=0.0065
-bounds=[(6,15)]
+# bounds=[(1,1.6),(1.5,2.5)]
+bounds=[(-0.005,-0.002),(-0.005,-0.001)]
 # bounds=[(0.005,0.007)]
 #result = differential_evolution(lambda x: optimize('summer_winter', x), bounds)
 #initial_guess=[-9.57979633e-03, -9.85185254e-03 , 1.05581961e-02,  6.34612522e+00,-1.00242107e-03, -1.05457432e-03]
 # initial_guess=[-0.012,-0.006,0.001,5,0,0]
 # initial_guess=[-0.01,0.0065]
-initial_guess=[9.03]
+initial_guess=[-0.0456,-0.002]
+# initial_guess=[1.4,2.1]
 opt_method='Nelder-Mead'
 with open(f"../Results/{opt_method}-Results.txt", "a") as file:
-    file.write("-------------------Optimize Volume-----------\n")
+    file.write("-------------------Optimize Summer with lapse rate list-----------\n")
     # for opt_var in ['ela','front_var','thick','vol_change']:
-    for opt_var in ['vol_change']:
+    for opt_var in ['summer']:
         result = minimize(lambda x: optimize(opt_var, x),initial_guess,method=opt_method,bounds=bounds,options={'disp': True})
         # result_ice_melt, result_snow_melt, result_accum, result_snow_conv, result_snow_amp, result_ice_amp=result.x
         # result_accum=result.x
