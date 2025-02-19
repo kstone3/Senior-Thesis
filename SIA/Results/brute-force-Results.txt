@@ -43,3 +43,18 @@ Final objective function value: 774.4613560270024
 Optimized parameters for WINTER MB:
 Optimized accumulation factor: 0.031900000000000005
 Final objective function value: 774.4613560270027
+-------------------Lapse rate list-----------
+Best accumulation lower bound: 1.11
+Best accumulation upper bound: 2.5999999999999917
+Best ice melt factor: -0.0038999999999999972
+Best snow melt factor: -0.002400000000000001
+Best summer result: 0.015988349268073423
+Best winter result: 0.03717793204553803
+-------------------New bounds for accum-----------
+Best accumulation lower bound: 1.04
+Best accumulation upper bound: 2.689999999999996
+Best winter result: 0.037557733980824515
+-------------------Accumfactor gradient function-----------
+Best accumulation lower bound: 1.2
+Best accumulation upper bound: 0.03399999999999998
+Best winter result: 0.03874898938193151

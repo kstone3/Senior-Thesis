@@ -7,7 +7,6 @@ from math import inf
 from datetime import datetime,timedelta
 import time as t
 import warnings
-import matplotlib
 
 # logfile = open("powellOutput.txt", "w")
 
@@ -111,7 +110,7 @@ class glacierSim():
         self.daily_runoff_training=[] #holds daily runoff data for training
         self.daily_runoff_verif=[] #holds daily runoff data for verification
         self.daily_runoff_all_data=[]
-        self.monthly_runoff_all=np.zeros(math.ceil((self.time-start_time)*365.25)) #holds daily runoff data for all data
+        self.monthly_runoff_all=np.zeros((self.time-start_time)*12+1) #holds daily runoff data for all data
         
         #PREV VARS:
         self.prev_thickness=np.mean(self.ice) #previous avg ice thickness used to calculate thickness change
@@ -289,7 +288,7 @@ class glacierSim():
         if current_date_key in self.date_index_all: self.daily_runoff_all_data[self.date_index_all[current_date_key]] += (self.glacial_melt+self.snow_melt_vol)
         if current_date_key in self.date_index_training: self.daily_runoff_training[self.date_index_training[current_date_key]] += (self.glacial_melt+self.snow_melt_vol)
         if current_date_key in self.date_index_verif: self.daily_runoff_verif[self.date_index_verif[current_date_key]] += (self.glacial_melt+self.snow_melt_vol)
-        self.monthly_runoff_all[(1984-self.current_date.year)+(self.current_date.month-1)] += (self.glacial_melt+self.snow_melt_vol)
+        self.monthly_runoff_all[(self.current_date.year - 1984) * 12 + (self.current_date.month - 1)] += (self.glacial_melt+self.snow_melt_vol)
         #If date is the date before thickness change verification data starts then set prev_thickness to calculate thickness change
         if self.current_date==datetime(1998,12,31): self.prev_thickness=np.mean(self.ice)
         #Calculate thickness change data
@@ -372,7 +371,7 @@ class glacierSim():
             melt_arr[melt_arr>self.snow_melt_factor]=self.snow_melt_factor
             mb[np.where((x_temps>0)&((self.ice+self.topo)>=self.curr_ela))[0]]=self.snow_melt_factor*x_temps[np.where((x_temps>0)&((self.ice+self.topo)>self.curr_ela))[0]]
             mb[np.where((x_temps>0)&((self.ice+self.topo)<self.curr_ela))[0]]=melt_arr[np.where((x_temps>0)&((self.ice+self.topo)<self.curr_ela))[0]]*x_temps[np.where((x_temps>0)&((self.ice+self.topo)<self.curr_ela))[0]]
-            self.glacial_melt=np.sum(mb[mb<0]*self.year_area[mb<0])*timestep
+            self.glacial_melt=np.sum(mb[mb<0]*-1*self.year_area[mb<0])*timestep
             #mb[x_temps>0]= self.ice_melt_factor*x_temps[x_temps>0] if int(self.current_date.month) in [12,1,2] else (self.ice_melt_amplitude/2*(1-math.cos(2*math.pi/8*((self.current_date.month+(self.current_date.day+1)/calendar.monthrange(self.current_date.year, self.current_date.month)[1])-11))) + self.ice_melt_factor)*x_temps[x_temps>0]
             #Calculates snow melt and accumulation
             self.snow_model(index,timestep)
@@ -382,7 +381,9 @@ class glacierSim():
             #Note: Should this be changed to not factor in temps? Will snow accumulate to ice if the temp is above 0?
             # mb[x_temps<0]=self.snow_depth[x_temps<0]*self.accum_factor
             #IDEA: Try multiplying the accum_factor by elevation to change accumulation along glacier
-            accumfactor = self.accumfactor_lower + ((self.current_date.year - 1984) / (2024 - 1984)) * (self.accumfactor_upper - self.accumfactor_lower)
+            # accumfactor = self.accumfactor_lower + ((self.current_date.year - 1984) / (2024 - 1984)) * (self.accumfactor_upper - self.accumfactor_lower)
+            # accumulation gradient
+            accumfactor=self.accumfactor_lower+(self.current_date.year-1984)*self.accumfactor_upper
             mb[x_temps<0]=(self.precip[index]/1000)*accumfactor
             #Subtract snow that was just turned into ice
             # subtract_snow = (self.snow_depth[x_temps<0]*self.accum_factor*timestep)
@@ -954,10 +955,12 @@ best_ice_meltfactor=0
 best_snow_meltfactor=0
 min_result_winter=inf
 min_result_summer=inf
-accum_lower_list=np.arange(1.1,1.41,0.01)
-accum_upper_list=np.arange(2.2,2.61,0.01)
-ice_meltfactor_list=np.arange(-0.005,-0.0031,0.0001)
-snow_meltfactor_list=np.arange(-0.003,-0.0011,0.0001)
+# accum_lower_list=np.arange(1,1.21,0.01)
+# accum_upper_list=np.arange(2.5,2.71,0.01)
+accum_lower_list=np.arange(1.2,1.51,0.01)
+accum_upper_list=np.arange(0.01,0.041,0.001)
+# ice_meltfactor_list=np.arange(-0.005,-0.0031,0.0001)
+# snow_meltfactor_list=np.arange(-0.003,-0.0011,0.0001)
 checked_ice_list=[]
 checked_snow_list=[]
 ice_index=0
@@ -969,12 +972,14 @@ start_time_script = t.time()
 
 for accum_upper in accum_upper_list:
     for accum_lower in accum_lower_list:
-        ice_meltfactor=ice_meltfactor_list[ice_index]
-        snow_meltfactor=snow_meltfactor_list[snow_index]
-        checked_ice_list.append(ice_meltfactor)
-        checked_snow_list.append(snow_meltfactor)
-        print("Ice melt factor: ", ice_meltfactor)
-        print("Snow melt factor: ", snow_meltfactor)
+        # ice_meltfactor=ice_meltfactor_list[ice_index]
+        # snow_meltfactor=snow_meltfactor_list[snow_index]
+        ice_meltfactor=-0.0039
+        snow_meltfactor=-0.0024
+        # checked_ice_list.append(ice_meltfactor)
+        # checked_snow_list.append(snow_meltfactor)
+        # print("Ice melt factor: ", ice_meltfactor)
+        # print("Snow melt factor: ", snow_meltfactor)
         print("Accumulation lower bound: ", accum_lower)
         print("Accumulation upper bound: ", accum_upper)
         print()
@@ -983,18 +988,18 @@ for accum_upper in accum_upper_list:
         model.init(ax,ela=ela, ela_1900=ela_1900,time=time, save=save,gamma=gamma,quiet=quiet, tune_factors=tune_factors, initial_ice=ice, start_time=start_time)
         for i in range(0,model.frames):
             model.run_model(i)
-        summer_min=min(np.nanmin(model.calculated_summer_mb),np.nanmin(model.summer_mb))
-        summer_max=max(np.nanmax(model.calculated_summer_mb),np.nanmax(model.summer_mb))
-        calc_summer_mb_norm=(model.calculated_summer_mb-summer_min)/(summer_max-summer_min)
-        meas_summer_mb_norm= (np.array(model.summer_mb)-summer_min)/(summer_max-summer_min)
-        if(np.mean((calc_summer_mb_norm-meas_summer_mb_norm)**2)<min_result_summer):
-            min_result_summer=np.mean((calc_summer_mb_norm-meas_summer_mb_norm)**2)
-            best_ice_meltfactor=ice_meltfactor
-            best_snow_meltfactor=snow_meltfactor
-            print("Best ice melt factor: ", best_ice_meltfactor)
-            print("Best snow melt factor: ", best_snow_meltfactor)
-            print("New min summer result: ", min_result_summer)
-            print()
+        # summer_min=min(np.nanmin(model.calculated_summer_mb),np.nanmin(model.summer_mb))
+        # summer_max=max(np.nanmax(model.calculated_summer_mb),np.nanmax(model.summer_mb))
+        # calc_summer_mb_norm=(model.calculated_summer_mb-summer_min)/(summer_max-summer_min)
+        # meas_summer_mb_norm= (np.array(model.summer_mb)-summer_min)/(summer_max-summer_min)
+        # if(np.mean((calc_summer_mb_norm-meas_summer_mb_norm)**2)<min_result_summer):
+        #     min_result_summer=np.mean((calc_summer_mb_norm-meas_summer_mb_norm)**2)
+        #     best_ice_meltfactor=ice_meltfactor
+        #     best_snow_meltfactor=snow_meltfactor
+        #     print("Best ice melt factor: ", best_ice_meltfactor)
+        #     print("Best snow melt factor: ", best_snow_meltfactor)
+        #     print("New min summer result: ", min_result_summer)
+        #     print()
         winter_min=min(np.nanmin(model.calculated_winter_mb),np.nanmin(model.winter_mb))
         winter_max=max(np.nanmax(model.calculated_winter_mb),np.nanmax(model.winter_mb))
         calc_winter_mb_norm=(model.calculated_winter_mb-winter_min)/(winter_max-winter_min)
@@ -1015,32 +1020,32 @@ for accum_upper in accum_upper_list:
         time_remaining_sec = int(time_remaining % 60)
         print(f"Iteration {iteration_count}/{total_iterations} - Est. time remaining: {time_remaining_min}m {time_remaining_sec}s")
         print()
-        if snow_index<(len(snow_meltfactor_list)-1): snow_index+=1
-    snow_index=0
-    if ice_index<(len(ice_meltfactor_list)-1): ice_index+=1
+    #     if snow_index<(len(snow_meltfactor_list)-1): snow_index+=1
+    # snow_index=0
+    # if ice_index<(len(ice_meltfactor_list)-1): ice_index+=1
 
-if set(checked_ice_list).issubset(set(ice_meltfactor_list)):
-    print("All elements of checked_ice_list are in ice_meltfactor_list")
-else:
-    print("Not all elements of checked_ice_list are in ice_meltfactor_list")
+# if set(checked_ice_list).issubset(set(ice_meltfactor_list)):
+#     print("All elements of checked_ice_list are in ice_meltfactor_list")
+# else:
+#     print("Not all elements of checked_ice_list are in ice_meltfactor_list")
     
-if set(checked_snow_list).issubset(set(snow_meltfactor_list)):
-    print("All elements of checked_snow_list are in snow_meltfactor_list")
-else:
-    print("Not all elements of checked_snow_list are in snow_meltfactor_list")
+# if set(checked_snow_list).issubset(set(snow_meltfactor_list)):
+#     print("All elements of checked_snow_list are in snow_meltfactor_list")
+# else:
+#     print("Not all elements of checked_snow_list are in snow_meltfactor_list")
     
 print("Best accumulation lower bound: ", best_accum_lower)
 print("Best accumulation upper bound: ", best_accum_upper)
-print("Best ice melt factor: ", best_ice_meltfactor)
-print("Best snow melt factor: ", best_snow_meltfactor)
-print("Best summer result: ", min_result_summer)
+# print("Best ice melt factor: ", best_ice_meltfactor)
+# print("Best snow melt factor: ", best_snow_meltfactor)
+# print("Best summer result: ", min_result_summer)
 print("Best winter result: ", min_result_winter)
 
 with open(f"../Results/brute-force-Results.txt", "a") as file:
-    file.write("-------------------Lapse rate list-----------\n")
+    file.write("-------------------Accumfactor gradient function-----------\n")
     file.write(f"Best accumulation lower bound: {best_accum_lower}\n")
     file.write(f"Best accumulation upper bound: {best_accum_upper}\n")
-    file.write(f"Best ice melt factor: {best_ice_meltfactor}\n")
-    file.write(f"Best snow melt factor: {best_snow_meltfactor}\n")
-    file.write(f"Best summer result: {min_result_summer}\n")
+    # file.write(f"Best ice melt factor: {best_ice_meltfactor}\n")
+    # file.write(f"Best snow melt factor: {best_snow_meltfactor}\n")
+    # file.write(f"Best summer result: {min_result_summer}\n")
     file.write(f"Best winter result: {min_result_winter}\n")
