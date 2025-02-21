@@ -1,4 +1,4 @@
-steps=[1:3];
+steps=[3];
 addpath('../bin/')
 addpath('../execution/')
 
@@ -6,8 +6,8 @@ if any(steps==1)
     domain =['Data/south_cascade_glacier.exp'];
 	hinit=1000;	% element size for the initial mesh
 	hmax=1000;		% maximum element size of the final mesh
-	hmin=50;		% minimum element size of the final mesh
-	gradation=1.5;	% maximum size ratio between two neighboring elements
+	hmin=100;		% minimum element size of the final mesh
+	gradation=1.3;	% maximum size ratio between two neighboring elements
 	err=5;			% maximum error between interpolated and control field
 
 	% Generate an initial uniform mesh (resolution = hinit m)
@@ -25,7 +25,7 @@ if any(steps==1)
     md=bamg(md,'hmax',hmax,'hmin',hmin,'gradation',gradation,'field',vel_obs,'err',err);
 	%md=triangle(model, 'Data/south_cascade_glacier.exp',50);
 	%ploting
-	plotmodel(md,'data','mesh')
+	% plotmodel(md,'data','mesh')
 	save Models/southCascadeMesh md;
 end
 if any(steps==2) %Parameterization #3 
@@ -51,7 +51,7 @@ if any(steps==2) %Parameterization #3
 	min_friction = min(md.friction.coefficient);
 	disp(['Minimum friction: ', num2str(min_friction)]);
 	%md.thermal.isthermal = 0;
-	plotmodel(md, 'data', md.geometry.thickness);
+	% plotmodel(md, 'data', md.geometry.thickness);
 	save Models/southCascadePar md;
 end
 if any(steps==3)
@@ -101,17 +101,20 @@ if any(steps==3)
 		plotmodel(md, 'data', invalid_elements, 'title', 'Invalid Elements');
 	end
 
-	plotmodel(md, 'data', 'mesh');
+	% plotmodel(md, 'data', 'mesh');
 	% % Solve
 
 	md = setflowequation(md,'SIA','all');
 	md.cluster=generic('name',oshostname,'np',2);
 	md.toolkits=toolkits;
 	md.verbose = verbose('solution', true);
+	md.stressbalance.reltol = 1e-3;  % Increase solver tolerance
+	md.stressbalance.maxiter = 500;  % Allow more iterations
+
 	% md.verbose.solution=1;
-	md.timestepping.time_step = 0;    % Define time step (e.g., 0.1 years)
+	md.timestepping.time_step = 0.1;    % Define time step (e.g., 0.1 years)
 	%md.timestepping.final_time = 10;   % Define final simulation time (e.g., 10 years)
-	md = solve(md, 'StressBalance');       % Solve the transient problem
+	md = solve(md, 'transient');       % Solve the transient problem
 	% md.timestepping.time_step = 0;
 	% md.timestepping.final_time = 0;
 	% md = solve(md, 'SteadyState');	

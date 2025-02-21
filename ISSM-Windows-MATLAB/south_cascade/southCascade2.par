@@ -76,6 +76,8 @@ md.mask.ice_levelset = ones(md.mesh.numberofvertices, 1); % Default ice-covered
 md.geometry.thickness(pos_invalid) = 0; % Small positive value
 md.geometry.base= md.geometry.surface- md.geometry.thickness;
 md.geometry.bed=md.geometry.base;
+invalid = find(md.geometry.base > md.geometry.surface);
+md.geometry.surface(invalid) = md.geometry.base(invalid) + 1;
 
 % Update ice mask
 md.mask.ice_levelset(pos_invalid) = -1; % Mark as ice-free
@@ -105,6 +107,8 @@ md.friction.coefficient = ones(md.mesh.numberofvertices, 1) * 2;
 md.friction.p=ones(md.mesh.numberofelements,1);
 md.friction.q=ones(md.mesh.numberofelements,1);
 md.friction.coefficient(pos_invalid) = 1;
+md.friction.coefficient(md.friction.coefficient <= 0) = 1;  % Set min value to 1
+
 
 md.inversion=m1qn3inversion();
 md.inversion.vx_obs=md.initialization.vx;
