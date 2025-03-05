@@ -1,0 +1,109 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{indentfirst}
+\usepackage{amsmath}
+
+\title{Can a Shallow Ice Approximation Model be Used to Model the Water Output of Alpine Glaciers?}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section*{Abstract}
+% (Insert abstract text here.)
+
+\section{Introduction}
+
+\section{Literature Review}
+    As shown in Le Meur et al., 2004, there are significant differences in computational time between a SIA model and a Stokes model. When 
+computing the free surface and associated velocity field, the SIA model took 1 minute of CPU time, whereas the Stokes model took 2 hours. 
+This disparity grew even larger for 3D models. The authors show that there are some instances where SIA models do significantly worse than 
+Stokes models, such as glaciers on steep slopes and glaciers in steep, narrow valleys because SIA models only approximate the Stokes 
+equations. One of these approximations is to ignore horizontal stress gradients. This can cause a SIA model to deviate from a Stokes model 
+significantly in predicted glacier flow and expansion. In one example, the resulting SIA model can have an upper free surface that is 
+15--20\% greater than the Stokes model and velocities up to a factor of 2 greater (Le Meur et al., 2004). In the 2D model, the bed 
+characteristics and slope become the limiting factor of the SIA model; Le Meur et al., 2004 note that the maximum velocity ratio of their 
+SIA and Stokes models goes from 1.9 in a 3D model to 1.3 in a 2D model, which will differ depending on model configuration, but it tends to 
+indicate that the horizontal stress gradients played a large part in this error. They found instances in which the SIA models performed well 
+compared to Stokes models---particularly large flat glaciers with relatively free edges. One thing to note about this comparison study is 
+that the authors are looking at the shape, area, and velocity profile of the glacier, whereas this study will focus on the water output 
+(surface mass loss) of the glacier.
+
+    There are several papers, such as Le Muer et al., 2003 and Kessler et al., 2006, that use an SIA model for alpine glaciers. The consensus 
+from those papers is that SIA models only work well on alpine glaciers with a low aspect ratio, defined as the thickness-to-extent ratio in 
+Le Muer et al., 2004. The glacier used by this study will have a low aspect ratio and therefore a SIA model should work well to model it.
+
+    Additionally, there is precedent for using a SIA-Mass Balance model for modeling water runoff from glaciers (Naz et al., 2014). They used 
+the SIA model to approximate the ice dynamics and a mass balance model to approximate the accumulation and ablation patterns on the glacier. 
+As shown in their paper, the SIA model was able to accurately predict the glacier, and the coupled hydrological model was able to predict 
+the stream flow accurately---only overestimating the July flow by an average of 13\% and underestimating the August and September flow by an 
+average of 2\%.
+
+\section{Thesis Statement}
+% (Insert thesis statement here.)
+
+\section{Methods}
+
+\subsection{Study Site}
+\textbf{South Cascade Glacier in the North Cascades of Washington}
+
+\subsection{Physical Characteristics and Relevance}
+
+\subsection{Availability of Hydrological and Glacial Data}
+
+\subsection{Model Development}
+\subsubsection{Model Overview}
+
+\subsubsection{Ice Dynamics}
+\paragraph{SIA Model} 
+\paragraph{Assumptions}
+
+\subsubsection{Snow and Rain Model}
+The snow melt model uses precipitation and temperature data to melt and accumulate snow. This model uses 14 elevation bins and keeps track 
+of the snow depth in each bin. The equation below is used to calculate the change in snow depth per timestep 
+$$\text{snow depth} += 
+\begin{cases} 
+  p*\alpha & \text{if } T \leq 0,\\
+  -\text{minimum}((s*T),\text{snow depth}) & \text{if } T > 0
+\end{cases}$$
+Where $p$ is the precipitation, $\alpha$ is the precipitation conversion factor, $s$ is the snow melt factor, and $T$ is 
+the temperature. The snow melt is constrained so that there cannot be more melt than there is snow. The rain is simply modeled by $p*\alpha$ 
+for positive temperatures
+
+The total volume of snow is calculated by the equation
+$$\text{snow melt volume}=(s*T)*(\text{area of bin}-\text{area of glacier})$$
+This give us the total volume of snow melting off the glacier. The glacial melt is calculated elsewhere. The volume of rain is calculated by
+$$\text{rain volume}=p*\alpha*(\text{area of bin})$$
+This calculates the rain for the whole basin, assuming that any rain that falls off the glacier runs off immediately.
+\subsubsection{Glacial Melt Model}
+\paragraph{Data Used for Model}
+
+\subsubsection{Model Comparison}
+\paragraph{Running OGGM Model for the Same Glacier}
+\paragraph{Comparing Outputs of Both Models}
+\paragraph{Validation Using Real-World Streamflow Data (Brunner et al., 2024)}
+
+\section{Expected Results}
+\subsection{Accuracy of SIA}
+\subsection{Accuracy of ISSM}
+\subsection{Comparison of Accuracy}
+
+\section{Implications of Research}
+\subsection{Importance of Simplified Ice Dynamics in Numerical Glacier Modeling}
+\subsection{Applications}
+
+\section{Discussion}
+\subsection{What Worked}
+\subsection{What Didn’t Work and Why}
+\subsection{What Can Be Improved}
+
+\section{Conclusion}
+\subsection{Summary of Results}
+\subsection{Conclusion of Model Accuracy}
+
+\section{References}
+% (Insert references here.)
+
+\end{document}
