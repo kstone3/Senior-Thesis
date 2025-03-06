@@ -142,3 +142,23 @@ Final objective function value: inf
 Optimized snow conversion factor: [-0.0039  -0.00252]
 Final objective function value: 0.037270106235778235
 [-0.0039  -0.00252]
+-------------------Optimize avalanche percentage-----------
+Optimized snow conversion factor: [0.5]
+Final objective function value: inf
+[0.5]
+-------------------Optimize avalanche percentage-----------
+Optimized snow conversion factor: [0.5]
+Final objective function value: inf
+[0.5]
+-------------------Optimize avalanche percentage-----------
+Optimized snow conversion factor: [0.5]
+Final objective function value: inf
+[0.5]
+-------------------Optimize summer mb-----------
+Optimized snow conversion factor: [-0.0039 -0.0025]
+Final objective function value: inf
+[-0.0039 -0.0025]
+-------------------Optimize summer mb-----------
+Optimized snow conversion factor: [-0.00385125 -0.002875  ]
+Final objective function value: 0.017254174217253858
+[-0.00385125 -0.002875  ]

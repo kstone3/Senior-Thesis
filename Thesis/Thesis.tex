@@ -15,6 +15,9 @@
 % (Insert abstract text here.)
 
 \section{Introduction}
+\subsection{Importance of glacial melting in mountain hydrology}
+\subsection{Role of numerical modeling in understanding glacial runoff}
+\subsection{Challenges in computational modeling of glaciers}
 
 \section{Literature Review}
     As shown in Le Meur et al., 2004, there are significant differences in computational time between a SIA model and a Stokes model. When 
@@ -77,8 +80,30 @@ $$\text{snow melt volume}=(s*T)*(\text{area of bin}-\text{area of glacier})$$
 This give us the total volume of snow melting off the glacier. The glacial melt is calculated elsewhere. The volume of rain is calculated by
 $$\text{rain volume}=p*\alpha*(\text{area of bin})$$
 This calculates the rain for the whole basin, assuming that any rain that falls off the glacier runs off immediately.
+\subsubsection{Mass Balance Model}
+The mass balance of the glacier is calculated using temperature and precipitation data from the Diablo Dam weather station at 272m. The 
+temperature at the glacier is calculated by using a month-specific lapse rate. This month-specific lapse rate was empiraclly calculated using
+data from the Diablo Dam weather station and the South Cascade Glacier weather station at 1830m from 2010-2018. The precipitation at the 
+glacier is calculated by multiplying the precipitation at the Diablo Dam weather station by the precipitation conversion factor of 1.58 
+(reference). The ablation of the glacier is calculated by using a combination of an ice melt factor and a snow melt factor. Above the ELA the 
+ablation is calculated by the equation
+$$\text{ablation}=T*\text{snow melt factor}$$
+Below the ELA the ablation is calculated by the equation
+$$\text{ablation}=T*(\text{snow melt factor}+((\text{ELA}-\text{elevation})/(\text{ELA}-\text{minimum(elevation)}))*$$
+$$(\text{ice melt factor}-\text{snow melt factor}))$$
+The result of this equation is the snow melt factor being used at the ELA and a linear increase in the melt factor until it hits the ice melt 
+factor at the base of the glacier. 
+The accumulation of the glacier is calculated using a similar linear equation that increases with time.
+$$\text{accumulation}=p*\alpha*(\text{start accumulation}+((\text{year}-1984)/(2024-1984))*$$
+$$(\text{start accumulation}-\text{end accumulation}))$$
+This resuls in the accumulation increasing with time until it hits the end accumulation at 2024. 
 \subsubsection{Glacial Melt Model}
+The glacial melt model uses the mass balance of the glacier to calculate how much volume the glacier is losing. The volume of runoff from the 
+glacier per timestep is calculated by the equation
+$$\text{glacial melt volume}=(\text{mass balance}<0)*\text{area of glacier}$$
 \paragraph{Data Used for Model}
+
+\subsubsection{Model Calibration}
 
 \subsubsection{Model Comparison}
 \paragraph{Running OGGM Model for the Same Glacier}
@@ -87,7 +112,7 @@ This calculates the rain for the whole basin, assuming that any rain that falls 
 
 \section{Expected Results}
 \subsection{Accuracy of SIA}
-\subsection{Accuracy of ISSM}
+\subsection{Accuracy of OGGM}
 \subsection{Comparison of Accuracy}
 
 \section{Implications of Research}
