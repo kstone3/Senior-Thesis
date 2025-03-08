@@ -7,10 +7,6 @@ import matplotlib
 from glacierSim import glacierSim
 matplotlib.use("TkAgg")
 
-#Initialize plotting stuff outside of class
-fig, ax = plt.subplots() #initialize plotting variables
-_ = plt.close(fig) #used to prevent an empty plot from displaying
-
 def optimize(parameter, input_params):
     try:
         # print("Optimizing: ", parameter)

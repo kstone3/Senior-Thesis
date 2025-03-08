@@ -7,14 +7,14 @@ import random
 from datetime import datetime, timedelta
 
 class glacierSim():
-    def __init__(self, ela=1880,ela_1900=1650,valley_length=3668, time=500,save=10,gamma=0.01,quiet=True, tune_factors=[-0.004,-0.002,0.0065,1.6,2.2,5,0.006], initial_ice=None, start_time=0):
+    def __init__(self, ela=1880,ela_1900=1650,time=500,save=10,gamma=0.01,quiet=True, tune_factors=[-0.004,-0.002,0.0065,1.6,2.2,5,0.006], initial_ice=None, start_time=0, input_files=None):
         #MODEL VARS:
-        self.valley_length = valley_length
+        self.valley_length=0 #in m, defined in calc_topo
         self.start_ela = ela #in m
         self.curr_ela=ela
         self.ela_1900=ela_1900
         self.num_cells = 50 #set number of cells
-        self.dx = self.valley_length/(self.num_cells-1) #cell width in m
+        self.dx = 0 #cell width in m, will be calculated in calc_topo
         if start_time==0: self.ice = np.zeros(self.num_cells) #initialize ice
         else: self.ice = np.array(initial_ice)
         
@@ -23,7 +23,7 @@ class glacierSim():
         self.snow_line_list=[] #stores info for plotting snow
         self.ela_line_list=[] #stores info for plotting ela
         self.title_list=[] #stores info for plotting title
-        self.x = np.linspace(0.5 * self.dx, self.valley_length - 0.5 * self.dx,self.num_cells) #used for plotting topography and ice thickness
+        self.x = np.zeros(self.num_cells) #used for plotting topography and ice thickness, defined in calc_topo
         self.topo =[] #initialize topography
         self.quiet=quiet #set to true to printout values while model is running
         
@@ -87,7 +87,6 @@ class glacierSim():
         self.date_index_verif=[] #holds date index for verification data
         self.date_index_all=[] #holds date index for all data
         
-        
         #CALCULATED VERIF VARS:
         #MB VARS
         self.calculated_annual_mb=np.zeros(40, dtype=np.float64) #used to verify annual mass balance
@@ -123,13 +122,17 @@ class glacierSim():
         self.year_area=np.zeros(self.num_cells)
         self.glacier_area=0
         
-    def init(self, ela=1880,ela_1900=1650,valley_length=3668, time=500,save=10,gamma=0.008, quiet=True, tune_factors=[-0.004,-0.002,0.0065,1.6,2.2,5,0.006], initial_ice=None, start_time=0):
-        self.__init__(ela, ela_1900,valley_length, time, save, gamma, quiet, tune_factors, initial_ice, start_time)
+        #INPUT FILE VARS:
+        if input_files is not None: self.input_files=input_files #list of input files for glacier data
+        else: print("No input files provided")
+        
+    def init(self, ela=1880,ela_1900=1650,valley_length=3668, time=500,save=10,gamma=0.008, quiet=True, tune_factors=[-0.004,-0.002,0.0065,1.6,2.2,5,0.006], initial_ice=None, start_time=0, input_files=None): 
+        self.__init__(ela, ela_1900, time, save, gamma, quiet, tune_factors, initial_ice, start_time, input_files)
         self.load_verif_data()
         self.calc_topo()
         self.load_area_data()
         self.load_weather_data()
-        self.ela_list.append(self.topo[-1])
+        self.ela_list.append(self.topo[-1]) 
     
     #Used to calculate distance between two lat lon points to interpolate bed topo
     def haversine(self, lat1, lon1, lat2, lon2):
@@ -141,7 +144,7 @@ class glacierSim():
         longitudes = []
         topo = []
         #Load in the bed topo data
-        df = pd.read_csv('Data/centerlineBed.csv')
+        df = pd.read_csv(self.input_files['bed'])
         latitudes = df.iloc[:, 2].astype(float).tolist()  # Latitude is the second column (index 2)
         longitudes = df.iloc[:, 1].astype(float).tolist()  # Longitude is the third column (index 1)
         topo = df.iloc[:, 0].astype(float).tolist()  # Elevation is the first column (index 0)
@@ -161,9 +164,9 @@ class glacierSim():
         #Load in the 2021 and 1986 glacier extent data for verification
         #This is done here instead of in the load_verif function below because 
         #it needs the cumulative_distances to interpolate the data onto the model arrays
-        data_1986 = np.loadtxt('Data/centerlineThickness_1986.csv', delimiter=',', skiprows=1)
+        data_1986 = np.loadtxt(self.input_files['glacier_1986'], delimiter=',', skiprows=1)
         self.thickness_1986_verif = data_1986[:, 3] - data_1986[:, 0]
-        data_2021 = np.loadtxt('Data/centerlineThickness_2021.csv', delimiter=',', skiprows=1)
+        data_2021 = np.loadtxt(self.input_files['glacier_2021'], delimiter=',', skiprows=1)
         self.thickness_2021_verif = data_2021[:, 3] - data_2021[:, 0]
         self.thickness_1986_verif=np.interp(np.linspace(cumulative_distances[0], cumulative_distances[-1], self.num_cells), cumulative_distances, self.thickness_1986_verif) if type(self.thickness_1986_verif) is not int else np.zeros(self.num_cells)
         self.thickness_2021_verif=np.maximum(np.interp(np.linspace(cumulative_distances[0], cumulative_distances[-1], self.num_cells), cumulative_distances, self.thickness_2021_verif) if type(self.thickness_2021_verif) is not int else np.zeros(self.num_cells),0)
@@ -171,7 +174,7 @@ class glacierSim():
     #Calculate the initial glacier area
     def load_area_data(self):
         #Load in the area data
-        df = pd.read_csv('Data/Input_SouthCascade_Area_Altitude_Distribution.csv')
+        df = pd.read_csv(self.input_files['area'])
         self.bins = df.columns[2:].astype(float).to_numpy()
         self.years = df.iloc[:, 0].astype(float).tolist()
         self.areas = df.iloc[:, 2:].astype(float).to_numpy()*1000000 #convert to m^2
@@ -180,6 +183,7 @@ class glacierSim():
         self.update_areas()
                 
     def update_areas(self):
+        #Get the area for the current year, area data starts in 1950
         area=self.areas[(self.current_date.year-1950),:]
         bin_indices = np.digitize((self.topo+self.ice), self.bins)
         for i in range(len(area)):
@@ -199,7 +203,7 @@ class glacierSim():
     
     def load_weather_data(self):
         #Load temperature and precipitation data
-        df = pd.read_csv('Data/Input_SouthCascade_Daily_Weather.csv')
+        df = pd.read_csv(self.input_files['temp_precip'])
         self.dates = pd.to_datetime(df.iloc[:, 0], format="%Y/%m/%d").tolist()
         self.temps = df.iloc[:, 1].astype(float).to_numpy()
         self.precip = df.iloc[:, 2].apply(lambda x: float(x) if not np.isnan(float(x)) else 0).to_numpy()
@@ -211,7 +215,8 @@ class glacierSim():
 
     def load_verif_data(self):
         #Load the mass balance and ELA data
-        df = pd.read_csv('Data/Output_SouthCascade_Glacier_Wide_solutions_calibrated.csv', skiprows=25)
+        #Skips the first 25 rows because they are before 1984
+        df = pd.read_csv(self.input_files['mass_balance'], skiprows=25)
         self.annual_mb = df.iloc[:-1, 3].astype(float).tolist()
         self.summer_mb = df.iloc[:-1, 2].astype(float).tolist()
         self.winter_mb = df.iloc[:-1, 1].astype(float).tolist()
@@ -224,7 +229,7 @@ class glacierSim():
         #I only have data from 1992-2007 and there are many gaps in that record so I keep track of what days I have data for 
         #and I keep track of that so I can only add the runoff data for those days to my calculated runoff arrays
         #Also the runoff data is summed by month so that there is less variability in the data
-        df = pd.read_csv('Data/runoff_m3_1992-2007.csv')
+        df = pd.read_csv(self.input_files['runoff'])
         df['date'] = pd.to_datetime(df['date'])
         #Runoff training data variables
         training_start_date = "1997-08-15"
@@ -243,11 +248,11 @@ class glacierSim():
         self.date_index_all = {date: idx for idx, date in enumerate(df['date'])}
         self.daily_runoff_all_data = np.zeros(len(self.date_index_all))
         #Load the thickness change and front variation data
-        self.thickness_change_verif = pd.read_csv('Data/thickness_change.csv').iloc[0:, 11].astype(float).to_numpy()
-        self.front_variation_verif = pd.read_csv('Data/front_variation_change.csv').iloc[0:, 9].astype(float).to_numpy()
+        self.thickness_change_verif = pd.read_csv(self.input_files['thickness_change']).iloc[0:, 11].astype(float).to_numpy()
+        self.front_variation_verif = pd.read_csv(self.input_files['front_variation']).iloc[0:, 9].astype(float).to_numpy()
         self.front_variation_calc = np.zeros(len(self.front_variation_verif))
         #Load the basin area data (used for the snow melt calculations)
-        self.basin_areas, self.mean_snow_bin_elev=np.loadtxt('Data/basin_wide_area_elev_bands.csv', delimiter=',', usecols=(1, 2), unpack=True)
+        self.basin_areas, self.mean_snow_bin_elev=np.loadtxt(self.input_files['basin_area'], delimiter=',', usecols=(1, 2), unpack=True)
         self.snow_depth=np.zeros(len(self.basin_areas))
         self.snow_melt_amt=np.zeros(len(self.basin_areas))
         

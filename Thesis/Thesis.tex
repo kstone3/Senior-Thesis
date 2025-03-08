@@ -2,6 +2,9 @@
 \usepackage[utf8]{inputenc}
 \usepackage{indentfirst}
 \usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{placeins}
 
 \title{Can a Shallow Ice Approximation Model be Used to Model the Water Output of Alpine Glaciers?}
 \author{}
@@ -16,10 +19,49 @@
 
 \section{Introduction}
 \subsection{Importance of glacial melting in mountain hydrology}
+Glacial melting plays a significant role in the hydrology of mountain catchment areas as shown in Fountain and Tangborn, 1985. Accurately 
+capturing glacial dynamics with numerical models is important for understanding how water sources in high mountain catchments will evolve. 
+The runoff produced by glaciers, especially later in the summer months, is a major contributor to stream flow. Without the runoff from the 
+glaciers, the rivers would be even lower during the driest summer months as shown in Figure 1.
+
+As glaciers melt and retreat, the change in mass takes the form of meltwater. This meltwater affects communities downriver in a variety of 
+ways. For instance, many communities rely on these rivers as a water source for drinking and irrigation.  
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Plots/fountain_1985_fig3.png}
+        \caption{Monthly fraction of the annual runoff for basins of various glacier cover.}
+        \label{fig:subfig1}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Plots/fountain_1985_fig4.png}
+        \caption{Timing of peak specific runoff as a function of glacier cover.}
+        \label{fig:subfig2}
+    \end{subfigure}
+    \caption{Figures 3 and 4 from Fountain and Tangborn (1985) showing how the percent of basin glacierized delays the peak runoff time of the basin.}
+    \label{fig:main_figure}
+\end{figure}
+\FloatBarrier
 \subsection{Role of numerical modeling in understanding glacial runoff}
+One of the best ways to find out how glaciers will affect the stream flow of rivers in the glacier basin is by using computer models to 
+approximate the water discharge of the glaciers. Scientists have been using computers to model glaciers for several decades, such as this 
+paper by Iken A, 1981. As computational resources have grown, these models have grown in complexity and resolution leading to very 
+computationally expensive models, meaning that they take a lot of computing power to run. Many of these Advanced Ice Sheet Models (AISMs) 
+use equations such as the 3-dimensional Stokes equations (Larour et al., 2012) to model the complicated ice dynamics of these glaciers.  
 \subsection{Challenges in computational modeling of glaciers}
+AISMs are numerically very sophisticated; these models are also not very intuitive and often take a while to learn how to run. The advantage 
+of AISMs is that they do a particularly good job of modeling ice dynamics. For some glaciers such as marine calving glaciers, accurate ice 
+dynamics are crucial to accurately model them, as shown in Amaral et al., 2020. However, modeling glaciers in 3-dimensions is often 
+unnecessary. If we can use simpler models, such as the Shallow Ice Approximation (SIA) model, to calculate the water runoff of small 
+mountain glaciers in locations such as the Alps, then we can run these models over more glaciers and larger areas, and it is easier to 
+incorporate them into larger hydrology models. 
 
 \section{Literature Review}
+\subsection{Prior research on SIA vs. Stokes models}
     As shown in Le Meur et al., 2004, there are significant differences in computational time between a SIA model and a Stokes model. When 
 computing the free surface and associated velocity field, the SIA model took 1 minute of CPU time, whereas the Stokes model took 2 hours. 
 This disparity grew even larger for 3D models. The authors show that there are some instances where SIA models do significantly worse than 
@@ -33,11 +75,11 @@ indicate that the horizontal stress gradients played a large part in this error.
 compared to Stokes models---particularly large flat glaciers with relatively free edges. One thing to note about this comparison study is 
 that the authors are looking at the shape, area, and velocity profile of the glacier, whereas this study will focus on the water output 
 (surface mass loss) of the glacier.
-
+\subsection{Using SIA models to model alpine glaciers}
     There are several papers, such as Le Muer et al., 2003 and Kessler et al., 2006, that use an SIA model for alpine glaciers. The consensus 
 from those papers is that SIA models only work well on alpine glaciers with a low aspect ratio, defined as the thickness-to-extent ratio in 
 Le Muer et al., 2004. The glacier used by this study will have a low aspect ratio and therefore a SIA model should work well to model it.
-
+\subsection{Using SIA models to model water runoff from glaciers}
     Additionally, there is precedent for using a SIA-Mass Balance model for modeling water runoff from glaciers (Naz et al., 2014). They used 
 the SIA model to approximate the ice dynamics and a mass balance model to approximate the accumulation and ablation patterns on the glacier. 
 As shown in their paper, the SIA model was able to accurately predict the glacier, and the coupled hydrological model was able to predict 
@@ -45,12 +87,30 @@ the stream flow accurately---only overestimating the July flow by an average of 
 average of 2\%.
 
 \section{Thesis Statement}
-% (Insert thesis statement here.)
-
-\section{Methods}
-
+%Fix this to reflect the OGGM comparison
+How much do ice dynamics affect the model result when modeling small mountain glaciers for mass balance? I theorize that if using a simple 
+1-dimensional SIA-Mass Balance model on small mountain glaciers (with a low aspect ratio) in the Alps, the mass balance profile will have a 
+much larger effect on the output of the model and its overall accuracy than the modeled ice dynamics. The results of the SIA-Mass Balance 
+model and the Stokes model will be compared to the actual stream flow data to verify this hypothesis.
 \subsection{Study Site}
-\textbf{South Cascade Glacier in the North Cascades of Washington}
+\textbf{\large South Cascade Glacier, Washington State}
+
+In this study, I will focus on modeling the South Cascade Glacier in the North Cascades region of Washington State. South Cascade Glacier is 
+roughly 1.79 square kilometers, has a mean elevation of roughly 1900 meters, faces North, has an average slope of 12.8 degrees (need new 
+source), an average thickness of ??? meters, and a maximum thickness of ???? meters (GlaThiDa Consortium, 2020). The glacier is small, not 
+overly steep, and has a low aspect ratio such that a shallow ice approximation (SIA) model should be able to accurately represent its ice 
+dynamics. On the other hand, the glacier is large enough to exhibit some movement and produce a measurable amount of runoff throughout the 
+year. It is also one of the USGS Benchmark glaciers which means there is a large amount of data on it available such as temperature, 
+precipitation, mass balance, front variation, and thickness change. In 1992 a stream gauge was installed just below the glacier which allows 
+one to calculate the runoff from the glacier. 
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{Plots/SouthCascadeGlacierMap.pdf}
+    \caption{Map of the South Cascade Glacier in the North Cascades of Washington.}
+    \label{fig:south_cascade_glacier}
+\end{figure}
+\FloatBarrier
+\section{Methods}
 
 \subsection{Physical Characteristics and Relevance}
 
