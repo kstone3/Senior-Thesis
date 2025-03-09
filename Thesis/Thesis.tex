@@ -15,7 +15,6 @@
 \maketitle
 
 \section*{Abstract}
-% (Insert abstract text here.)
 
 \section{Introduction}
 \subsection{Importance of glacial melting in mountain hydrology}
@@ -112,34 +111,43 @@ one to calculate the runoff from the glacier.
 \FloatBarrier
 \section{Methods}
 
-\subsection{Physical Characteristics and Relevance}
-
-\subsection{Availability of Hydrological and Glacial Data}
-
 \subsection{Model Development}
 \subsubsection{Model Overview}
+The model is a one-dimensional shallow ice approximation (SIA) model coupled with a degree day mass balance model. The structure of the model is
+\begin{enumerate}
+    \item SIA model for ice dynamics
+    \item Degree day and precipitation mass balance model
+    \item Degree day and precipitation snow model
+\end{enumerate}
+
+There are two main sections to the model run, spinup and run. The spinup section of the model runs for 500 years and aims to replicate the 
+state of the glacier in 1984 when weather data becomes readily available. This section uses the simple mass balance equation below
+\begin{equation}(\text{glacier elevation}-\text{ELA})*\text{gamma}/365.25\end{equation}
+This calculates the mass balance in meters per day. When the spinup hits the year 1900 the ela is shifted up by 50 meters to simulate the 
+retreat state of the glacier. 
+
+The run portion of the model runs from 1984-2024 and is described below.
 
 \subsubsection{Ice Dynamics}
-\paragraph{SIA Model} 
+\paragraph{SIA Model}
+
+The SIA model is a one-dimensional model that uses the shallow ice approximation to approximate the ice dynamics of the glacier. This model 
+calculates the one dimensional ice flux of the glacier using equation 1. 
+\begin{equation}Q=\frac{2A}{n+2}(p_{ice}g|\frac{\partial z_s}{\partial x}|)^n\frac{H^5}{5}\end{equation}
+Where $Q$ is the ice flux, $A$ is the flow rate factor, $n$ is the flow law exponent, $p_{ice}$ is the density of ice, $g$ is the acceleration
+due to gravity, $\frac{\partial z_s}{\partial x}$ is the slope of the glacier, and $H$ is the thickness of the glacier. This model works by 
+creating an array of bins that represent the glacier. The model then calculates the ice flux of each bin and uses that to create the flow of 
+ice in the model. 
 \paragraph{Assumptions}
 
-\subsubsection{Snow and Rain Model}
-The snow melt model uses precipitation and temperature data to melt and accumulate snow. This model uses 14 elevation bins and keeps track 
-of the snow depth in each bin. The equation below is used to calculate the change in snow depth per timestep 
-$$\text{snow depth} += 
-\begin{cases} 
-  p*\alpha & \text{if } T \leq 0,\\
-  -\text{minimum}((s*T),\text{snow depth}) & \text{if } T > 0
-\end{cases}$$
-Where $p$ is the precipitation, $\alpha$ is the precipitation conversion factor, $s$ is the snow melt factor, and $T$ is 
-the temperature. The snow melt is constrained so that there cannot be more melt than there is snow. The rain is simply modeled by $p*\alpha$ 
-for positive temperatures
+The SIA equations make several assumptions. First, the equations neglect longitudinal stress, ice only flows downhill. Second, the equations 
+also assume that there is no basal sliding of the glacier. Third, the equations only use gravity as the driver of ice flow; they ignore other 
+forces such as lateral and basal stress. Fourth, this set of equations assumes that the horizontal dimensions of the modeled glacier are much 
+larger than the vertical dimensions.
 
-The total volume of snow is calculated by the equation
-$$\text{snow melt volume}=(s*T)*(\text{area of bin}-\text{area of glacier})$$
-This give us the total volume of snow melting off the glacier. The glacial melt is calculated elsewhere. The volume of rain is calculated by
-$$\text{rain volume}=p*\alpha*(\text{area of bin})$$
-This calculates the rain for the whole basin, assuming that any rain that falls off the glacier runs off immediately.
+The South Cascade Glacier was chosen because of some of these assumptions, it's horizontal dimensions are significant larger than its vertical 
+dimensions, and it is not a steep or fast flowing glacier, allowing the SIA assumptions to hold.
+
 \subsubsection{Mass Balance Model}
 The mass balance of the glacier is calculated using temperature and precipitation data from the Diablo Dam weather station at 272m. The 
 temperature at the glacier is calculated by using a month-specific lapse rate. This month-specific lapse rate was empiraclly calculated using
@@ -147,28 +155,59 @@ data from the Diablo Dam weather station and the South Cascade Glacier weather s
 glacier is calculated by multiplying the precipitation at the Diablo Dam weather station by the precipitation conversion factor of 1.58 
 (reference). The ablation of the glacier is calculated by using a combination of an ice melt factor and a snow melt factor. Above the ELA the 
 ablation is calculated by the equation
-$$\text{ablation}=T*\text{snow melt factor}$$
+\begin{equation}\text{ablation}=T*\text{snow melt factor}\end{equation}
 Below the ELA the ablation is calculated by the equation
-$$\text{ablation}=T*(\text{snow melt factor}+((\text{ELA}-\text{elevation})/(\text{ELA}-\text{minimum(elevation)}))*$$
-$$(\text{ice melt factor}-\text{snow melt factor}))$$
+\begin{equation}\text{ablation}=T*(\text{snow melt factor}+((\text{ELA}-\text{elevation})/(\text{ELA}-\text{minimum(elevation)}))*$$
+$$(\text{ice melt factor}-\text{snow melt factor}))\end{equation}
 The result of this equation is the snow melt factor being used at the ELA and a linear increase in the melt factor until it hits the ice melt 
 factor at the base of the glacier. 
 The accumulation of the glacier is calculated using a similar linear equation that increases with time.
-$$\text{accumulation}=p*\alpha*(\text{start accumulation}+((\text{year}-1984)/(2024-1984))*$$
-$$(\text{start accumulation}-\text{end accumulation}))$$
+\begin{equation}\text{accumulation}=p*\alpha*(\text{start accumulation}+((\text{year}-1984)/(2024-1984))*$$
+$$(\text{start accumulation}-\text{end accumulation}))\end{equation}
 This resuls in the accumulation increasing with time until it hits the end accumulation at 2024. 
+
+\subsubsection{Snow and Rain Model}
+The snow melt model uses precipitation and temperature data to melt and accumulate snow. This model uses 14 elevation bins and keeps track 
+of the snow depth in each bin. Each elevation bin has a corresponding area that represents the area of the basin in the bin's elevation range. 
+The equation below is used to calculate the change in snow depth per timestep 
+\begin{equation}\text{snow depth} += 
+\begin{cases} 
+  p*\alpha & \text{if } T \leq 0,\\
+  -\text{minimum}((s*T),\text{snow depth}) & \text{if } T > 0
+\end{cases}\end{equation}
+Where $p$ is the precipitation, $\alpha$ is the precipitation conversion factor, $s$ is the snow melt factor, and $T$ is 
+the temperature. The snow melt is constrained so that there cannot be more melt than there is snow. The rain is simply modeled by $p*\alpha$ 
+for positive temperatures
+
+The total volume of snow is calculated by the equation
+\begin{equation}\text{snow melt volume}=(s*T)*(\text{area of bin}-\text{area of glacier})\end{equation}
+This give us the total volume of snow melting off the glacier. The glacial melt is calculated elsewhere. The volume of rain is calculated by
+\begin{equation}\text{rain volume}=p*\alpha*(\text{area of bin})\end{equation}
+This calculates the rain for the whole basin, assuming that any rain that falls off the glacier runs off immediately.
+
 \subsubsection{Glacial Melt Model}
 The glacial melt model uses the mass balance of the glacier to calculate how much volume the glacier is losing. The volume of runoff from the 
 glacier per timestep is calculated by the equation
-$$\text{glacial melt volume}=(\text{mass balance}<0)*\text{area of glacier}$$
-\paragraph{Data Used for Model}
+\begin{equation}\text{glacial melt volume}=(\text{mass balance}<0)*\text{area of glacier}\end{equation}
+\subsection{Data Used for Model}
+The temperature and precipitation data used for the model is from the Diablo Dam weather station at 272m. The data is available from 1984-2024 
+and is only missing XXXX days in that time period (reference). The glacier area data used in the model is from the USGS (reference). The basin 
+area data was calculated using a DEM from the USGS and the basin outline shown in figure XXXX.
 
 \subsubsection{Model Calibration}
+The spinup initial ela, ela shift and gamma were manually optimized to match the glacier extent in 1984. 
+
+The ice and snowmelt factors were calibrated using summer mass balance data available from the USGS from 1984-2024. I used the minimize 
+function using the Nelder-Mead method from the scipy library to minimize the mean squared error between the model and the data. The 
+accumulation factors were calculated using the same methodology for the winter mass balance data available from the USGS from 1984-2024.
+
+The avalanche percentage was optimized using the same methods as the mass balance variables, but instead of a mean squared error being 
+minimized, the mean of the snow depth over the period 1984-2024 was minimized. 
 
 \subsubsection{Model Comparison}
 \paragraph{Running OGGM Model for the Same Glacier}
 \paragraph{Comparing Outputs of Both Models}
-\paragraph{Validation Using Real-World Streamflow Data (Brunner et al., 2024)}
+\paragraph{Validation Using Real-World Streamflow Data }
 
 \section{Expected Results}
 \subsection{Accuracy of SIA}
