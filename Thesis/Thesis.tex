@@ -148,6 +148,12 @@ larger than the vertical dimensions.
 The South Cascade Glacier was chosen because of some of these assumptions, it's horizontal dimensions are significant larger than its vertical 
 dimensions, and it is not a steep or fast flowing glacier, allowing the SIA assumptions to hold.
 
+\subsubsection{Model Setup}
+The model relies on a variety of input data in order to run. Besides the temperature and precipitation data described below the model also 
+needs a bed topography to run. This is input into the model as a csv with a latitude, longitude and elevation columns. The data in this model 
+is from (reference). The model loads the data an interpolates it across the number of cells into the model to create a topography variable to a
+act as the bed surface for the glacier. 
+
 \subsubsection{Mass Balance Model}
 The mass balance of the glacier is calculated using temperature and precipitation data from the Diablo Dam weather station at 272m. The 
 temperature at the glacier is calculated by using a month-specific lapse rate. This month-specific lapse rate was empiraclly calculated using
@@ -206,8 +212,22 @@ minimized, the mean of the snow depth over the period 1984-2024 was minimized.
 
 \subsubsection{Model Comparison}
 \paragraph{Running OGGM Model for the Same Glacier}
-\paragraph{Comparing Outputs of Both Models}
+
+The OGGM model was run using the run\_with\_hydro task from the oggm library. This model run used CMIP5 historical temperature and 
+precipitation data to model the hydrology of the glacier from 1984-2019. Using the output of this model I was able to calculate the total 
+runoff from the glacier using the melt\_on\_glacier\_monthly, snowmelt\_on\_glacier\_monthly and liq\_precip\_on\_glacier\_monthly variables. 
+The MSE of the OGGM model and my model is 5.31\% and the MSE of the OGGM model and the measured runoff data is 3.93\%.
+
 \paragraph{Validation Using Real-World Streamflow Data }
+
+The calculated runoff of the SIA-Mass Balance model was validated using measured streamflow data from 1992-2007. This data was measured using 
+a stream gauge located just below the glacier. The data is in units of mm per day averaged over the basin area (4.46$\text{km}^2$). I 
+converted this to cubic meters per day by divinding each value by 1000 and multiplying by the basin area in square meters. None of the input 
+parameters to the model were specifically tuned to match the streamflow data. The melt factors were tuned to match the yearly summer mass 
+balance, the accumulation factors were tuned to match the yearly winter mass balance, the avalance percentage was tuned to minimize the 
+average snow depth over the model run, the lapse rates were empirically calculated using data from the Diablo Dam weater station and a weather station 
+at 1830 meters next to the South Cascade glacier, and the precipitation conversion factor was obtained from (reference). The model was able 
+to calculate the runoff from the whole basin (snowmelt, glacier melt and rainfall) from 1984-2024 with a mean squared error of 1.41\%.
 
 \section{Expected Results}
 \subsection{Accuracy of SIA}
@@ -216,6 +236,12 @@ minimized, the mean of the snow depth over the period 1984-2024 was minimized.
 
 \section{Implications of Research}
 \subsection{Importance of Simplified Ice Dynamics in Numerical Glacier Modeling}
+These results show that complicated and computationally intensive mass balance, melt and ice dynamics are not required to accurately model the 
+runoff from small mountain glaciers. This means that we can use much simpler and less computationally intensive models such as the ones used 
+in this paper to model the runoff from mountain glaciers over a much larger area. The modeling techniques used in this paper could easily be 
+scaled to a much larger region if mass balance is available to tune the input parameters. I would hypothesize that the input parameters used 
+in my model of the South Cascade Glacier could be used for a much larger model over a similar region as almost all of the input parameters are 
+climate dependet, but this is a topic for another paper. 
 \subsection{Applications}
 
 \section{Discussion}

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2025.1.16)  8 MAR 2025 21:29
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2025.1.16)  10 MAR 2025 22:02
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -227,7 +227,7 @@ LaTeX Warning: `!h' float specifier changed to `!ht'.
 [5 <./Plots/SouthCascadeGlacierMap.pdf>]
 
 [6]
-Overfull \hbox (17.03896pt too wide) detected at line 160
+Overfull \hbox (17.03896pt too wide) detected at line 166
 [][] \OT1/cmr/m/n/10 = \OML/cmm/m/it/10 T \OMS/cmsy/m/n/10 ^^C \OT1/cmr/m/n/10 ([] + (([] \OMS/cmsy/m/n/10 ^^@ []\OT1/cmr/m/n/10 )\OML/cmm/m/it/10 =\OT1/cmr/m/n/10 ([] \OMS/cmsy/m/n/10 ^^@ []\OT1/cmr/m/n/10 ))\OMS/cmsy/m/n/10 ^^C
  []
 
@@ -237,25 +237,27 @@ Overfull \hbox (17.03896pt too wide) detected at line 160
 
 [8]
 
-[9] (./Thesis.aux)
+[9]
+
+[10] (./Thesis.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 1
 L3 programming layer <2024-12-25>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 3589 strings out of 473207
- 61270 string characters out of 5720461
+ 3590 strings out of 473207
+ 61288 string characters out of 5720461
  455193 words of memory out of 5000000
- 26831 multiletter control sequences out of 15000+600000
+ 26832 multiletter control sequences out of 15000+600000
  564519 words of font info for 56 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  67i,9n,77p,349b,495s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on Thesis.pdf (9 pages, 1935677 bytes).
+Output written on Thesis.pdf (10 pages, 1939135 bytes).
 PDF statistics:
- 207 PDF objects out of 1000 (max. 8388607)
- 148 compressed objects within 2 object streams
+ 210 PDF objects out of 1000 (max. 8388607)
+ 150 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
  16 words of extra memory for PDF output out of 10000 (max. 10000000)
 
