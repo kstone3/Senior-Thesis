@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2025.1.16)  12 MAR 2025 22:08
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2025.1.16)  12 MAR 2025 21:33
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -136,59 +136,40 @@ Package caption Info: New subtype `subtable' on input line 238.
 \c@subtable=\count285
 ) (c:/texlive/2024/texmf-dist/tex/latex/placeins/placeins.sty
 Package: placeins 2005/04/18  v 2.2
-) (c:/texlive/2024/texmf-dist/tex/latex/tools/tabularx.sty
-Package: tabularx 2023/12/11 v2.12a `tabularx' package (DPC)
- (c:/texlive/2024/texmf-dist/tex/latex/tools/array.sty
-Package: array 2024/10/17 v2.6g Tabular extension package (FMi)
-\col@sep=\dimen161
-\ar@mcellbox=\box54
-\extrarowheight=\dimen162
-\NC@list=\toks25
-\extratabsurround=\skip54
-\backup@length=\skip55
-\ar@cellbox=\box55
-)
-\TX@col@width=\dimen163
-\TX@old@table=\dimen164
-\TX@old@col=\dimen165
-\TX@target=\dimen166
-\TX@delta=\dimen167
-\TX@cols=\count286
-\TX@ftn=\toks26
 ) (c:/texlive/2024/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 File: l3backend-pdftex.def 2024-05-08 L3 backend support: PDF output (pdfTeX)
-\l__color_backend_stack_int=\count287
-\l__pdf_internal_box=\box56
+\l__color_backend_stack_int=\count286
+\l__pdf_internal_box=\box54
 ) (./Thesis.aux)
 \openout1 = `Thesis.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 13.
+LaTeX Font Info:    ... okay on input line 13.
  (c:/texlive/2024/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count288
-\scratchdimen=\dimen168
-\scratchbox=\box57
-\nofMPsegments=\count289
-\nofMParguments=\count290
-\everyMPshowfont=\toks27
-\MPscratchCnt=\count291
-\MPscratchDim=\dimen169
-\MPnumerator=\count292
-\makeMPintoPDFobject=\count293
-\everyMPtoPDFconversion=\toks28
+\scratchcounter=\count287
+\scratchdimen=\dimen161
+\scratchbox=\box55
+\nofMPsegments=\count288
+\nofMParguments=\count289
+\everyMPshowfont=\toks25
+\MPscratchCnt=\count290
+\MPscratchDim=\dimen162
+\MPnumerator=\count291
+\makeMPintoPDFobject=\count292
+\everyMPtoPDFconversion=\toks26
 ) (c:/texlive/2024/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 485.
@@ -200,17 +181,17 @@ Package caption Info: End \AtBeginDocument code.
 <Plots/fountain_1985_fig3.png, id=1, 316.18124pt x 380.92313pt>
 File: Plots/fountain_1985_fig3.png Graphic file (type png)
 <use Plots/fountain_1985_fig3.png>
-Package pdftex.def Info: Plots/fountain_1985_fig3.png  used on input line 35.
+Package pdftex.def Info: Plots/fountain_1985_fig3.png  used on input line 33.
 (pdftex.def)             Requested size: 155.24895pt x 187.03757pt.
 
-Underfull \hbox (badness 1226) in paragraph at lines 36--36
+Underfull \hbox (badness 1226) in paragraph at lines 34--34
 \OT1/cmr/m/n/9 runoff for basins of var-i-ous glacier
  []
 
 <Plots/fountain_1985_fig4.png, id=3, 307.1475pt x 259.7203pt>
 File: Plots/fountain_1985_fig4.png Graphic file (type png)
 <use Plots/fountain_1985_fig4.png>
-Package pdftex.def Info: Plots/fountain_1985_fig4.png  used on input line 42.
+Package pdftex.def Info: Plots/fountain_1985_fig4.png  used on input line 40.
 (pdftex.def)             Requested size: 155.24895pt x 131.27858pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
@@ -224,7 +205,7 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 [2 <./Plots/fountain_1985_fig3.png> <./Plots/fountain_1985_fig4.png>]
 
 [3]
-Overfull \hbox (5.87917pt too wide) in paragraph at lines 92--96
+Overfull \hbox (5.87917pt too wide) in paragraph at lines 90--94
 \OT1/cmr/m/n/10 moun-tain glaciers for mass bal-ance? I the-o-rize that if us-ing a sim-ple 1-dimensional
  []
 
@@ -234,7 +215,7 @@ pdfTeX warning: pdflatex.exe (file ./Plots/SouthCascadeGlacierMap.pdf): PDF incl
 <Plots/SouthCascadeGlacierMap.pdf, id=21, 614.295pt x 614.295pt>
 File: Plots/SouthCascadeGlacierMap.pdf Graphic file (type pdf)
 <use Plots/SouthCascadeGlacierMap.pdf>
-Package pdftex.def Info: Plots/SouthCascadeGlacierMap.pdf  used on input line 109.
+Package pdftex.def Info: Plots/SouthCascadeGlacierMap.pdf  used on input line 107.
 (pdftex.def)             Requested size: 345.0pt x 345.0058pt.
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
@@ -250,8 +231,8 @@ LaTeX Warning: `!h' float specifier changed to `!ht'.
 [5 <./Plots/SouthCascadeGlacierMap.pdf>]
 
 [6]
-Overfull \hbox (0.42519pt too wide) detected at line 206
-[]\OML/cmm/m/it/10 b[] \OT1/cmr/m/n/10 = \OML/cmm/m/it/10 p \OMS/cmsy/m/n/10 ^^C \OML/cmm/m/it/10  \OMS/cmsy/m/n/10 ^^C \OT1/cmr/m/n/10 ([][] + ((\OML/cmm/m/it/10 y \OMS/cmsy/m/n/10 ^^@ \OT1/cmr/m/n/10 1984)\OML/cmm/m/it/10 =\OT1/cmr/m/n/10 (2024 \OMS/cmsy/m/n/10 ^^@ \OT1/cmr/m/n/10 1984)) \OMS/cmsy/m/n/10 ^^C \OT1/cmr/m/n/10 ([][] \OMS/cmsy/m/n/10 ^^@ [][]\OT1/cmr/m/n/10 ))
+Overfull \hbox (17.03896pt too wide) detected at line 187
+[][] \OT1/cmr/m/n/10 = \OML/cmm/m/it/10 T \OMS/cmsy/m/n/10 ^^C \OT1/cmr/m/n/10 ([] + (([] \OMS/cmsy/m/n/10 ^^@ []\OT1/cmr/m/n/10 )\OML/cmm/m/it/10 =\OT1/cmr/m/n/10 ([] \OMS/cmsy/m/n/10 ^^@ []\OT1/cmr/m/n/10 ))\OMS/cmsy/m/n/10 ^^C
  []
 
 
@@ -262,7 +243,7 @@ Overfull \hbox (0.42519pt too wide) detected at line 206
 <Plots/calc_vs_measured.png, id=158, 587.5551pt x 406.1574pt>
 File: Plots/calc_vs_measured.png Graphic file (type png)
 <use Plots/calc_vs_measured.png>
-Package pdftex.def Info: Plots/calc_vs_measured.png  used on input line 272.
+Package pdftex.def Info: Plots/calc_vs_measured.png  used on input line 260.
 (pdftex.def)             Requested size: 345.0pt x 238.49045pt.
 
 
@@ -270,7 +251,7 @@ Package pdftex.def Info: Plots/calc_vs_measured.png  used on input line 272.
 <Plots/oggm_vs_measured.png, id=162, 602.0091pt x 420.6114pt>
 File: Plots/oggm_vs_measured.png Graphic file (type png)
 <use Plots/oggm_vs_measured.png>
-Package pdftex.def Info: Plots/oggm_vs_measured.png  used on input line 283.
+Package pdftex.def Info: Plots/oggm_vs_measured.png  used on input line 271.
 (pdftex.def)             Requested size: 345.0pt x 241.04742pt.
 
 
@@ -289,15 +270,15 @@ L3 programming layer <2024-12-25>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 3741 strings out of 473207
- 63843 string characters out of 5720461
- 463241 words of memory out of 5000000
- 26978 multiletter control sequences out of 15000+600000
+ 3611 strings out of 473207
+ 61900 string characters out of 5720461
+ 458193 words of memory out of 5000000
+ 26853 multiletter control sequences out of 15000+600000
  564519 words of font info for 56 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 67i,14n,77p,349b,495s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 67i,12n,77p,349b,495s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb>
-Output written on Thesis.pdf (12 pages, 2198638 bytes).
+Output written on Thesis.pdf (12 pages, 2192656 bytes).
 PDF statistics:
  225 PDF objects out of 1000 (max. 8388607)
  157 compressed objects within 2 object streams
