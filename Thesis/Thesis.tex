@@ -231,7 +231,26 @@ to calculate the runoff from the whole basin (snowmelt, glacier melt and rainfal
 
 \section{Expected Results}
 \subsection{Accuracy of SIA}
+The SIA-Mass Balance proved to be quite accurate with a mean squared error of 1.42\% for the available data from 1992-2007, consisting of 2418 
+data points. Below is a graph of the real-world measured runoff data and my model calculated runoff
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{Plots/calc_vs_measured.png}
+    \caption{Measured vs. Calculated runoff data from 1992-2007}
+    \label{fig:calc_vs_measured}
+\end{figure}
+\FloatBarrier
 \subsection{Accuracy of OGGM}
+The OGGM Model proved to be slightly less accurate when compared to the real-world measured runoff data. It was also run on slightly different 
+temperature and precipitation data compared to my SIA-Mass Balance model. It used the CMIP5 (confirm this) climate modeled data which goes 
+back to 1970 (check this). It had a mean squared error of 3.22\% for all of the runoff data from 1992-2007.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{Plots/oggm_vs_measured.png}
+    \caption{Measured vs. Calculated runoff data from 1992-2007}
+    \label{fig:oggm_vs_measured}
+\end{figure}
+\FloatBarrier
 \subsection{Comparison of Accuracy}
 
 \section{Implications of Research}

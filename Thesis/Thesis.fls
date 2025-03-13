@@ -97,6 +97,16 @@ INPUT ./Plots/SouthCascadeGlacierMap.pdf
 INPUT ./Plots/SouthCascadeGlacierMap.pdf
 INPUT c:/texlive/2024/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm
 INPUT c:/texlive/2024/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm
+INPUT ./Plots/calc_vs_measured.png
+INPUT ./Plots/calc_vs_measured.png
+INPUT ./Plots/calc_vs_measured.png
+INPUT ./Plots/calc_vs_measured.png
+INPUT ./Plots/calc_vs_measured.png
+INPUT ./Plots/oggm_vs_measured.png
+INPUT ./Plots/oggm_vs_measured.png
+INPUT ./Plots/oggm_vs_measured.png
+INPUT ./Plots/oggm_vs_measured.png
+INPUT ./Plots/oggm_vs_measured.png
 INPUT Thesis.aux
 INPUT c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 INPUT c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb

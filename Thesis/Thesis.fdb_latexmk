@@ -1,11 +1,13 @@
 # Fdb version 4
-["pdflatex"] 1741665769.49153 "c:/Users/bookn/Downloads/Senior-Thesis/Thesis/Thesis.tex" "Thesis.pdf" "Thesis" 1741665771.41481 0
+["pdflatex"] 1741748128.20087 "c:/Users/bookn/Downloads/Senior-Thesis/Thesis/Thesis.tex" "Thesis.pdf" "Thesis" 1741748130.68743 0
   "Plots/SouthCascadeGlacierMap.pdf" 1741494573 1720876 39a7cb56c5226f7126476cc1e293bfbd ""
+  "Plots/calc_vs_measured.png" 1741742889 94775 b534ef454bf23acc2466da5dc96cada9 ""
   "Plots/fountain_1985_fig3.png" 1741323943 75620 db429d8aaac0dc7a5b9b3e5349567763 ""
   "Plots/fountain_1985_fig4.png" 1741323714 32607 5e9b863438c9d796a0de41bbd2aa54e8 ""
-  "Thesis.aux" 1741665771 5398 f2fa5f2be631c8a5e00f29fa143c7ce8 "pdflatex"
-  "Thesis.tex" 1741665766 19355 feb2adff9e5a8611f8c12aba16164aef ""
-  "c:/Users/bookn/Downloads/Senior-Thesis/Thesis/Thesis.tex" 1741665766 19355 feb2adff9e5a8611f8c12aba16164aef ""
+  "Plots/oggm_vs_measured.png" 1741748116 113659 653add5604752136b55485fe3622dea6 ""
+  "Thesis.aux" 1741748130 5820 4c4271f171862e9642ff6ea57c354b59 "pdflatex"
+  "Thesis.tex" 1741748127 20462 b6b5a9a9eb4757398588399fc3c2253d ""
+  "c:/Users/bookn/Downloads/Senior-Thesis/Thesis/Thesis.tex" 1741748127 20462 b6b5a9a9eb4757398588399fc3c2253d ""
   "c:/texlive/2024/texmf-dist/fonts/map/fontname/texfonts.map" 1737010095 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "c:/texlive/2024/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1737001620 1004 54797486969f23fa377b128694d548df ""
   "c:/texlive/2024/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex8.tfm" 1737001620 988 bdf658c3bfc2d96d3c8b02cfc1c94c20 ""

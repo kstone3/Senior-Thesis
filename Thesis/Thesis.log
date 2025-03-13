@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2025.1.16)  10 MAR 2025 22:02
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2025.1.16)  11 MAR 2025 20:55
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -236,28 +236,52 @@ Overfull \hbox (17.03896pt too wide) detected at line 166
 [7]
 
 [8]
+<Plots/calc_vs_measured.png, id=157, 587.5551pt x 406.1574pt>
+File: Plots/calc_vs_measured.png Graphic file (type png)
+<use Plots/calc_vs_measured.png>
+Package pdftex.def Info: Plots/calc_vs_measured.png  used on input line 238.
+(pdftex.def)             Requested size: 345.0pt x 238.49045pt.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+
 
 [9]
+<Plots/oggm_vs_measured.png, id=161, 602.0091pt x 409.0482pt>
+File: Plots/oggm_vs_measured.png Graphic file (type png)
+<use Plots/oggm_vs_measured.png>
+Package pdftex.def Info: Plots/oggm_vs_measured.png  used on input line 249.
+(pdftex.def)             Requested size: 345.0pt x 234.42068pt.
 
-[10] (./Thesis.aux)
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+
+
+[10 <./Plots/calc_vs_measured.png>]
+
+[11 <./Plots/oggm_vs_measured.png>]
+
+[12] (./Thesis.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 1
 L3 programming layer <2024-12-25>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 3590 strings out of 473207
- 61288 string characters out of 5720461
+ 3606 strings out of 473207
+ 61792 string characters out of 5720461
  455193 words of memory out of 5000000
- 26832 multiletter control sequences out of 15000+600000
+ 26848 multiletter control sequences out of 15000+600000
  564519 words of font info for 56 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  67i,9n,77p,349b,495s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on Thesis.pdf (10 pages, 1939135 bytes).
+Output written on Thesis.pdf (12 pages, 2177370 bytes).
 PDF statistics:
- 210 PDF objects out of 1000 (max. 8388607)
- 150 compressed objects within 2 object streams
+ 220 PDF objects out of 1000 (max. 8388607)
+ 154 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
- 16 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 26 words of extra memory for PDF output out of 10000 (max. 10000000)
 
