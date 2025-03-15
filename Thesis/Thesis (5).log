@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2025.1.16)  15 MAR 2025 15:18
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2025.1.16)  15 MAR 2025 14:40
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -262,7 +262,7 @@ LaTeX Warning: `!h' float specifier changed to `!ht'.
 [6]
 
 [7 <./Plots/1986_glacier_comparison.png>]
-Overfull \hbox (0.42519pt too wide) detected at line 226
+Overfull \hbox (0.42519pt too wide) detected at line 219
 []\OML/cmm/m/it/10 b[] \OT1/cmr/m/n/10 = \OML/cmm/m/it/10 p \OMS/cmsy/m/n/10 ^^C \OML/cmm/m/it/10  \OMS/cmsy/m/n/10 ^^C \OT1/cmr/m/n/10 ([][] + ((\OML/cmm/m/it/10 y \OMS/cmsy/m/n/10 ^^@ \OT1/cmr/m/n/10 1984)\OML/cmm/m/it/10 =\OT1/cmr/m/n/10 (2024 \OMS/cmsy/m/n/10 ^^@ \OT1/cmr/m/n/10 1984)) \OMS/cmsy/m/n/10 ^^C \OT1/cmr/m/n/10 ([][] \OMS/cmsy/m/n/10 ^^@ [][]\OT1/cmr/m/n/10 ))
  []
 
@@ -271,18 +271,10 @@ Overfull \hbox (0.42519pt too wide) detected at line 226
 [8]
 
 [9]
-<Plots/2021_glacier_comparison.png, id=163, 419.166pt x 327.3831pt>
-File: Plots/2021_glacier_comparison.png Graphic file (type png)
-<use Plots/2021_glacier_comparison.png>
-Package pdftex.def Info: Plots/2021_glacier_comparison.png  used on input line 270.
-(pdftex.def)             Requested size: 345.0pt x 269.45996pt.
-
-
-[10 <./Plots/2021_glacier_comparison.png>]
-<Plots/calc_vs_measured.png, id=168, 587.5551pt x 406.1574pt>
+<Plots/calc_vs_measured.png, id=163, 587.5551pt x 406.1574pt>
 File: Plots/calc_vs_measured.png Graphic file (type png)
 <use Plots/calc_vs_measured.png>
-Package pdftex.def Info: Plots/calc_vs_measured.png  used on input line 300.
+Package pdftex.def Info: Plots/calc_vs_measured.png  used on input line 285.
 (pdftex.def)             Requested size: 345.0pt x 238.49045pt.
 
 
@@ -290,11 +282,11 @@ LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 
 
-[11]
-<Plots/oggm_vs_measured.png, id=172, 602.0091pt x 420.6114pt>
+[10]
+<Plots/oggm_vs_measured.png, id=167, 602.0091pt x 420.6114pt>
 File: Plots/oggm_vs_measured.png Graphic file (type png)
 <use Plots/oggm_vs_measured.png>
-Package pdftex.def Info: Plots/oggm_vs_measured.png  used on input line 311.
+Package pdftex.def Info: Plots/oggm_vs_measured.png  used on input line 296.
 (pdftex.def)             Requested size: 345.0pt x 241.04742pt.
 
 
@@ -302,29 +294,29 @@ LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 
 
-[12 <./Plots/calc_vs_measured.png>]
+[11 <./Plots/calc_vs_measured.png>]
 
-[13 <./Plots/oggm_vs_measured.png>]
+[12 <./Plots/oggm_vs_measured.png>]
 
-[14] (./Thesis.aux)
+[13] (./Thesis.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 1
 L3 programming layer <2024-12-25>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 3757 strings out of 473207
- 64459 string characters out of 5720461
- 464286 words of memory out of 5000000
- 26994 multiletter control sequences out of 15000+600000
+ 3749 strings out of 473207
+ 64151 string characters out of 5720461
+ 464263 words of memory out of 5000000
+ 26986 multiletter control sequences out of 15000+600000
  564519 words of font info for 56 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  67i,14n,77p,349b,495s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb>
-Output written on Thesis.pdf (14 pages, 2268573 bytes).
+Output written on Thesis.pdf (13 pages, 2232405 bytes).
 PDF statistics:
- 236 PDF objects out of 1000 (max. 8388607)
- 162 compressed objects within 2 object streams
+ 231 PDF objects out of 1000 (max. 8388607)
+ 160 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
- 36 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 31 words of extra memory for PDF output out of 10000 (max. 10000000)
 

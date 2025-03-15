@@ -77,6 +77,7 @@ class glacierSim():
         self.thickness_change_verif=np.zeros(4) #thickness change for verif
         self.front_variation_verif=np.zeros(100) #front variation verification data
         self.ela_verif=np.zeros(100) #ela's for verification
+        self.thickness_1958_verif=0 #thickness in 1958 for verif
         self.thickness_1986_verif=0 #thickness in 1986 for verif
         self.thickness_2021_verif=0 #thickness in 2021 for verif
         #RUNOFF VARS
@@ -96,7 +97,9 @@ class glacierSim():
         #GLACIER VARS
         self.front_variation_calc=np.zeros(100) #model calculated front variation
         self.thickness_change=np.zeros(4) #model thickness change
+        self.ice_1958=np.zeros(self.num_cells) #stores the ice in 1958
         self.ice_1986=np.zeros(self.num_cells) #stores the ice in 1986
+        self.ice_2021=np.zeros(self.num_cells) #stores the ice in 2021
         self.glacier_extent=0 #length of glacier in m
         self.ice_thickness_over_time=[] #tracks avg ice thickness over time
         self.ela_list=[] #list of ela values over time, used for verif
@@ -164,10 +167,13 @@ class glacierSim():
         #Load in the 2021 and 1986 glacier extent data for verification
         #This is done here instead of in the load_verif function below because 
         #it needs the cumulative_distances to interpolate the data onto the model arrays
+        data_1958 = np.loadtxt(self.input_files['glacier_1958'], delimiter=',', skiprows=1)
+        self.thickness_1958_verif = data_1958[:, 3] - data_1958[:, 0]
         data_1986 = np.loadtxt(self.input_files['glacier_1986'], delimiter=',', skiprows=1)
         self.thickness_1986_verif = data_1986[:, 3] - data_1986[:, 0]
         data_2021 = np.loadtxt(self.input_files['glacier_2021'], delimiter=',', skiprows=1)
         self.thickness_2021_verif = data_2021[:, 3] - data_2021[:, 0]
+        self.thickness_1958_verif=np.interp(np.linspace(cumulative_distances[0], cumulative_distances[-1], self.num_cells), cumulative_distances, self.thickness_1958_verif) if type(self.thickness_1958_verif) is not int else np.zeros(self.num_cells)
         self.thickness_1986_verif=np.interp(np.linspace(cumulative_distances[0], cumulative_distances[-1], self.num_cells), cumulative_distances, self.thickness_1986_verif) if type(self.thickness_1986_verif) is not int else np.zeros(self.num_cells)
         self.thickness_2021_verif=np.maximum(np.interp(np.linspace(cumulative_distances[0], cumulative_distances[-1], self.num_cells), cumulative_distances, self.thickness_2021_verif) if type(self.thickness_2021_verif) is not int else np.zeros(self.num_cells),0)
         
@@ -180,7 +186,7 @@ class glacierSim():
         self.areas = df.iloc[:, 2:].astype(float).to_numpy()*1000000 #convert to m^2
         self.bin_bounds=np.concatenate(([self.bins[0] - 25], (self.bins[:-1] + self.bins[1:]) / 2, [self.bins[-1] + 25]))
         #Call update_areas() to initialize the area arrays
-        self.update_areas()
+        if self.current_date.year>=1984:self.update_areas()
                 
     def update_areas(self):
         #Get the area for the current year, area data starts in 1950
@@ -301,8 +307,10 @@ class glacierSim():
             else:
                 self.front_variation_calc[int(self.current_date.year-1984)]+=self.prev_front-self.x[0]
                 self.prev_front=self.x[0]
-        #Calcualte ice thickness data for 1986
-        if self.current_date.year==1986: self.ice_1986=self.ice[~np.isnan(self.thickness_1986_verif)].copy()
+        #Calcualte ice thickness data for 1986 and 2021
+        if self.current_date.year==1958: self.ice_1958=self.ice.copy()
+        if self.current_date.year==1986: self.ice_1986=self.ice.copy()
+        if self.current_date.year==2021: self.ice_2021=self.ice.copy()
         #Add mass balance to verification arrays
         if 1984<=self.current_date.year<2024:
             date=int(self.current_date.year-1984)
@@ -557,4 +565,4 @@ class glacierSim():
         self.ice_line=ax.plot(self.ice_line_list[i][0],self.ice_line_list[i][1], color=self.ice_line_list[i][2], label=self.ice_line_list[i][3])
         # self.snow_line=ax.plot(self.snow_line_list[i][0],self.snow_line_list[i][1], color=self.snow_line_list[i][2], label=self.snow_line_list[i][3])
         ax.legend()
-        return self.ice_line_list,self.ela_line_list    
+        return self.ice_line_list,self.ela_line_list       
