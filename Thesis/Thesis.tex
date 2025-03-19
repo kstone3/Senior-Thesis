@@ -115,10 +115,6 @@ gauge was installed just below the glacier which allows one to calculate the run
     \label{fig:south_cascade_glacier}
 \end{figure}
 \FloatBarrier
-\section{Methods}
-
-\subsection{Model Development}
-\subsubsection{Model Overview}
 \begin{table}[h!]
     \centering
     \begin{tabularx}{\textwidth}{|c|X|}
@@ -155,6 +151,13 @@ gauge was installed just below the glacier which allows one to calculate the run
     \caption{Symbols Table}
     \label{tab:symbols_table}
 \end{table}
+\FloatBarrier
+
+\section{Methods}
+
+\subsection{Model Development}
+\subsubsection{Model Overview}
+
 The model is a one-dimensional Shallow Ice Approximation (SIA) model coupled with a temperature degree day mass balance model. The structure 
 of the model is
 \begin{enumerate}
@@ -166,7 +169,7 @@ of the model is
 There are two main sections to the model run, spinup and run. The spinup section of the model runs for 500 years and aims to replicate the 
 state of the glacier in 1984 when weather data becomes readily available. This section uses the simple mass balance equation below
 \begin{equation}(Z_g-\text{ELA})*\gamma /365.25\end{equation}
-This calculates the mass balance in meters per day. When the spinup hits the year 1900 the ELA is shifted up from 1880m to 1930m to simulate the 
+This uses a gamma of 0.031 to calculate the mass balance in meters per day. When the spinup hits the year 1900 the ELA is shifted up from 1900m to 1930m to simulate the 
 retreat state of the glacier. The figure below shows the model in 1986 after 500 years of spinup and 2 years of run compared with the actual 
 glacier in 1986 derived from a DEM (reference). The measured line has some gaps due to the DEM not being complete over the glacier area.
 
@@ -339,9 +342,20 @@ much faster. As a result, the whole model will run faster which means researcher
 times. This could lead to more accurate water predictions for water management teams and subsequently better water management techniques.  
 \section{Discussion}
 \subsection{What Worked}
-\subsection{What Didn’t Work and Why}
-\subsection{What Can Be Improved}
+The runoff was modeled very accurately using only temperature and precipitation data. The model was calibrated using the mass balance data, 
+but what I find very interesting is the very high corelation between the modeled glacier mass balance and the runoff data. The MSE of the 
+model winter mass balance is 3.62\% and the MSE of the model summer mass balance is 1.73\%, but the MSE of the runoff data is 1.41\%. In 
+addition to this the snow model proved to be quite accurate and was able to accumulate enough snow during the winter to melt during the 
+spring and match the spring runoff data. 
 
+\subsection{What Can Be Improved}
+I would like to improve the runtime of the model. It currently takes about 30 seconds to run for 1984-2024, and I suspect a lot of this time 
+is due to the use of the Python datetime library which is not very efficient. Ideally I would like to completely eliminate the need for a date 
+library which would result in a much faster model and would make the model much more generalizable.
+\subsection{Future Work}
+I would like to run the model for a glacier near the South Cascade Glacier with a similar climate to see how region specific the input 
+parameters are. I would expect the input parameters to mostly depend on the local climate and therefore work quite well for a nearby glacier. 
+I would also like to explore running the model with modeled climate data to see what the future runoff of this glacier looks like.
 \section{Conclusion}
 \subsection{Summary of Results}
 \subsection{Conclusion of Model Accuracy}
