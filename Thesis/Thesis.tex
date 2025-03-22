@@ -30,14 +30,14 @@ ways. For instance, many communities rely on these rivers as a water source for 
 
 \begin{figure}[h]
     \centering
-    \begin{subfigure}[b]{0.45\textwidth}
+    \begin{subfigure}[b]{0.49\textwidth}
         \centering
         \includegraphics[width=\textwidth]{Plots/fountain_1985_fig3.png}
         \caption{Monthly fraction of the annual runoff for basins of various glacier cover.}
         \label{fig:subfig1}
     \end{subfigure}
     \hfill
-    \begin{subfigure}[b]{0.45\textwidth}
+    \begin{subfigure}[b]{0.49\textwidth}
         \centering
         \includegraphics[width=\textwidth]{Plots/fountain_1985_fig4.png}
         \caption{Timing of peak specific runoff as a function of glacier cover.}
@@ -171,14 +171,27 @@ state of the glacier in 1984 when weather data becomes readily available. This s
 \begin{equation}(Z_g-\text{ELA})*\gamma /365.25\end{equation}
 This uses a gamma of 0.031 to calculate the mass balance in meters per day. When the spinup hits the year 1900 the ELA is shifted up from 1900m to 1930m to simulate the 
 retreat state of the glacier. The figure below shows the model in 1986 after 500 years of spinup and 2 years of run compared with the actual 
-glacier in 1986 derived from a DEM (reference). The measured line has some gaps due to the DEM not being complete over the glacier area.
+glacier in 1986 and in 1958 derived from a DEM (reference). The measured line has some gaps due to the DEM not being complete over the glacier area.
 
-\begin{figure}[h!]
+\begin{figure}[h]
     \centering
-    \includegraphics[width=\textwidth]{Plots/1986_glacier_comparison.png}
-    \caption{Spinup comparison of the model in 1986 after 500 years of spinup and 2 years of run compared with the actual glacier in 1986.}
-    \label{fig:1986_glacier_comparison}
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Plots/1986_glacier_comparison.png}
+        % \caption{Spinup comparison of the model in 1986 after 500 years of spinup and 2 years of run compared with the actual glacier in 1986.}
+        \label{fig:1986_glacier_comparison}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Plots/1958_glacier_comparison.png}
+        % \caption{Timing of peak specific runoff as a function of glacier cover.}
+        \label{fig:1958_glacier_comparison}
+    \end{subfigure}
+    \caption{Spinup comparison of the model in 1958 and 1986 after 500 years of spinup and 2 years of run compared to the actual glacier.}
+    \label{fig:glacier_comparison}
 \end{figure}
+\FloatBarrier
 
 Three factors were tuned to create the spinup glacier, the initial ELA, the shifted ELA in 1900 and gamma. These variables were tuned to 
 match the glacier ice profile in 1958 and 1986 when DEM's are available (reference). 
@@ -266,6 +279,27 @@ accumulation factors were calculated using the same methodology for the winter m
 
 The avalanche percentage was optimized using the same methods as the mass balance variables, but instead of a mean squared error being 
 minimized, the mean of the snow depth over the period 1984-2024 was minimized.
+The figures below show the modeled vs. measured winter and summer mass balance data.
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Plots/winter_mb_compare.png}
+        % \caption{Spinup comparison of the model in 1986 after 500 years of spinup and 2 years of run compared with the actual glacier in 1986.}
+        \label{fig:winter_mb_compare}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Plots/summer_mb_compare.png}
+        % \caption{Timing of peak specific runoff as a function of glacier cover.}
+        \label{fig:summer_mb_compare}
+    \end{subfigure}
+    \caption{Comparison plots of the calculated vs measured winter and summer mass balance.}
+    \label{fig:mb_comparison}
+\end{figure}
+\FloatBarrier
 
 The figure below shows the resulting ice thicknesses computed by the model in 2021 compared to the 2021 DEM.
 \begin{figure}[h!]
@@ -274,11 +308,18 @@ The figure below shows the resulting ice thicknesses computed by the model in 20
     \caption{Model comparison of the ice thickness in 2021 compared to the actual glacier in 2021.}
     \label{fig:2021_glacier_comparison}
 \end{figure}
-
+\FloatBarrier
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{Plots/model_run_1984_2024.png}
+    \caption{Output of the model run from 1984-2024.}
+    \label{fig:model_run_1984_2024}
+\end{figure}
+\FloatBarrier
 \subsubsection{Model Comparison}
 \paragraph{Running OGGM Model for the Same Glacier}
 
-The OGGM model was run using the run\_with\_hydro task from the oggm library. This model run used CMIP5 historical temperature and 
+The OGGM model was run using the run\_with\_hydro task from the oggm library. This model run used GSWP3\_W5E5 historical temperature and 
 precipitation data to model the hydrology of the glacier from 1984-2019. Using the output of this model I was able to calculate the total 
 runoff from the glacier using the melt\_on\_glacier\_monthly, snowmelt\_on\_glacier\_monthly and liq\_precip\_on\_glacier\_monthly variables. 
 The MSE of the OGGM model and my model is 5.31\% and the MSE of the OGGM model and the measured runoff data is 3.93\%.
@@ -307,7 +348,7 @@ data points. Below is a graph of the real-world measured runoff data and my mode
 \FloatBarrier
 \subsection{Accuracy of OGGM}
 The OGGM Model proved to be slightly less accurate when compared to the real-world measured runoff data. It was also run on slightly different 
-temperature and precipitation data compared to my SIA-Mass Balance model. It used the CMIP5 (confirm this) climate modeled data which goes 
+temperature and precipitation data compared to my SIA-Mass Balance model. It used the GSWP3\_W5E5 climate modeled data which goes 
 back to 1970 (check this). It had a mean squared error of 3.22\% for all of the runoff data from 1992-2007.
 \begin{figure}[h!]
     \centering
@@ -333,20 +374,39 @@ The work of this paper shows that complex models are not always required to accu
 can have applications in everything from regional glacier modeling to water resource managment as glaciers are a significant source of water 
 for many communities around the world. 
 
-The result of this research project will tell us how important it is to accurately model the ice dynamics of small mountain glaciers when 
-predicting mass balance changes. If the hypothesis is correct, then researchers will be able to run less computationally expensive models to 
-achieve a similar output as a much more sophisticated and computationally expensive model such as the Stokes model. As referenced in Verbunt 
-et al., 2003, glacier models are often just one component of hydrology or other types of models. If we can make certain assumptions, like 
-using an SIA-Mass Balance model when modeling a small mountain glacier as part of a larger hydrology model, that glacier component will run 
-much faster. As a result, the whole model will run faster which means researchers can run this model over a larger area or run it many more 
-times. This could lead to more accurate water predictions for water management teams and subsequently better water management techniques.  
 \section{Discussion}
 \subsection{What Worked}
 The runoff was modeled very accurately using only temperature and precipitation data. The model was calibrated using the mass balance data, 
 but what I find very interesting is the very high corelation between the modeled glacier mass balance and the runoff data. The MSE of the 
 model winter mass balance is 3.62\% and the MSE of the model summer mass balance is 1.73\%, but the MSE of the runoff data is 1.41\%. In 
 addition to this the snow model proved to be quite accurate and was able to accumulate enough snow during the winter to melt during the 
-spring and match the spring runoff data. 
+spring and match the spring runoff data. Besides calculating the total runoff for the glacier basin, I was also able to pull out just the 
+glacial melt data and visualize that. By comparing the two one can see that the glacier contributes to roughly half of the total basin melt, 
+which means that as the glacier retreats it will start contributing less and less water to the basin runoff resulting in a decrease in total 
+basin runoff. One might expect the glacier runoff to be retreating with time, but instead is stays constant, which I speculate is due to a 
+rapidly warming climate is causing the glacier's melt to accelerate, meaning it is loosing a greater percentage of its total mass each year. 
+This has a critical point where eventually the glacial runoff will start to decrease even if the glacier is still melting at an increasing 
+rate, there simply isn't enough mass left to provide the same volume of runoff as the year before.
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[b]{\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Plots/glacier_runoff.png}
+        % \caption{Spinup comparison of the model in 1986 after 500 years of spinup and 2 years of run compared with the actual glacier in 1986.}
+        \label{fig:glacier_runoff}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Plots/all_runoff.png}
+        % \caption{Timing of peak specific runoff as a function of glacier cover.}
+        \label{fig:all_runoff}
+    \end{subfigure}
+    \caption{Comparison plots of the glacier runoff and total basin runoff.}
+    \label{fig:runoff_compare}
+\end{figure}
+\FloatBarrier
 
 \subsection{What Can Be Improved}
 I would like to improve the runtime of the model. It currently takes about 30 seconds to run for 1984-2024, and I suspect a lot of this time 
