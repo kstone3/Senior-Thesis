@@ -20,14 +20,13 @@
 
 \section{Introduction}
 \subsection{Importance of glacial melting in mountain hydrology}
-Glacial melting plays a significant role in the hydrology of mountain catchment areas as shown in Fountain and Tangborn, 1985. Accurately 
-capturing glacial dynamics with numerical models is important for understanding how water sources in high mountain catchments will evolve. 
-The runoff produced by glaciers, especially later in the summer months, is a major contributor to stream flow. Without the runoff from the 
-glaciers, the rivers would be even lower during the driest summer months as shown in Figure 1.
+Glacial melting plays a significant role in the hydrology of mountain catchment areas as shown in Fountain and Tangborn, 1985. In order to 
+understand how the hydrology of these mountain catchment areas will evolve as glacier melt an retreat, scientists create models to predict 
+this evoution. The runoff from these mountain catchments are often used as water sources for communities down stream (reference) and as shown in 
+Figure 1, basins with greater glaciation produce more runoff. As the glaciers in these basins melt and retreat this change in mass takes the 
+form of meltwater. This meltwater can effect communities that rely on the runoff from these glaciated basins in a variety of ways (reference).
 
-As glaciers melt and retreat, the change in mass takes the form of meltwater. This meltwater affects communities downriver in a variety of 
-ways. For instance, many communities rely on these rivers as a water source for drinking and irrigation.  
-
+%Might need to change these figures to support statement above
 \begin{figure}[h]
     \centering
     \begin{subfigure}[b]{0.49\textwidth}
@@ -48,10 +47,12 @@ ways. For instance, many communities rely on these rivers as a water source for 
 \end{figure}
 \FloatBarrier
 \subsection{Role of numerical modeling in understanding glacial runoff}
-One of the best ways to find out how glaciers will affect the stream flow of rivers in the glacier basin is by using computer models to 
-approximate the water discharge of the glaciers. Scientists have been using computers to model glaciers for several decades, such as this 
-paper by Iken A, 1981. As computational resources have grown, these models have grown in complexity and resolution leading to very 
-computationally expensive models, meaning that they take a lot of computing power to run.
+One of the most accurate ways to predict out how glaciers will affect the runoff of a glaciated mountain catchment is by using computer 
+models to approximate the water discharge of the glaciers. Scientists have been using computers to model glaciers for several decades, 
+such as this paper by Iken A, 1981. As computational resources have grown, these models have grown in complexity and resolution leading 
+to very computationally expensive models. These models have proved to be very accurate in modeling the past and present state of a variety 
+of glacier types all around the world.
+
 \subsection{Challenges in computational modeling of glaciers}
 % AISMs are numerically very sophisticated; these models are also not very intuitive and often take a while to learn how to run. The advantage 
 % of AISMs is that they do a particularly good job of modeling ice dynamics. For some glaciers such as marine calving glaciers, accurate ice 
@@ -94,7 +95,7 @@ the stream flow accurately---only overestimating the July flow by an average of 
 average of 2\%.
 
 \section{Thesis Statement}
-How much do ice dynamics affect the model result when modeling small mountain glaciers for mass balance? I theorize that if using a simple 
+How much do ice dynamics affect the model result when modeling small mountain glaciers for water runoff? I theorize that if using a simple 
 1-dimensional SIA-Mass Balance model on small mountain glaciers (with a low aspect ratio), the mass balance profile will have a 
 much larger effect on the output of the model and its overall accuracy than the modeled ice dynamics. The results of the SIA-Mass Balance 
 model and the OGGM model will be compared to the actual stream flow data to verify this hypothesis.
@@ -105,9 +106,13 @@ In this study, I will focus on modeling the South Cascade Glacier in the North C
 roughly 1.68 square kilometers, has a mean elevation of roughly 1900 meters, (GLIMS) faces North, an average thickness of 99 meters, and a 
 maximum thickness of 195 meters (GlaThiDa Consortium, 2020). The glacier is small, not overly steep, and has a low aspect ratio such that a 
 SIA model should be able to accurately represent its ice dynamics. On the other hand, the glacier is large enough to exhibit some movement 
-and produce a measurable amount of runoff throughout the year. It is also one of the USGS Benchmark glaciers which means there is a large 
-amount of data on it available such as temperature, precipitation, mass balance, front variation, and thickness change. In 1992 a stream 
-gauge was installed just below the glacier which allows one to calculate the runoff from the glacier. 
+and produce a measurable amount of runoff throughout the year. 
+
+Thanks to the foresight of the USGS in creating the Benchmark Glacier Program in the 1950s to study and document the South Cascade glacier, 
+and eventually adding four more glaciers, there is an abundant amount of information on these glaciers. Due to this program I was able to 
+easily access and use temperature, precipitation, mass balance and DEM data from the USGS. Also as part of this Benchmark Glacier program a 
+stream gauge was installed just below the glacier to track the runoff from the basin. 
+
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth]{Plots/SouthCascadeGlacierMap.pdf}
@@ -158,8 +163,8 @@ gauge was installed just below the glacier which allows one to calculate the run
 \subsection{Model Development}
 \subsubsection{Model Overview}
 
-The model is a one-dimensional Shallow Ice Approximation (SIA) model coupled with a temperature degree day mass balance model. The structure 
-of the model is
+The model is a one-dimensional Shallow Ice Approximation (SIA) model coupled with a temperature degree day mass balance model and a snow model. 
+The structure of the model is
 \begin{enumerate}
     \item SIA model for ice dynamics
     \item Temperature degree day and precipitation mass balance model
@@ -225,6 +230,12 @@ matched the measured summer mass balance. The accumulation factors were tuned so
 mass balance. The lapse rate was empiraclly calculated using data from the Diablo Dam weather station and a weather station at 1830 meters 
 next to the South Cascade glacier. The avalanche percentage was tuned to minimize the average snow depth over the model run. The precipitation 
 conversion factor was obtained from (reference).
+
+The centerline bed topography was calculated using some data from Robert Jacobel (reference). The data I started with was calculated using 
+ground penetrating radar. Using this data of latitude, longitude and elevation points I used the ArcGIS kriging interpolation function to 
+interpolate this data across the whole glacier. I then traced a line down the center of the glacier and got bed elevation points for the line 
+from the interpolated data. I then used these new latitude, longitude, and elevation points to create the one-dimensional bed topography for 
+the model.
 
 \subsubsection{Mass Balance Model}
 The mass balance of the glacier is calculated using temperature and precipitation data from the Diablo Dam weather station at 272m. The 

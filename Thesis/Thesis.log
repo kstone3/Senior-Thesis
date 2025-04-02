@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2025.1.16)  22 MAR 2025 16:16
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2025.1.16)  1 APR 2025 16:26
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -200,12 +200,12 @@ Package caption Info: End \AtBeginDocument code.
 <Plots/fountain_1985_fig3.png, id=1, 316.18124pt x 380.92313pt>
 File: Plots/fountain_1985_fig3.png Graphic file (type png)
 <use Plots/fountain_1985_fig3.png>
-Package pdftex.def Info: Plots/fountain_1985_fig3.png  used on input line 35.
+Package pdftex.def Info: Plots/fountain_1985_fig3.png  used on input line 34.
 (pdftex.def)             Requested size: 169.0519pt x 203.6727pt.
 <Plots/fountain_1985_fig4.png, id=3, 307.1475pt x 259.7203pt>
 File: Plots/fountain_1985_fig4.png Graphic file (type png)
 <use Plots/fountain_1985_fig4.png>
-Package pdftex.def Info: Plots/fountain_1985_fig4.png  used on input line 42.
+Package pdftex.def Info: Plots/fountain_1985_fig4.png  used on input line 41.
 (pdftex.def)             Requested size: 169.0519pt x 142.94965pt.
 
 
@@ -220,8 +220,8 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 [2 <./Plots/fountain_1985_fig3.png> <./Plots/fountain_1985_fig4.png>]
 
 [3]
-Overfull \hbox (5.87917pt too wide) in paragraph at lines 97--101
-\OT1/cmr/m/n/10 moun-tain glaciers for mass bal-ance? I the-o-rize that if us-ing a sim-ple 1-dimensional
+Overfull \hbox (2.71251pt too wide) in paragraph at lines 98--102
+\OT1/cmr/m/n/10 moun-tain glaciers for wa-ter runoff? I the-o-rize that if us-ing a sim-ple 1-dimensional
  []
 
 
@@ -230,7 +230,7 @@ pdfTeX warning: pdflatex.exe (file ./Plots/SouthCascadeGlacierMap.pdf): PDF incl
 <Plots/SouthCascadeGlacierMap.pdf, id=21, 614.295pt x 614.295pt>
 File: Plots/SouthCascadeGlacierMap.pdf Graphic file (type pdf)
 <use Plots/SouthCascadeGlacierMap.pdf>
-Package pdftex.def Info: Plots/SouthCascadeGlacierMap.pdf  used on input line 113.
+Package pdftex.def Info: Plots/SouthCascadeGlacierMap.pdf  used on input line 118.
 (pdftex.def)             Requested size: 345.0pt x 345.0058pt.
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
@@ -249,12 +249,12 @@ LaTeX Warning: `!h' float specifier changed to `!ht'.
 <Plots/1986_glacier_comparison.png, id=149, 419.166pt x 327.3831pt>
 File: Plots/1986_glacier_comparison.png Graphic file (type png)
 <use Plots/1986_glacier_comparison.png>
-Package pdftex.def Info: Plots/1986_glacier_comparison.png  used on input line 180.
+Package pdftex.def Info: Plots/1986_glacier_comparison.png  used on input line 185.
 (pdftex.def)             Requested size: 169.0519pt x 132.03493pt.
 <Plots/1958_glacier_comparison.png, id=150, 419.166pt x 327.3831pt>
 File: Plots/1958_glacier_comparison.png Graphic file (type png)
 <use Plots/1958_glacier_comparison.png>
-Package pdftex.def Info: Plots/1958_glacier_comparison.png  used on input line 187.
+Package pdftex.def Info: Plots/1958_glacier_comparison.png  used on input line 192.
 (pdftex.def)             Requested size: 169.0519pt x 132.03493pt.
 
 
@@ -263,7 +263,7 @@ Package pdftex.def Info: Plots/1958_glacier_comparison.png  used on input line 1
  <./Plots/1986_glacier_comparison.png> <./Plots/1958_glacier_comparison.png>]
 
 [8]
-Overfull \hbox (0.42519pt too wide) detected at line 242
+Overfull \hbox (0.42519pt too wide) detected at line 253
 []\OML/cmm/m/it/10 b[] \OT1/cmr/m/n/10 = \OML/cmm/m/it/10 p \OMS/cmsy/m/n/10 ^^C \OML/cmm/m/it/10  \OMS/cmsy/m/n/10 ^^C \OT1/cmr/m/n/10 ([][] + ((\OML/cmm/m/it/10 y \OMS/cmsy/m/n/10 ^^@ \OT1/cmr/m/n/10 1984)\OML/cmm/m/it/10 =\OT1/cmr/m/n/10 (2024 \OMS/cmsy/m/n/10 ^^@ \OT1/cmr/m/n/10 1984)) \OMS/cmsy/m/n/10 ^^C \OT1/cmr/m/n/10 ([][] \OMS/cmsy/m/n/10 ^^@ [][]\OT1/cmr/m/n/10 ))
  []
 
@@ -273,12 +273,12 @@ Overfull \hbox (0.42519pt too wide) detected at line 242
 <Plots/winter_mb_compare.png, id=165, 597.6729pt x 395.3169pt>
 File: Plots/winter_mb_compare.png Graphic file (type png)
 <use Plots/winter_mb_compare.png>
-Package pdftex.def Info: Plots/winter_mb_compare.png  used on input line 288.
+Package pdftex.def Info: Plots/winter_mb_compare.png  used on input line 299.
 (pdftex.def)             Requested size: 169.0519pt x 111.81596pt.
 <Plots/summer_mb_compare.png, id=166, 605.6226pt x 395.3169pt>
 File: Plots/summer_mb_compare.png Graphic file (type png)
 <use Plots/summer_mb_compare.png>
-Package pdftex.def Info: Plots/summer_mb_compare.png  used on input line 295.
+Package pdftex.def Info: Plots/summer_mb_compare.png  used on input line 306.
 (pdftex.def)             Requested size: 169.0519pt x 110.34415pt.
 
 
@@ -290,12 +290,12 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 <Plots/2021_glacier_comparison.png, id=170, 419.166pt x 327.3831pt>
 File: Plots/2021_glacier_comparison.png Graphic file (type png)
 <use Plots/2021_glacier_comparison.png>
-Package pdftex.def Info: Plots/2021_glacier_comparison.png  used on input line 307.
+Package pdftex.def Info: Plots/2021_glacier_comparison.png  used on input line 318.
 (pdftex.def)             Requested size: 345.0pt x 269.45996pt.
 <Plots/model_run_1984_2024.png, id=171, 411.2163pt x 298.4751pt>
 File: Plots/model_run_1984_2024.png Graphic file (type png)
 <use Plots/model_run_1984_2024.png>
-Package pdftex.def Info: Plots/model_run_1984_2024.png  used on input line 314.
+Package pdftex.def Info: Plots/model_run_1984_2024.png  used on input line 325.
 (pdftex.def)             Requested size: 345.0pt x 250.42589pt.
 
 
@@ -309,12 +309,12 @@ LaTeX Warning: `!h' float specifier changed to `!ht'.
 <Plots/calc_vs_measured.png, id=182, 587.5551pt x 406.1574pt>
 File: Plots/calc_vs_measured.png Graphic file (type png)
 <use Plots/calc_vs_measured.png>
-Package pdftex.def Info: Plots/calc_vs_measured.png  used on input line 344.
+Package pdftex.def Info: Plots/calc_vs_measured.png  used on input line 355.
 (pdftex.def)             Requested size: 345.0pt x 238.49045pt.
 <Plots/oggm_vs_measured.png, id=183, 602.0091pt x 420.6114pt>
 File: Plots/oggm_vs_measured.png Graphic file (type png)
 <use Plots/oggm_vs_measured.png>
-Package pdftex.def Info: Plots/oggm_vs_measured.png  used on input line 355.
+Package pdftex.def Info: Plots/oggm_vs_measured.png  used on input line 366.
 (pdftex.def)             Requested size: 345.0pt x 241.04742pt.
 
 
@@ -324,12 +324,12 @@ Package pdftex.def Info: Plots/oggm_vs_measured.png  used on input line 355.
 <Plots/glacier_runoff.png, id=193, 845.559pt x 395.3169pt>
 File: Plots/glacier_runoff.png Graphic file (type png)
 <use Plots/glacier_runoff.png>
-Package pdftex.def Info: Plots/glacier_runoff.png  used on input line 395.
+Package pdftex.def Info: Plots/glacier_runoff.png  used on input line 406.
 (pdftex.def)             Requested size: 345.0pt x 161.2968pt.
 <Plots/all_runoff.png, id=194, 835.4412pt x 395.3169pt>
 File: Plots/all_runoff.png Graphic file (type png)
 <use Plots/all_runoff.png>
-Package pdftex.def Info: Plots/all_runoff.png  used on input line 402.
+Package pdftex.def Info: Plots/all_runoff.png  used on input line 413.
 (pdftex.def)             Requested size: 345.0pt x 163.24515pt.
 
 
@@ -356,7 +356,7 @@ Here is how much of TeX's memory you used:
  1141 hyphenation exceptions out of 8191
  67i,14n,77p,349b,495s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb>
-Output written on Thesis.pdf (17 pages, 2726003 bytes).
+Output written on Thesis.pdf (17 pages, 2726682 bytes).
 PDF statistics:
  257 PDF objects out of 1000 (max. 8388607)
  168 compressed objects within 2 object streams
