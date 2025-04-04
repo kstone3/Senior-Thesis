@@ -125,7 +125,8 @@ def optimize(parameter, input_params):
 
 #Initialize the input files variables
 input_files={}
-input_files['bed']='Data/centerlineBed.csv' #FORMAT: csv with columns, elevation, longitude, latitude
+# input_files['bed']='Data/centerlineBed.csv' #FORMAT: csv with columns, elevation, longitude, latitude
+input_files['bed']='Data/rgi7_centerline_bed.csv'
 input_files['area']='Data/Input_SouthCascade_Area_Altitude_Distribution.csv' #FORMAT: csv with first row mean elevation of bin, then columns of year, area per bin
 input_files['temp_precip']='Data/Input_SouthCascade_Daily_Weather.csv' #FORMAT: csv with columns date, temperature, precipitation
 input_files['mass_balance']='Data/Output_SouthCascade_Glacier_Wide_solutions_calibrated.csv' #FORMAT: csv with columns year, winter mass balance, summer mass balance, annual mass balance, ela
@@ -134,9 +135,12 @@ input_files['thickness_change']='Data/thickness_change.csv' #FORMAT: csv with co
 input_files['front_variation']='Data/front_variation_change.csv' #FORMAT: csv with columns date, front variation change
 #Fix basin_area file to represent the new polygon in arcgis
 input_files['basin_area']='Data/basin_wide_area_elev_bands.csv' #FORMAT: csv with columns area, mean elevation of bin
-input_files['glacier_1958']='Data/centerlineThickness_1958.csv' #FORMAT: csv with columns bed elevation, longitude, latitude, elevation in 1986
-input_files['glacier_1986']='Data/centerlineThickness_1986.csv' #FORMAT: csv with columns bed elevation, longitude, latitude, elevation in 1986
-input_files['glacier_2021']='Data/centerlineThickness_2021.csv' #FORMAT: csv with columns bed elevation, longitude, latitude, elevation in 2021
+# input_files['glacier_1958']='Data/centerlineThickness_1958.csv' #FORMAT: csv with columns bed elevation, longitude, latitude, elevation in 1986
+# input_files['glacier_1986']='Data/centerlineThickness_1986.csv' #FORMAT: csv with columns bed elevation, longitude, latitude, elevation in 1986
+# input_files['glacier_2021']='Data/centerlineThickness_2021.csv' #FORMAT: csv with columns bed elevation, longitude, latitude, elevation in 2021
+input_files['glacier_1958']='Data/rgi7_centerlineThickness_1958.csv' #FORMAT: csv with columns bed elevation, longitude, latitude, elevation in 1986
+input_files['glacier_1986']='Data/rgi7_centerlineThickness_1986.csv' #FORMAT: csv with columns bed elevation, longitude, latitude, elevation in 1986
+input_files['glacier_2021']='Data/rgi7_centerlineThickness_2021.csv' #FORMAT: csv with columns bed elevation, longitude, latitude, elevation in 2021
 
 ela=1880
 ela_1900=1930

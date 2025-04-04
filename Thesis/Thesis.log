@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2025.1.16)  1 APR 2025 16:26
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2025.1.16)  3 APR 2025 23:12
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -155,40 +155,48 @@ Package: array 2024/10/17 v2.6g Tabular extension package (FMi)
 \TX@delta=\dimen167
 \TX@cols=\count286
 \TX@ftn=\toks26
+) (c:/texlive/2024/texmf-dist/tex/latex/enumitem/enumitem.sty
+Package: enumitem 2019/06/20 v3.9 Customized lists
+\labelindent=\skip56
+\enit@outerparindent=\dimen168
+\enit@toks=\toks27
+\enit@inbox=\box56
+\enit@count@id=\count287
+\enitdp@description=\count288
 ) (c:/texlive/2024/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 File: l3backend-pdftex.def 2024-05-08 L3 backend support: PDF output (pdfTeX)
-\l__color_backend_stack_int=\count287
-\l__pdf_internal_box=\box56
+\l__color_backend_stack_int=\count289
+\l__pdf_internal_box=\box57
 ) (./Thesis.aux)
 \openout1 = `Thesis.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 15.
-LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
  (c:/texlive/2024/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count288
-\scratchdimen=\dimen168
-\scratchbox=\box57
-\nofMPsegments=\count289
-\nofMParguments=\count290
-\everyMPshowfont=\toks27
-\MPscratchCnt=\count291
-\MPscratchDim=\dimen169
-\MPnumerator=\count292
-\makeMPintoPDFobject=\count293
-\everyMPtoPDFconversion=\toks28
+\scratchcounter=\count290
+\scratchdimen=\dimen169
+\scratchbox=\box58
+\nofMPsegments=\count291
+\nofMParguments=\count292
+\everyMPshowfont=\toks28
+\MPscratchCnt=\count293
+\MPscratchDim=\dimen170
+\MPnumerator=\count294
+\makeMPintoPDFobject=\count295
+\everyMPtoPDFconversion=\toks29
 ) (c:/texlive/2024/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 485.
@@ -200,12 +208,12 @@ Package caption Info: End \AtBeginDocument code.
 <Plots/fountain_1985_fig3.png, id=1, 316.18124pt x 380.92313pt>
 File: Plots/fountain_1985_fig3.png Graphic file (type png)
 <use Plots/fountain_1985_fig3.png>
-Package pdftex.def Info: Plots/fountain_1985_fig3.png  used on input line 34.
+Package pdftex.def Info: Plots/fountain_1985_fig3.png  used on input line 35.
 (pdftex.def)             Requested size: 169.0519pt x 203.6727pt.
 <Plots/fountain_1985_fig4.png, id=3, 307.1475pt x 259.7203pt>
 File: Plots/fountain_1985_fig4.png Graphic file (type png)
 <use Plots/fountain_1985_fig4.png>
-Package pdftex.def Info: Plots/fountain_1985_fig4.png  used on input line 41.
+Package pdftex.def Info: Plots/fountain_1985_fig4.png  used on input line 42.
 (pdftex.def)             Requested size: 169.0519pt x 142.94965pt.
 
 
@@ -220,7 +228,7 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 [2 <./Plots/fountain_1985_fig3.png> <./Plots/fountain_1985_fig4.png>]
 
 [3]
-Overfull \hbox (2.71251pt too wide) in paragraph at lines 98--102
+Overfull \hbox (2.71251pt too wide) in paragraph at lines 99--103
 \OT1/cmr/m/n/10 moun-tain glaciers for wa-ter runoff? I the-o-rize that if us-ing a sim-ple 1-dimensional
  []
 
@@ -230,7 +238,7 @@ pdfTeX warning: pdflatex.exe (file ./Plots/SouthCascadeGlacierMap.pdf): PDF incl
 <Plots/SouthCascadeGlacierMap.pdf, id=21, 614.295pt x 614.295pt>
 File: Plots/SouthCascadeGlacierMap.pdf Graphic file (type pdf)
 <use Plots/SouthCascadeGlacierMap.pdf>
-Package pdftex.def Info: Plots/SouthCascadeGlacierMap.pdf  used on input line 118.
+Package pdftex.def Info: Plots/SouthCascadeGlacierMap.pdf  used on input line 119.
 (pdftex.def)             Requested size: 345.0pt x 345.0058pt.
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
@@ -246,24 +254,24 @@ LaTeX Warning: `!h' float specifier changed to `!ht'.
 [5 <./Plots/SouthCascadeGlacierMap.pdf>]
 
 [6]
-<Plots/1986_glacier_comparison.png, id=149, 419.166pt x 327.3831pt>
-File: Plots/1986_glacier_comparison.png Graphic file (type png)
-<use Plots/1986_glacier_comparison.png>
-Package pdftex.def Info: Plots/1986_glacier_comparison.png  used on input line 185.
-(pdftex.def)             Requested size: 169.0519pt x 132.03493pt.
-<Plots/1958_glacier_comparison.png, id=150, 419.166pt x 327.3831pt>
+<Plots/1958_glacier_comparison.png, id=149, 419.166pt x 327.3831pt>
 File: Plots/1958_glacier_comparison.png Graphic file (type png)
 <use Plots/1958_glacier_comparison.png>
-Package pdftex.def Info: Plots/1958_glacier_comparison.png  used on input line 192.
+Package pdftex.def Info: Plots/1958_glacier_comparison.png  used on input line 188.
+(pdftex.def)             Requested size: 169.0519pt x 132.03493pt.
+<Plots/1986_glacier_comparison.png, id=150, 419.166pt x 327.3831pt>
+File: Plots/1986_glacier_comparison.png Graphic file (type png)
+<use Plots/1986_glacier_comparison.png>
+Package pdftex.def Info: Plots/1986_glacier_comparison.png  used on input line 195.
 (pdftex.def)             Requested size: 169.0519pt x 132.03493pt.
 
 
 [7
 
- <./Plots/1986_glacier_comparison.png> <./Plots/1958_glacier_comparison.png>]
+ <./Plots/1958_glacier_comparison.png> <./Plots/1986_glacier_comparison.png>]
 
 [8]
-Overfull \hbox (0.42519pt too wide) detected at line 253
+Overfull \hbox (0.42519pt too wide) detected at line 266
 []\OML/cmm/m/it/10 b[] \OT1/cmr/m/n/10 = \OML/cmm/m/it/10 p \OMS/cmsy/m/n/10 ^^C \OML/cmm/m/it/10  \OMS/cmsy/m/n/10 ^^C \OT1/cmr/m/n/10 ([][] + ((\OML/cmm/m/it/10 y \OMS/cmsy/m/n/10 ^^@ \OT1/cmr/m/n/10 1984)\OML/cmm/m/it/10 =\OT1/cmr/m/n/10 (2024 \OMS/cmsy/m/n/10 ^^@ \OT1/cmr/m/n/10 1984)) \OMS/cmsy/m/n/10 ^^C \OT1/cmr/m/n/10 ([][] \OMS/cmsy/m/n/10 ^^@ [][]\OT1/cmr/m/n/10 ))
  []
 
@@ -273,12 +281,12 @@ Overfull \hbox (0.42519pt too wide) detected at line 253
 <Plots/winter_mb_compare.png, id=165, 597.6729pt x 395.3169pt>
 File: Plots/winter_mb_compare.png Graphic file (type png)
 <use Plots/winter_mb_compare.png>
-Package pdftex.def Info: Plots/winter_mb_compare.png  used on input line 299.
+Package pdftex.def Info: Plots/winter_mb_compare.png  used on input line 312.
 (pdftex.def)             Requested size: 169.0519pt x 111.81596pt.
 <Plots/summer_mb_compare.png, id=166, 605.6226pt x 395.3169pt>
 File: Plots/summer_mb_compare.png Graphic file (type png)
 <use Plots/summer_mb_compare.png>
-Package pdftex.def Info: Plots/summer_mb_compare.png  used on input line 306.
+Package pdftex.def Info: Plots/summer_mb_compare.png  used on input line 319.
 (pdftex.def)             Requested size: 169.0519pt x 110.34415pt.
 
 
@@ -290,12 +298,12 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 <Plots/2021_glacier_comparison.png, id=170, 419.166pt x 327.3831pt>
 File: Plots/2021_glacier_comparison.png Graphic file (type png)
 <use Plots/2021_glacier_comparison.png>
-Package pdftex.def Info: Plots/2021_glacier_comparison.png  used on input line 318.
+Package pdftex.def Info: Plots/2021_glacier_comparison.png  used on input line 331.
 (pdftex.def)             Requested size: 345.0pt x 269.45996pt.
 <Plots/model_run_1984_2024.png, id=171, 411.2163pt x 298.4751pt>
 File: Plots/model_run_1984_2024.png Graphic file (type png)
 <use Plots/model_run_1984_2024.png>
-Package pdftex.def Info: Plots/model_run_1984_2024.png  used on input line 325.
+Package pdftex.def Info: Plots/model_run_1984_2024.png  used on input line 338.
 (pdftex.def)             Requested size: 345.0pt x 250.42589pt.
 
 
@@ -309,12 +317,12 @@ LaTeX Warning: `!h' float specifier changed to `!ht'.
 <Plots/calc_vs_measured.png, id=182, 587.5551pt x 406.1574pt>
 File: Plots/calc_vs_measured.png Graphic file (type png)
 <use Plots/calc_vs_measured.png>
-Package pdftex.def Info: Plots/calc_vs_measured.png  used on input line 355.
+Package pdftex.def Info: Plots/calc_vs_measured.png  used on input line 368.
 (pdftex.def)             Requested size: 345.0pt x 238.49045pt.
 <Plots/oggm_vs_measured.png, id=183, 602.0091pt x 420.6114pt>
 File: Plots/oggm_vs_measured.png Graphic file (type png)
 <use Plots/oggm_vs_measured.png>
-Package pdftex.def Info: Plots/oggm_vs_measured.png  used on input line 366.
+Package pdftex.def Info: Plots/oggm_vs_measured.png  used on input line 379.
 (pdftex.def)             Requested size: 345.0pt x 241.04742pt.
 
 
@@ -324,12 +332,12 @@ Package pdftex.def Info: Plots/oggm_vs_measured.png  used on input line 366.
 <Plots/glacier_runoff.png, id=193, 845.559pt x 395.3169pt>
 File: Plots/glacier_runoff.png Graphic file (type png)
 <use Plots/glacier_runoff.png>
-Package pdftex.def Info: Plots/glacier_runoff.png  used on input line 406.
+Package pdftex.def Info: Plots/glacier_runoff.png  used on input line 419.
 (pdftex.def)             Requested size: 345.0pt x 161.2968pt.
 <Plots/all_runoff.png, id=194, 835.4412pt x 395.3169pt>
 File: Plots/all_runoff.png Graphic file (type png)
 <use Plots/all_runoff.png>
-Package pdftex.def Info: Plots/all_runoff.png  used on input line 413.
+Package pdftex.def Info: Plots/all_runoff.png  used on input line 426.
 (pdftex.def)             Requested size: 345.0pt x 163.24515pt.
 
 
@@ -348,15 +356,15 @@ L3 programming layer <2024-12-25>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 3814 strings out of 473207
- 66230 string characters out of 5720461
- 461957 words of memory out of 5000000
- 27051 multiletter control sequences out of 15000+600000
+ 4145 strings out of 473207
+ 71922 string characters out of 5720461
+ 469593 words of memory out of 5000000
+ 27378 multiletter control sequences out of 15000+600000
  564519 words of font info for 56 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  67i,14n,77p,349b,495s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb>
-Output written on Thesis.pdf (17 pages, 2726682 bytes).
+Output written on Thesis.pdf (17 pages, 2726585 bytes).
 PDF statistics:
  257 PDF objects out of 1000 (max. 8388607)
  168 compressed objects within 2 object streams

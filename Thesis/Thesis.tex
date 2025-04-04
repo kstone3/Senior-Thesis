@@ -7,6 +7,7 @@
 \usepackage{placeins}
 \usepackage{tabularx}
 \usepackage{array}
+\usepackage{enumitem}
 
 \title{Can a Shallow Ice Approximation Model be Used to Model the Water Output of Alpine Glaciers?}
 \author{}
@@ -102,16 +103,16 @@ model and the OGGM model will be compared to the actual stream flow data to veri
 \subsection{Study Site}
 \textbf{\large South Cascade Glacier, Washington State}
 
-In this study, I will focus on modeling the South Cascade Glacier in the North Cascades region of Washington State. South Cascade Glacier is 
+In this study, I will focus on modeling the South Cascade Glacier in the North Cascades region of Washington State. The South Cascade Glacier is 
 roughly 1.68 square kilometers, has a mean elevation of roughly 1900 meters, (GLIMS) faces North, an average thickness of 99 meters, and a 
-maximum thickness of 195 meters (GlaThiDa Consortium, 2020). The glacier is small, not overly steep, and has a low aspect ratio such that a 
-SIA model should be able to accurately represent its ice dynamics. On the other hand, the glacier is large enough to exhibit some movement 
+maximum thickness of 195 meters (GlaThiDa Consortium, 2020). The glacier is small, not overly steep, and has a low aspect ratio, therefore a
+SIA model should be able to accurately model its ice dynamics. On the other hand, the glacier is large enough to exhibit some movement 
 and produce a measurable amount of runoff throughout the year. 
 
 Thanks to the foresight of the USGS in creating the Benchmark Glacier Program in the 1950s to study and document the South Cascade glacier, 
-and eventually adding four more glaciers, there is an abundant amount of information on these glaciers. Due to this program I was able to 
+and eventually four more glaciers, there is an abundant amount of information on these glaciers. Due to this program I was able to 
 easily access and use temperature, precipitation, mass balance and DEM data from the USGS. Also as part of this Benchmark Glacier program a 
-stream gauge was installed just below the glacier to track the runoff from the basin. 
+stream gauge was installed just below the glacier to track the runoff from the basin, the data from which was essential to this project.
 
 \begin{figure}[h!]
     \centering
@@ -120,6 +121,7 @@ stream gauge was installed just below the glacier to track the runoff from the b
     \label{fig:south_cascade_glacier}
 \end{figure}
 \FloatBarrier
+
 \begin{table}[h!]
     \centering
     \begin{tabularx}{\textwidth}{|c|X|}
@@ -163,43 +165,68 @@ stream gauge was installed just below the glacier to track the runoff from the b
 \subsection{Model Development}
 \subsubsection{Model Overview}
 
-The model is a one-dimensional Shallow Ice Approximation (SIA) model coupled with a temperature degree day mass balance model and a snow model. 
-The structure of the model is
-\begin{enumerate}
-    \item SIA model for ice dynamics
+% The model is a one-dimensional SIA model coupled with a temperature degree day mass balance model and snow model. 
+% The structure of the model is
+\textbf{Model Structure:}
+\begin{enumerate}[leftmargin=2cm]
+    \item Ice dyanamics modeled using SIA
     \item Temperature degree day and precipitation mass balance model
-    \item Temperature degree day and precipitation snow model
+    \item Temperature degree day and precipitation snow and rain model
 \end{enumerate}
 
-There are two main sections to the model run, spinup and run. The spinup section of the model runs for 500 years and aims to replicate the 
+There are two sections to getting a complete model run, the spinup and the data driven run. The spinup section of the model runs for 500 years and aims to replicate the 
 state of the glacier in 1984 when weather data becomes readily available. This section uses the simple mass balance equation below
 \begin{equation}(Z_g-\text{ELA})*\gamma /365.25\end{equation}
-This uses a gamma of 0.031 to calculate the mass balance in meters per day. When the spinup hits the year 1900 the ELA is shifted up from 1900m to 1930m to simulate the 
-retreat state of the glacier. The figure below shows the model in 1986 after 500 years of spinup and 2 years of run compared with the actual 
-glacier in 1986 and in 1958 derived from a DEM (reference). The measured line has some gaps due to the DEM not being complete over the glacier area.
+This uses a $\gamma$ of 0.031 to calculate the mass balance in meters per day. When the spinup hits the year 1900 the ELA is shifted up from 1900m to 1930m to simulate the 
+retreat state of the glacier. The figure below shows the model in 1958 (474 years of spinup), and 1986 (500 years of spinup and 2 years of data driven run) compared with the actual 
+glacier in 1986 and in 1958 derived from a DEM (reference). The gaps in the actual glacier lines are due to the available DEMs being incomplete over the glacier area.
 
 \begin{figure}[h]
     \centering
-    \begin{subfigure}[b]{0.49\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Plots/1986_glacier_comparison.png}
-        % \caption{Spinup comparison of the model in 1986 after 500 years of spinup and 2 years of run compared with the actual glacier in 1986.}
-        \label{fig:1986_glacier_comparison}
-    \end{subfigure}
-    \hfill
     \begin{subfigure}[b]{0.49\textwidth}
         \centering
         \includegraphics[width=\textwidth]{Plots/1958_glacier_comparison.png}
         % \caption{Timing of peak specific runoff as a function of glacier cover.}
         \label{fig:1958_glacier_comparison}
     \end{subfigure}
-    \caption{Spinup comparison of the model in 1958 and 1986 after 500 years of spinup and 2 years of run compared to the actual glacier.}
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Plots/1986_glacier_comparison.png}
+        % \caption{Spinup comparison of the model in 1986 after 500 years of spinup and 2 years of run compared with the actual glacier in 1986.}
+        \label{fig:1986_glacier_comparison}
+    \end{subfigure}
+    \caption{Comparisons of the modeled glacier and actual glacier in 1958 and 1986}
     \label{fig:glacier_comparison}
 \end{figure}
 \FloatBarrier
 
-Three factors were tuned to create the spinup glacier, the initial ELA, the shifted ELA in 1900 and gamma. These variables were tuned to 
-match the glacier ice profile in 1958 and 1986 when DEM's are available (reference). 
+Three factors were tuned to create the spinup glacier, the initial ELA, the shifted ELA in 1900 and $\gamma$. These variables were tuned to 
+minimize the mean squared error (MSE) between the modeled glacier and the actual glacer in 1958 and 1986 when DEM's are available. The result is 
+a MSE of 1.26\% in 1958 and a MSE of 0.99\% in 1986.
+
+The data driven run uses the mass balance model described below to calculate the mass balance for the glacier instead of the simple mass balance 
+equation used for spinup. This mass balance model is driven by temperature and precipitation data. The data driven run also contains a snow and 
+rain model in order to calculate the snow melt and rainfall in the basin.
+
+\subsubsection{Data driven run setup}
+The data driven section of the model run relies on a variety of data in order to run. It requires daily temperature and precipitation data, 
+a bed topography, yearly glacier area, and total basin area to run. In order to tune the input parameters the model needs winter and summer mass balance 
+data, and ice thickness data along the bed centerline to tune the glacier spinup. The model needs seven input parameters to run: ice melt factor, 
+snow melt factor, lapse rate, start accumulation factor, end 
+accumulation factor, avalance percentage and precipitation conversion factor. The methods for tuning these parameters are described later in the paper
+
+% The centerline bed topography was calculated using latitude, longitude and elevation bed topography from Robert Jacobel (reference). This  was calculated using 
+% ground penetrating radar. I used the ArcGIS (reference) Kriging Interoplation function to interoplate this point elevation data into a complete 
+% bed topography across the whole glacer. I then traced a line down the center of the glacier and got bed elevation points for the line 
+% from the interpolated data. I then used these new latitude, longitude, and elevation points to create the one-dimensional bed topography for 
+% the model.
+
+The centerline bed topography was calculated using latitude, longitude and elevation bed topography from Robert Jacobel (reference). This  was calculated using 
+ground penetrating radar. I used the ArcGIS (reference) Kriging Interoplation function to interoplate this point elevation data into a complete 
+bed topography across the whole glacer. The South Cascade Glacier centerline was obtained from RGI 7.0 (reference) and the bed topography was 
+extracted for 26 points along the centerline. These latitude, longitude and elevation values were then used to create a one-dimenional bed topography 
+for the model.
 
 \subsubsection{Ice Dynamics}
 \paragraph{SIA Model}
@@ -211,51 +238,37 @@ calculates the one dimensional ice flux of the glacier using equation 2.
 % create the flow of ice in the model. 
 \paragraph{Assumptions}
 
-The SIA equations make several assumptions. First, the equations are 1-dimensional, so they neglect longitudinal stress, and ice only flows downhill. Second, the equations 
-also assume that there is no basal sliding of the glacier. Third, the equations only use gravity as the driver of ice flow; they ignore other 
-forces such as lateral and basal stress. Fourth, this set of equations assumes that the horizontal dimensions of the modeled glacier are much 
-larger than the vertical dimensions.
+The SIA ice flux equation make several assumptions. First, the equations are 1-dimensional, so they neglect longitudinal stress, and ice only 
+flows downhill. Second, the equations also assume that there is no basal sliding of the glacier. Third, the equations only use gravity as the 
+driver of ice flow; they ignore other forces such as lateral and basal stress. Fourth, this set of equations assumes that the horizontal 
+dimensions of the modeled glacier are much larger than the vertical dimensions.
+
+\textbf{Should I move the paragraph below???}
 
 The South Cascade Glacier was chosen because of some of these assumptions, it's horizontal dimensions are significant larger than its vertical 
 dimensions (widths ranging from 400m-1200m and maximum ice thickness of 195m), and it is not a steep (average slope of 7.14 degrees along my 
 centerline in 2021) or fast flowing glacier, allowing the SIA assumptions to hold.
 
-\subsubsection{Model Setup}
-The model relies on a variety of input data in order to run. Besides the temperature and precipitation data described below the model also 
-needs a bed topography, yearly glacier area, and total basin area to run. In order to tune the input parameters the model needs mass balance 
-data, and ice thickness data along the bed centerline to tune the glacier spinup. In order to run the model with the temperature and 
-precipitation data the model needs seven input parameters: ice melt factor, snow melt factor, lapse rate, start accumulation factor, end 
-accumulation factor, avalance percentage and precipitation conversion factor. The melt factors were tuned so the model summer mass balance 
-matched the measured summer mass balance. The accumulation factors were tuned so the model winter mass balance matched the measured winter 
-mass balance. The lapse rate was empiraclly calculated using data from the Diablo Dam weather station and a weather station at 1830 meters 
-next to the South Cascade glacier. The avalanche percentage was tuned to minimize the average snow depth over the model run. The precipitation 
-conversion factor was obtained from (reference).
-
-The centerline bed topography was calculated using some data from Robert Jacobel (reference). The data I started with was calculated using 
-ground penetrating radar. Using this data of latitude, longitude and elevation points I used the ArcGIS kriging interpolation function to 
-interpolate this data across the whole glacier. I then traced a line down the center of the glacier and got bed elevation points for the line 
-from the interpolated data. I then used these new latitude, longitude, and elevation points to create the one-dimensional bed topography for 
-the model.
-
 \subsubsection{Mass Balance Model}
 The mass balance of the glacier is calculated using temperature and precipitation data from the Diablo Dam weather station at 272m. The 
-temperature at the glacier is calculated by using a month-specific lapse rate. This month-specific lapse rate was empiraclly calculated using
-data from the Diablo Dam weather station and the South Cascade Glacier weather station at 1830m from 2010-2018. The precipitation at the 
-glacier is calculated by multiplying the precipitation at the Diablo Dam weather station by the precipitation conversion factor of 1.58 
-(reference). The ablation of the glacier is calculated by using a combination of an ice melt factor and a snow melt factor. Above the ELA the 
+temperature at the glacier is calculated by using a month-specific lapse rate. 
+% This month-specific lapse rate was empiraclly calculated using data from the Diablo Dam weather station and the South Cascade Glacier weather station at 1830m from 2010-2018. 
+The precipitation at the glacier is calculated by multiplying the precipitation at the Diablo Dam weather station by the precipitation conversion factor of 1.58 
+obtained from (reference). The ablation of the glacier is calculated by using a combination of an ice melt factor and a snow melt factor. Above the ELA the 
 ablation is calculated by the equation
 \begin{equation}b_s=T*M_{snow}\end{equation}
 Below the ELA the ablation is calculated by the equation
 \begin{equation}b_s=T*(M_{snow}+((ELA-Z-g)/(ELA-min(Z_g)))*(M_{ice}-M_{snow}))\end{equation}
 The result of this equation is the snow melt factor being used at the ELA and a linear increase in the melt factor until it hits the ice melt 
-factor at the base of the glacier. 
+factor at the base of the glacier. This set of equations assumes that in the accumulation zone (above the ELA) the surface is always snow year 
+round, and below the ELA the surface transitions from snow to ice as you decrease in elevation.
 The accumulation of the glacier is calculated using a similar linear equation that increases with time.
 \begin{equation}b_w=p*\alpha*({Accum}_{lower}+((y-1984)/(2024-1984))*({Accum}_{lower}-{Accum}_{upper}))\end{equation}
-This resuls in the accumulation increasing with time until it hits the end accumulation at 2024. 
+This results in the accumulation increasing with time until it hits the end accumulation at 2024. 
 
 \subsubsection{Snow and Rain Model}
-The snow melt model uses precipitation and temperature data to melt and accumulate snow. This model uses 14 elevation bins and keeps track 
-of the snow depth in each bin. Each elevation bin has a corresponding area that represents the area of the basin in the bin's elevation range. 
+The snow melt model uses precipitation and temperature data to melt and accumulate snow. 
+% This model uses 14 elevation bins and keeps track of the snow depth in each bin. Each elevation bin has a corresponding area that represents the area of the basin in the bin's elevation range. 
 The equation below is used to calculate the change in snow depth per timestep 
 \begin{equation}s += 
 \begin{cases} 

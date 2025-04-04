@@ -1,9 +1,9 @@
 # Fdb version 4
-["pdflatex"] 1743546412.32134 "c:/Users/bookn/Downloads/Senior-Thesis/Thesis/Thesis.tex" "Thesis.pdf" "Thesis" 1743546417.13913 0
-  "Plots/1958_glacier_comparison.png" 1742417287 49026 c2eb2f2fd847ee13b7073e0787a1b47f ""
+["pdflatex"] 1743743556.24419 "c:/Users/bookn/Downloads/Senior-Thesis/Thesis/Thesis.tex" "Thesis.pdf" "Thesis" 1743743559.49362 0
+  "Plots/1958_glacier_comparison.png" 1743715862 48615 7813c821e16e82a85f7409d342c12273 ""
   "Plots/1986_glacier_comparison.png" 1742417297 47206 a5897c0e16ac330f7f8af2f510bd6a41 ""
   "Plots/2021_glacier_comparison.png" 1742417441 49176 aa282548f992c6022bf98c2ded6006a5 ""
-  "Plots/SouthCascadeGlacierMap.pdf" 1741494573 1720876 39a7cb56c5226f7126476cc1e293bfbd ""
+  "Plots/SouthCascadeGlacierMap.pdf" 1743714242 1720846 0903546fd608c781b1821fc6c50b14f3 ""
   "Plots/all_runoff.png" 1742616224 139824 fd3e5411b51f842b38bd68722d969673 ""
   "Plots/calc_vs_measured.png" 1741742889 94775 b534ef454bf23acc2466da5dc96cada9 ""
   "Plots/fountain_1985_fig3.png" 1741323943 75620 db429d8aaac0dc7a5b9b3e5349567763 ""
@@ -13,9 +13,9 @@
   "Plots/oggm_vs_measured.png" 1741834582 117515 7388741076972c059c93a2c8c2a406c7 ""
   "Plots/summer_mb_compare.png" 1742615842 58444 c5bed29157d19b7cbd903916aa80b842 ""
   "Plots/winter_mb_compare.png" 1742615831 61624 6a4df2d03ebe902db992f21b5ff7cbed ""
-  "Thesis.aux" 1743546416 8036 2275b40d308d3c7e6bdd9458fa83b56c "pdflatex"
-  "Thesis.tex" 1743546407 31142 ea148464a07980e1c987bb00185d5f65 ""
-  "c:/Users/bookn/Downloads/Senior-Thesis/Thesis/Thesis.tex" 1743546407 31142 ea148464a07980e1c987bb00185d5f65 ""
+  "Thesis.aux" 1743743559 7992 3617e106cc97d8db9c412fafc1104273 "pdflatex"
+  "Thesis.tex" 1743743555 32192 825880416be1e70909d56c437ad8ee3a ""
+  "c:/Users/bookn/Downloads/Senior-Thesis/Thesis/Thesis.tex" 1743743555 32192 825880416be1e70909d56c437ad8ee3a ""
   "c:/texlive/2024/texmf-dist/fonts/map/fontname/texfonts.map" 1737010095 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "c:/texlive/2024/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1737001620 1004 54797486969f23fa377b128694d548df ""
   "c:/texlive/2024/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex8.tfm" 1737001620 988 bdf658c3bfc2d96d3c8b02cfc1c94c20 ""
@@ -57,6 +57,7 @@
   "c:/texlive/2024/texmf-dist/tex/latex/caption/caption.sty" 1737004510 56128 c2ccf1a29d78c33bc553880402e4fb9a ""
   "c:/texlive/2024/texmf-dist/tex/latex/caption/caption3.sty" 1737004510 72619 ee90b6612147680fd73c3b1406a74245 ""
   "c:/texlive/2024/texmf-dist/tex/latex/caption/subcaption.sty" 1737004510 12494 0c0cdb824278a4d51cefeb2e79901315 ""
+  "c:/texlive/2024/texmf-dist/tex/latex/enumitem/enumitem.sty" 1737008509 51697 f8f08183cd2080d9d18a41432d651dfb ""
   "c:/texlive/2024/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty" 1737008637 13886 d1306dcf79a944f6988e688c1785f9ce ""
   "c:/texlive/2024/texmf-dist/tex/latex/graphics-cfg/graphics.cfg" 1737011207 1224 978390e9c2234eab29404bc21b268d1e ""
   "c:/texlive/2024/texmf-dist/tex/latex/graphics-def/pdftex.def" 1737011211 19440 9da9dcbb27470349a580fca7372d454b ""
