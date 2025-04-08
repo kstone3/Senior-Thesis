@@ -23,7 +23,7 @@
 \subsection{Importance of glacial melting in mountain hydrology}
 Glacial melting plays a significant role in the hydrology of mountain catchment areas as shown in Fountain and Tangborn, 1985. In order to 
 understand how the hydrology of these mountain catchment areas will evolve as glacier melt an retreat, scientists create models to predict 
-this evoution. The runoff from these mountain catchments are often used as water sources for communities down stream (reference) and as shown in 
+this evolution. The runoff from these mountain catchments are often used as water sources for communities down stream (reference) and as shown in 
 Figure 1, basins with greater glaciation produce more runoff. As the glaciers in these basins melt and retreat this change in mass takes the 
 form of meltwater. This meltwater can effect communities that rely on the runoff from these glaciated basins in a variety of ways (reference).
 
@@ -85,9 +85,9 @@ compared to Stokes models---particularly large flat glaciers with relatively fre
 that the authors are looking at the shape, area, and velocity profile of the glacier, whereas this study will focus on the water output 
 (surface mass loss) of the glacier.
 \subsection{Using SIA models to model alpine glaciers}
-    There are several papers, such as Le Muer et al., 2003 and Kessler et al., 2006, that use an SIA model for alpine glaciers. The consensus 
+    There are several papers, such as Le Meur et al., 2003 and Kessler et al., 2006, that use an SIA model for alpine glaciers. The consensus 
 from those papers is that SIA models only work well on alpine glaciers with a low aspect ratio, defined as the thickness-to-extent ratio in 
-Le Muer et al., 2004. The glacier used by this study will have a low aspect ratio and therefore a SIA model should work well to model it.
+Le Meur et al., 2004. The glacier used by this study will have a low aspect ratio and therefore a SIA model should work well to model it.
 \subsection{Using SIA models to model water runoff from glaciers}
     Additionally, there is precedent for using a SIA-Mass Balance model for modeling water runoff from glaciers (Naz et al., 2014). They used 
 the SIA model to approximate the ice dynamics and a mass balance model to approximate the accumulation and ablation patterns on the glacier. 
@@ -147,12 +147,12 @@ stream gauge was installed just below the glacier to track the runoff from the b
         ${Accum}_{lower}$ & Accumulation lower bound (m/day) \\
         $y$ & Year \\
         ${Accum}_{upper}$ & Accumulation upper bound (m/day) \\
-        $s$ & Snow depth (m) \\
-        $s_{melt-vol}$ & Snow melt volume ($\text{m}^3$) \\
+        $s$ & Snow depth (m water equivalent) \\
+        $s_{melt-vol}$ & Snow melt volume ($\text{m}^3$ water equivalent) \\
         ${Area}_{basin}$ & Basin area ($\text{m}^2$) \\
         ${Area}_{glacier} $ & Glacier area ($\text{m}^2$) \\
-        $r_{vol}$ & Rain volume ($\text{m}^3$) \\
-        $g_{melt-vol}$ & Glacial melt volume ($\text{m}^3$) \\
+        $r_{vol}$ & Rain volume ($\text{m}^3$ water equivalent) \\
+        $g_{melt-vol}$ & Glacial melt volume ($\text{m}^3$ water equivalent) \\
         \hline
     \end{tabularx}
     \caption{Symbols Table}
@@ -169,7 +169,7 @@ stream gauge was installed just below the glacier to track the runoff from the b
 % The structure of the model is
 \textbf{Model Structure:}
 \begin{enumerate}[leftmargin=2cm]
-    \item Ice dyanamics modeled using SIA
+    \item Ice dynamics modeled using SIA
     \item Temperature degree day and precipitation mass balance model
     \item Temperature degree day and precipitation snow and rain model
 \end{enumerate}
@@ -202,7 +202,7 @@ glacier in 1986 and in 1958 derived from a DEM (reference). The gaps in the actu
 \FloatBarrier
 
 Three factors were tuned to create the spinup glacier, the initial ELA, the shifted ELA in 1900 and $\gamma$. These variables were tuned to 
-minimize the mean squared error (MSE) between the modeled glacier and the actual glacer in 1958 and 1986 when DEM's are available. The result is 
+minimize the mean squared error (MSE) between the modeled glacier and the actual glacier in 1958 and 1986 when DEM's are available. The result is 
 a MSE of 1.26\% in 1958 and a MSE of 0.99\% in 1986.
 
 The data driven run uses the mass balance model described below to calculate the mass balance for the glacier instead of the simple mass balance 
@@ -214,19 +214,14 @@ The data driven section of the model run relies on a variety of data in order to
 a bed topography, yearly glacier area, and total basin area to run. In order to tune the input parameters the model needs winter and summer mass balance 
 data, and ice thickness data along the bed centerline to tune the glacier spinup. The model needs seven input parameters to run: ice melt factor, 
 snow melt factor, lapse rate, start accumulation factor, end 
-accumulation factor, avalance percentage and precipitation conversion factor. The methods for tuning these parameters are described later in the paper
-
-% The centerline bed topography was calculated using latitude, longitude and elevation bed topography from Robert Jacobel (reference). This  was calculated using 
-% ground penetrating radar. I used the ArcGIS (reference) Kriging Interoplation function to interoplate this point elevation data into a complete 
-% bed topography across the whole glacer. I then traced a line down the center of the glacier and got bed elevation points for the line 
-% from the interpolated data. I then used these new latitude, longitude, and elevation points to create the one-dimensional bed topography for 
-% the model.
+accumulation factor, avalanche percentage and precipitation conversion factor. The methods for tuning these parameters are described later in the paper
 
 The centerline bed topography was calculated using latitude, longitude and elevation bed topography from Robert Jacobel (reference). This  was calculated using 
-ground penetrating radar. I used the ArcGIS (reference) Kriging Interoplation function to interoplate this point elevation data into a complete 
-bed topography across the whole glacer. The South Cascade Glacier centerline was obtained from RGI 7.0 (reference) and the bed topography was 
-extracted for 26 points along the centerline. These latitude, longitude and elevation values were then used to create a one-dimenional bed topography 
-for the model.
+ground penetrating radar. I used the ArcGIS (reference) Kriging Interpolation function to interpolate this point elevation data into a complete 
+bed topography across the whole glacier. I then traced a line down the center of the glacier using the interpolated bed and got bed elevation points for the line 
+from the interpolated data. I then used these new latitude, longitude, and elevation points to create the one-dimensional bed topography for 
+the model. I explored using a centerline from RGI 7.0 (reference), but ultimately chose not to use it because the RGI centerline did not go 
+down the center of the interpolated bed.
 
 \subsubsection{Ice Dynamics}
 \paragraph{SIA Model}
@@ -252,7 +247,7 @@ centerline in 2021) or fast flowing glacier, allowing the SIA assumptions to hol
 \subsubsection{Mass Balance Model}
 The mass balance of the glacier is calculated using temperature and precipitation data from the Diablo Dam weather station at 272m. The 
 temperature at the glacier is calculated by using a month-specific lapse rate. 
-% This month-specific lapse rate was empiraclly calculated using data from the Diablo Dam weather station and the South Cascade Glacier weather station at 1830m from 2010-2018. 
+% This month-specific lapse rate was empirically calculated using data from the Diablo Dam weather station and the South Cascade Glacier weather station at 1830m from 2010-2018. 
 The precipitation at the glacier is calculated by multiplying the precipitation at the Diablo Dam weather station by the precipitation conversion factor of 1.58 
 obtained from (reference). The ablation of the glacier is calculated by using a combination of an ice melt factor and a snow melt factor. Above the ELA the 
 ablation is calculated by the equation
@@ -278,28 +273,32 @@ The equation below is used to calculate the change in snow depth per timestep
 The snow melt is constrained so that there cannot be more melt than there is snow. The rain is simply modeled by $p*\alpha$ for positive 
 temperatures.
 
-The total volume of snow is calculated by the equation
+The total volume of snow melt is calculated by the equation
 \begin{equation}s_{melt-vol}=(s*T)*({Area}_{basin}-{Area}_{glacier})\end{equation}
-This give us the total volume of snow melting off the glacier. The glacial melt is calculated elsewhere. The volume of rain is calculated by
+This give us the total volume of snow melting off the glacier. Any snow that falls on the glacier is factored into the mass balance equations 
+and is either accumulated on the glacier or factored into the glacier melt.
+The volume of rain is calculated by
 \begin{equation}r_{vol}=p*\alpha*{Area}_{basin}\end{equation}
-This calculates the rain for the whole basin, assuming that any rain that falls off the glacier runs off immediately.
+This calculates the rain for the whole basin, assuming that any rain that falls runs off immediately.
 
 \subsubsection{Glacial Melt Model}
 The glacial melt model uses the mass balance of the glacier to calculate how much volume the glacier is losing. The volume of runoff from the 
-glacier per timestep is calculated by the equation
+glacier is calculated by the equation
 \begin{equation}g_{melt-vol}=b_s*{Area}_{glacier}\end{equation}
 \subsection{Data Used for Model}
 The temperature and precipitation data used for the model is from the Diablo Dam weather station at 272m. The data is available from 1984-2024 
 and missing 298 days of temperature measurements and 292 days of precipitation measurements. The missing temperature data was interpolated 
-using the interp function from the numpy python library, the missing precipitation data was assumed to be 0. The glacier area data used in 
+using the interp function from the numpy python library (reference), the missing precipitation data was assumed to be 0. The glacier area data used in 
 the model is from the USGS (reference). The basin area data was calculated using a DEM from the USGS and the basin outline shown in figure 1.
 
 \subsubsection{Model Calibration}
-The spinup initial ela, ela shift and gamma were manually optimized to match the glacier extent in 1984. 
+% The spinup initial ela, ela shift and gamma were manually optimized to match the glacier extent in 1984. 
+The spinup initial ELA, ELA in 1900 and $\gamma$ were optimized using the minimize function with the Nelder-Mead method from the scipy library (reference).
+The average of the MSE of the glacier in 1958 and the modeled glacier in 1958 and the MSE of the glacier in 1986 and the modeled glacier in 1986 was minimized.
 
-The ice and snowmelt factors were calibrated using summer mass balance data available from the USGS from 1984-2024. I used the minimize 
-function using the Nelder-Mead method from the scipy library to minimize the mean squared error between the model and the data. The 
-accumulation factors were calculated using the same methodology for the winter mass balance data available from the USGS from 1984-2024.
+The ice and snowmelt factors were calibrated using summer mass balance data available from the USGS from 1984-2024. I used the minimize function 
+to minimize the mean squared error between the model mass balance and the USGS measured mass balance. The accumulation factors were calculated using 
+the same methodology for the winter mass balance data available from the USGS from 1984-2024.
 
 The avalanche percentage was optimized using the same methods as the mass balance variables, but instead of a mean squared error being 
 minimized, the mean of the snow depth over the period 1984-2024 was minimized.
@@ -333,6 +332,8 @@ The figure below shows the resulting ice thicknesses computed by the model in 20
     \label{fig:2021_glacier_comparison}
 \end{figure}
 \FloatBarrier
+
+This figure shows the evolution of the glacier from 1984-2024
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth]{Plots/model_run_1984_2024.png}
@@ -341,28 +342,32 @@ The figure below shows the resulting ice thicknesses computed by the model in 20
 \end{figure}
 \FloatBarrier
 \subsubsection{Model Comparison}
-\paragraph{Running OGGM Model for the Same Glacier}
+\paragraph{Running OGGM Model for the South Cascade Glacier}
 
-The OGGM model was run using the run\_with\_hydro task from the oggm library. This model run used GSWP3\_W5E5 historical temperature and 
-precipitation data to model the hydrology of the glacier from 1984-2019. Using the output of this model I was able to calculate the total 
-runoff from the glacier using the melt\_on\_glacier\_monthly, snowmelt\_on\_glacier\_monthly and liq\_precip\_on\_glacier\_monthly variables. 
-The MSE of the OGGM model and my model is 5.31\% and the MSE of the OGGM model and the measured runoff data is 3.93\%.
+The OGGM model was run using the run\_with\_hydro task from the oggm library. This model run used the GSWP3\_W5E5 historical temperature and 
+precipitation data (reference) to model the hydrology of the glacier from 1984-2019. Using the output of this model I was able to calculate the total 
+runoff from the glacier using the melt\_on\_glacier\_monthly, and liq\_precip\_on\_glacier\_monthly variables. In order 
+to calculate the runoff off the glacier the melt\_off\_glacier\_monthly, and liq\_precip\_off\_glacier\_monthly variables were averaged over the 
+SIA model glacier basin area. The MSE of the OGGM model and my model is 1.55\% and the MSE of the OGGM model and the measured runoff data is 3.22\%.
 
-\paragraph{Validation Using Real-World Streamflow Data }
-
-The calculated runoff of the SIA-Mass Balance model was validated using measured streamflow data from 1992-2007. This data was measured using 
-a stream gauge located just below the glacier. The data is in units of mm per day averaged over the basin area (4.46$\text{km}^2$). I 
-converted this to cubic meters per day by divinding each value by 1000 and multiplying by the basin area in square meters. None of the input 
-parameters to the model were specifically tuned to match the streamflow data. The melt factors were tuned to match the yearly summer mass 
-balance, the accumulation factors were tuned to match the yearly winter mass balance, the avalance percentage was tuned to minimize the 
-average snow depth over the model run, the lapse rates were empirically calculated using data from the Diablo Dam weater station and a weather station 
-at 1830 meters next to the South Cascade glacier, and the precipitation conversion factor was obtained from (reference). The model was able 
-to calculate the runoff from the whole basin (snowmelt, glacier melt and rainfall) from 1984-2024 with a mean squared error of 1.41\%.
+\begin{figure}[h!]
+    % \centering
+    \includegraphics[width=1.3\textwidth]{Plots/oggm_vs_calculated.png}
+    \caption{OGGM calculated runoff compared to SIA Modeled runoff form 1984-2019}
+    \label{fig:oggm_model_run_1984_2019}
+\end{figure}
+\FloatBarrier
 
 \section{Expected Results}
-\subsection{Accuracy of SIA}
-The SIA-Mass Balance proved to be quite accurate with a mean squared error of 1.42\% for the available data from 1992-2007, consisting of 2418 
-data points. Below is a graph of the real-world measured runoff data and my model calculated runoff
+\subsection{Accuracy of SIA Model}
+The calculated runoff of the SIA-Mass Balance model was validated using measured streamflow data from 1992-2007, consisting of 2418 
+data points, which were condensed into 91 months. This data was measured using 
+a stream gauge located just below the glacier (refer to Figure 1 for location). The data is in units of mm per day averaged over the basin area (4.46$\text{km}^2$). This was  
+converted to cubic meters per day by dividing each value by 1000 and multiplying by the basin area in square meters. This daily data was then 
+summed over the month to calculate a monthly runoff. Not every month was complete, so in order to validate the model, the model runoff was saved 
+for the same days as the measured data and then summed over the month. The SIA model was able to 
+calculate the runoff from the whole basin (snow melt, glacier melt and rainfall) with a mean squared error of 1.41\%.
+Below is a graph of the real-world measured runoff data and my model calculated runoff
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth]{Plots/calc_vs_measured.png}
@@ -371,6 +376,8 @@ data points. Below is a graph of the real-world measured runoff data and my mode
 \end{figure}
 \FloatBarrier
 \subsection{Accuracy of OGGM}
+\textbf{add in info about comparing OGGM for complete months, and same for model runoff}
+
 The OGGM Model proved to be slightly less accurate when compared to the real-world measured runoff data. It was also run on slightly different 
 temperature and precipitation data compared to my SIA-Mass Balance model. It used the GSWP3\_W5E5 climate modeled data which goes 
 back to 1970 (check this). It had a mean squared error of 3.22\% for all of the runoff data from 1992-2007.
@@ -382,32 +389,46 @@ back to 1970 (check this). It had a mean squared error of 3.22\% for all of the 
 \end{figure}
 \FloatBarrier
 \subsection{Comparison of Accuracy}
-The accuracy of the simpler SIA-Mass Balance model is quite impressive compared to the much more advanced OGGM model. The SIA-Mass Balance 
-model's accuracy is roughly two times better than OGGM which is quite impressive. The OGGM model was run on modeled climate data instead of 
-real-world measured data which most likely contributed to its worse accuracy. 
+% The accuracy of the simpler SIA-Mass Balance model is quite impressive compared to the much more advanced OGGM model. The SIA-Mass Balance 
+% model's accuracy is roughly two times better than OGGM which is quite impressive. The OGGM model was run on modeled climate data instead of 
+% real-world measured data which most likely contributed to its worse accuracy. 
+The accuracy of the SIA-Mass Balance model is ~2.3 times better than that of the more advanced OGGM model. This is partly due to the SIA model 
+using real-world temperature and precipitation data and the OGGM model using modeled climate data which is less accurate. The SIA model input 
+parameters are also tuned to the local climate of the glacier, whereas the OGGM model is not.
+
 \section{Implications of Research}
 \subsection{Importance of Simplified Ice Dynamics in Numerical Glacier Modeling}
-These results show that complicated and computationally intensive mass balance, melt and ice dynamics are not required to accurately model the 
+These results show that complicated and computationally intensive mass balance and ice dynamics are not required to accurately model the 
 runoff from small mountain glaciers. This means that we can use much simpler and less computationally intensive models such as the ones used 
-in this paper to model the runoff from mountain glaciers over a much larger area. The modeling techniques used in this paper could easily be 
-scaled to a much larger region if mass balance is available to tune the input parameters. I would hypothesize that the input parameters used 
-in my model of the South Cascade Glacier could be used for a much larger model over a similar region as almost all of the input parameters are 
-climate dependet, but this is a topic for another paper. 
+in this paper to model the runoff from mountain glaciers much quicker than more complicated models. The modeling techniques used in this paper could easily be 
+scaled to a much larger region if mass balance is available to tune the input parameters. Also the relative simplicity of the model used in 
+this paper means that it is much easier to modify to add new features and customize to a specific region or glacier.
+
+% I would hypothesize that the input parameters used 
+% in my model of the South Cascade Glacier could be used for a much larger model over a similar region as almost all of the input parameters are 
+% climate dependent, but this is a topic for another paper. 
 \subsection{Applications}
 The work of this paper shows that complex models are not always required to accurately model the runoff from small mountain glaciers. This 
-can have applications in everything from regional glacier modeling to water resource managment as glaciers are a significant source of water 
+can have applications in everything from regional glacier modeling to water resource management as glaciers are a significant source of water 
 for many communities around the world. 
 
 \section{Discussion}
 \subsection{What Worked}
-The runoff was modeled very accurately using only temperature and precipitation data. The model was calibrated using the mass balance data, 
-but what I find very interesting is the very high corelation between the modeled glacier mass balance and the runoff data. The MSE of the 
-model winter mass balance is 3.62\% and the MSE of the model summer mass balance is 1.73\%, but the MSE of the runoff data is 1.41\%. In 
-addition to this the snow model proved to be quite accurate and was able to accumulate enough snow during the winter to melt during the 
-spring and match the spring runoff data. Besides calculating the total runoff for the glacier basin, I was also able to pull out just the 
-glacial melt data and visualize that. By comparing the two one can see that the glacier contributes to roughly half of the total basin melt, 
-which means that as the glacier retreats it will start contributing less and less water to the basin runoff resulting in a decrease in total 
-basin runoff. One might expect the glacier runoff to be retreating with time, but instead is stays constant, which I speculate is due to a 
+The runoff was modeled very accurately using only temperature and precipitation data. The model was calibrated using mass balance data, but 
+none of the runoff data was used to tune any of the input parameters. The MSE of the model winter mass balance is 3.62\% and the MSE of the 
+model summer mass balance is 1.70\%, but the MSE of the runoff was even lower at 1.41\%. This shows that even with slightly larger (compared 
+to the runoff error) mass balance errors the model was still able to accurately model the runoff due to the snow and rainfall model. 
+% The model was calibrated using the mass balance data, 
+% but what I find very interesting is the very high corelation between the modeled glacier mass balance and the runoff data. The MSE of the 
+% model winter mass balance is 3.62\% and the MSE of the model summer mass balance is 1.73\%, but the MSE of the runoff data is 1.41\%. 
+While this study this study did not validate the snow and rain models its accuracy can be somewhat inferred from the accuracy of the runoff 
+model and mass balance model. On average the glacier contributed 37.94\% of the total basin runoff per month which means that the snow melt 
+and rainfall contributed the majority of the runoff. Since the glacier melt was validated with the mass balance (average of summer and winter 
+MSE is 2.66\%) and the the runoff was validated with a MSE of 1.41\% then the error of the snow and rain model must be 2.8\% \textbf{double 
+check this math}
+Even thought the glacier is contributing less than half of the total basin runoff on average, it contributes much more (\textbf{add 
+stats/figure showing contribution in summer months}) as the glacier retreats it will start contributing less water to the basin runoff resulting in a decrease in total 
+basin runoff. One might expect the glacier runoff to be reducing with time, but instead is stays constant, which I speculate is due to a 
 rapidly warming climate is causing the glacier's melt to accelerate, meaning it is loosing a greater percentage of its total mass each year. 
 This has a critical point where eventually the glacial runoff will start to decrease even if the glacier is still melting at an increasing 
 rate, there simply isn't enough mass left to provide the same volume of runoff as the year before.
@@ -433,16 +454,19 @@ rate, there simply isn't enough mass left to provide the same volume of runoff a
 \FloatBarrier
 
 \subsection{What Can Be Improved}
-I would like to improve the runtime of the model. It currently takes about 30 seconds to run for 1984-2024, and I suspect a lot of this time 
-is due to the use of the Python datetime library which is not very efficient. Ideally I would like to completely eliminate the need for a date 
-library which would result in a much faster model and would make the model much more generalizable.
+The largest improvement to this model would be its runtime. It currently takes about 30 seconds to run for 1984-2024, which is most likely 
+due to the use of the Python datetime library which is not very efficient. Eliminating the use of this library would make the model run 
+much faster, but would make it more difficult to run. The datetime library is very useful when using date driven data such as the temperature 
+and precipitation data in this model to keep track of the current date, but it is not very efficient.
 \subsection{Future Work}
-I would like to run the model for a glacier near the South Cascade Glacier with a similar climate to see how region specific the input 
-parameters are. I would expect the input parameters to mostly depend on the local climate and therefore work quite well for a nearby glacier. 
-I would also like to explore running the model with modeled climate data to see what the future runoff of this glacier looks like.
+The next step for this project would be to run the model for a glacier near the South Cascade Glacier with a similar climate to see how region specific the input 
+parameters are. Due to the input parameters being tuned for the mass balance of the glacier which largely depends on the local climate, it 
+seems plausible that they would work reasonably well for a glacier with a similar climate.
+Another idea to explore would be to run the model with modeled climate data in order to run the model into the future to see how this glacier 
+will evolve and how the basin runoff will evolve.
 \section{Conclusion}
-The SIA-Mass Balance model was able to accurately model the runoff from the South Cascade Glacier with a mean squared error of 1.42\% for 16 
-months from 1992-2007. While the OGGM model has an accuracy of 3.53\% for the same time period. This show that complex models are not always 
+The SIA-Mass Balance model was able to accurately model the runoff from the South Cascade Glacier with a mean squared error of 1.41\% for 16 
+months from 1992-2007, while the OGGM model has an accuracy of 3.22\% for the same time period. This show that complex models are not always 
 the best way to model the runoff from small mountain glaciers. A simpler model with parameters tuned to the local climate of the glacier can 
 perform just as well, if not better than a more complex model. 
 

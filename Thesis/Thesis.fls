@@ -133,6 +133,11 @@ INPUT ./Plots/model_run_1984_2024.png
 INPUT ./Plots/model_run_1984_2024.png
 INPUT ./Plots/model_run_1984_2024.png
 INPUT ./Plots/model_run_1984_2024.png
+INPUT ./Plots/oggm_vs_calculated.png
+INPUT ./Plots/oggm_vs_calculated.png
+INPUT ./Plots/oggm_vs_calculated.png
+INPUT ./Plots/oggm_vs_calculated.png
+INPUT ./Plots/oggm_vs_calculated.png
 INPUT ./Plots/calc_vs_measured.png
 INPUT ./Plots/calc_vs_measured.png
 INPUT ./Plots/calc_vs_measured.png
