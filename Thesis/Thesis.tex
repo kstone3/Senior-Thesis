@@ -171,7 +171,7 @@ stream gauge was installed just below the glacier to track the runoff from the b
 \begin{enumerate}[leftmargin=2cm]
     \item Ice dynamics modeled using SIA
     \item Temperature degree day and precipitation mass balance model
-    \item Temperature degree day and precipitation snow and rain model
+    \item Temperature degree day and precipitation (snow fall/melt and rain) model
 \end{enumerate}
 
 There are two sections to getting a complete model run, the spinup and the data driven run. The spinup section of the model runs for 500 years and aims to replicate the 
@@ -206,8 +206,8 @@ minimize the mean squared error (MSE) between the modeled glacier and the actual
 a MSE of 1.26\% in 1958 and a MSE of 0.99\% in 1986.
 
 The data driven run uses the mass balance model described below to calculate the mass balance for the glacier instead of the simple mass balance 
-equation used for spinup. This mass balance model is driven by temperature and precipitation data. The data driven run also contains a snow and 
-rain model in order to calculate the snow melt and rainfall in the basin.
+equation used for spinup. This mass balance model is driven by temperature and precipitation data. The data driven run also contains a precipitation 
+model in order to calculate the snow melt and rainfall in the basin.
 
 \subsubsection{Data driven run setup}
 The data driven section of the model run relies on a variety of data in order to run. It requires daily temperature and precipitation data, 
@@ -261,7 +261,7 @@ The accumulation of the glacier is calculated using a similar linear equation th
 \begin{equation}b_w=p*\alpha*({Accum}_{lower}+((y-1984)/(2024-1984))*({Accum}_{lower}-{Accum}_{upper}))\end{equation}
 This results in the accumulation increasing with time until it hits the end accumulation at 2024. 
 
-\subsubsection{Snow and Rain Model}
+\subsubsection{Precipitation Model}
 The snow melt model uses precipitation and temperature data to melt and accumulate snow. 
 % This model uses 14 elevation bins and keeps track of the snow depth in each bin. Each elevation bin has a corresponding area that represents the area of the basin in the bin's elevation range. 
 The equation below is used to calculate the change in snow depth per timestep 
@@ -415,20 +415,31 @@ for many communities around the world.
 \section{Discussion}
 \subsection{What Worked}
 The runoff was modeled very accurately using only temperature and precipitation data. The model was calibrated using mass balance data, but 
-none of the runoff data was used to tune any of the input parameters. The MSE of the model winter mass balance is 3.62\% and the MSE of the 
-model summer mass balance is 1.70\%, but the MSE of the runoff was even lower at 1.41\%. This shows that even with slightly larger (compared 
-to the runoff error) mass balance errors the model was still able to accurately model the runoff due to the snow and rainfall model. 
+none of the runoff data was used to tune any of the input parameters. The MSE of the modeled winter mass balance is 3.62\% and the MSE of the 
+modeled summer mass balance is 1.70\%, but the MSE of the annual mass balance is 0\%. In the parameter tuning the annual mass balance data 
+was not used, only the individual summer and winter yearly data which means that through minimizing the error of those two parts of the 
+mass balance, the yearly mas balance was modeled perfectly. 
+% This shows that even with slightly larger (compared 
+% to the runoff error) mass balance errors the model was still able to accurately model the runoff due to the snow and rainfall model. 
 % The model was calibrated using the mass balance data, 
 % but what I find very interesting is the very high corelation between the modeled glacier mass balance and the runoff data. The MSE of the 
 % model winter mass balance is 3.62\% and the MSE of the model summer mass balance is 1.73\%, but the MSE of the runoff data is 1.41\%. 
-While this study this study did not validate the snow and rain models its accuracy can be somewhat inferred from the accuracy of the runoff 
-model and mass balance model. On average the glacier contributed 37.94\% of the total basin runoff per month which means that the snow melt 
-and rainfall contributed the majority of the runoff. Since the glacier melt was validated with the mass balance (average of summer and winter 
-MSE is 2.66\%) and the the runoff was validated with a MSE of 1.41\% then the error of the snow and rain model must be 2.8\% \textbf{double 
-check this math}
-Even thought the glacier is contributing less than half of the total basin runoff on average, it contributes much more (\textbf{add 
-stats/figure showing contribution in summer months}) as the glacier retreats it will start contributing less water to the basin runoff resulting in a decrease in total 
-basin runoff. One might expect the glacier runoff to be reducing with time, but instead is stays constant, which I speculate is due to a 
+% While this study this study did not validate the snow and rain models its accuracy can be somewhat inferred from the accuracy of the runoff 
+% model and mass balance model. On average the glacier contributed 37.94\% of the total basin runoff per month which means that the snow melt 
+% and rainfall contributed the majority of the runoff. Since the glacier melt was validated with the mass balance (average of summer and winter 
+% MSE is 2.66\% \textbf{need to use annual mass balance data instead, can't average cause proportions arent 50/50}) and the the runoff was 
+% validated with a MSE of 1.41\% and the snow/rain and glacier melt model are independent, error propagation can be used to calculate the error 
+% the error of the snow and rain model to be 2.67\% \textbf{double check this math}
+While this study this study did not validate the precipitation model its accuracy can be assumed to be equal to that of the runoff. This is 
+derived from the fact that the runoff consists of the glacier melt plus the snow melt and rainfall. If the yearly mass balance of the glacier 
+has a 0\% error then the error of the runoff must be solely due to the precipitation model. So therefore the MSE of the precipitation 
+model must be 1.41\%.
+Even though the glacier is contributing less than half of the total basin runoff on average, it contributes much more during the summer during 
+the summer months as show in figure 11. As the glacier retreats it will start contributing less water to the basin runoff resulting in a decrease in total 
+basin runoff. If the precipitation stays constant over time, but the glacier continues to retreat the basin runoff will see a steep decline 
+particularly in early summer and fall when the glacier contributes most to the runoff. This is especially important considering that the 
+Cascades see the least amount of precipitation during that portion of the year (reference). 
+One might expect the glacier runoff to be reducing with time, but instead is stays constant, which I speculate is due to a 
 rapidly warming climate is causing the glacier's melt to accelerate, meaning it is loosing a greater percentage of its total mass each year. 
 This has a critical point where eventually the glacial runoff will start to decrease even if the glacier is still melting at an increasing 
 rate, there simply isn't enough mass left to provide the same volume of runoff as the year before.
@@ -452,7 +463,13 @@ rate, there simply isn't enough mass left to provide the same volume of runoff a
     \label{fig:runoff_compare}
 \end{figure}
 \FloatBarrier
-
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{Plots/percent_glac_melt_month.png}
+    \caption{Average percentage from 1984-2024 that the glacier contributes to the monthly runoff}
+    \label{fig:percent_glacier_runoff}
+\end{figure}
+\FloatBarrier
 \subsection{What Can Be Improved}
 The largest improvement to this model would be its runtime. It currently takes about 30 seconds to run for 1984-2024, which is most likely 
 due to the use of the Python datetime library which is not very efficient. Eliminating the use of this library would make the model run 

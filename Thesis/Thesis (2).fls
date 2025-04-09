@@ -158,11 +158,6 @@ INPUT ./Plots/all_runoff.png
 INPUT ./Plots/all_runoff.png
 INPUT ./Plots/all_runoff.png
 INPUT ./Plots/all_runoff.png
-INPUT ./Plots/percent_glac_melt_month.png
-INPUT ./Plots/percent_glac_melt_month.png
-INPUT ./Plots/percent_glac_melt_month.png
-INPUT ./Plots/percent_glac_melt_month.png
-INPUT ./Plots/percent_glac_melt_month.png
 INPUT Thesis.aux
 INPUT c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 INPUT c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb
