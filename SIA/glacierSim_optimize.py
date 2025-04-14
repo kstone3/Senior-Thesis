@@ -17,40 +17,44 @@ def optimize(parameter, input_params):
         # print("SNOW MELT AMPLITUDE: ", input_params[4])
         # print("ICE MELT AMPLITUDE: ", input_params[5])
         # print("LAPSE RATE: ", input_params[1])
-        # print("ACCUMFACTOR LOWER: ", input_params[0])
-        # print("ACCUMFACTOR UPPER: ", input_params[1])
+        print("ACCUMFACTOR LOWER: ", input_params[0])
+        print("ACCUMFACTOR UPPER: ", input_params[1])
         # print("PRECIP LAPSE RATE: ", input_params[0])
-        print("GAMMA: ", input_params[0])
-        print("ELA: ", input_params[1])
-        print("ELA 1900: ", input_params[2])
+        # print("GAMMA: ", input_params[0])
+        # print("ELA: ", input_params[1])
+        # print("ELA 1900: ", input_params[2])
         print(input_params)
         #print("GAMMA: ", input_params[0])
-        ela = input_params[1]
-        ela_1900= input_params[2]
-        time = 503
+        gamma=0.0309
+        ela=1903
+        ela_1900=1930
+        time = 540
         save = 1 #Needs to be 1 to calculate ela list
-        gamma=input_params[0] #0.016 #0.012 #0.016
-        accumfactor_lower=0.66
-        accumfactor_upper=1.7
-        ice_meltfactor= -0.0038 #bounds approx 0.005-0.012
-        snow_meltfactor=-0.0029 #bounds approx 0.002-0.006
+        # gamma=input_params[0] #0.016 #0.012 #0.016
+        # accumfactor_lower=0.66
+        # accumfactor_upper=1.7
+        accumfactor_lower=input_params[0] #0.66 #0.66
+        accumfactor_upper=input_params[1] #1.7 #1.7
+        ice_meltfactor=-0.00314334
+        snow_meltfactor=-0.00315546 #bounds approx 0.002-0.006
         avalanche_percent=0.32
         precip_conv_factor=1.58
         lapse_rate=[-0.00334774, -0.00544884, -0.00577458, -0.00679377, -0.00661499, -0.00627995, -0.00529508, -0.00534911, -0.00495446, -0.00494315, -0.00472614, -0.00452499]
         tune_factors=[ice_meltfactor,snow_meltfactor,lapse_rate,accumfactor_lower,accumfactor_upper,avalanche_percent, precip_conv_factor]
         quiet = True
-        start_time = 0
-        ice = [ 53.89550985, 61.2302675, 68.52805603, 72.16752233, 78.19477103,
-            86.57434438, 94.52278703, 113.00567764, 124.65045342, 131.1336047,
-            132.61805723, 126.05975829, 117.01403765, 110.72201024, 107.36448442,
-            113.23158091, 127.19316445, 150.80920841, 147.75800077, 135.19461921,
-            132.62404257, 130.58089845, 128.95030221, 129.67226275, 131.1275745,
-            137.76555425, 144.54125286, 149.5876901, 152.88274456, 152.52189309,
-            142.71479768, 122.66643947, 105.65745331, 89.73132543, 84.64598526,
-            84.39967405, 78.27781775, 70.24575207, 57.81117783, 43.58883439,
-            34.64893057, 15.29705107, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ]
-        model = glacierSim(ela=ela, ela_1900=ela_1900,time=time, save=save,gamma=gamma,quiet=quiet, tune_factors=tune_factors, initial_ice=None, start_time=start_time, input_files=input_files)
-        model.init(ela=ela, ela_1900=ela_1900,time=time, save=save,gamma=gamma,quiet=quiet, tune_factors=tune_factors, initial_ice=None, start_time=start_time, input_files=input_files)
+        start_time = 500
+        # ice = [ 53.89550985, 61.2302675, 68.52805603, 72.16752233, 78.19477103,
+        #     86.57434438, 94.52278703, 113.00567764, 124.65045342, 131.1336047,
+        #     132.61805723, 126.05975829, 117.01403765, 110.72201024, 107.36448442,
+        #     113.23158091, 127.19316445, 150.80920841, 147.75800077, 135.19461921,
+        #     132.62404257, 130.58089845, 128.95030221, 129.67226275, 131.1275745,
+        #     137.76555425, 144.54125286, 149.5876901, 152.88274456, 152.52189309,
+        #     142.71479768, 122.66643947, 105.65745331, 89.73132543, 84.64598526,
+        #     84.39967405, 78.27781775, 70.24575207, 57.81117783, 43.58883439,
+        #     34.64893057, 15.29705107, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ]
+        ice=[64.50665454, 73.34825753, 82.14677938, 87.1479015, 94.7306883, 104.5882329, 113.70294678, 133.07943541, 144.98064389, 151.46297586, 152.82095652, 146.08286833, 136.91565242, 130.65094348, 127.48133943, 133.66396017, 147.77059641, 171.2134459, 167.71477891, 154.67101123, 151.65240415, 149.12263247, 146.956214, 147.08248738, 147.85770221, 153.72402157, 159.62910372, 163.73136372, 166.02527862, 164.61263013, 153.6902369, 132.39018704, 113.84097541, 95.95253908, 88.15995433, 84.34092379, 73.81852984, 59.65209497, 37.52930102, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0,0]
+        model = glacierSim(ela=ela, ela_1900=ela_1900,time=time, save=save,gamma=gamma,quiet=quiet, tune_factors=tune_factors, initial_ice=ice, start_time=start_time, input_files=input_files)
+        model.init(ela=ela, ela_1900=ela_1900,time=time, save=save,gamma=gamma,quiet=quiet, tune_factors=tune_factors, initial_ice=ice, start_time=start_time, input_files=input_files)
         for i in range(0,model.frames):
             model.run_model(i)
         try:
@@ -60,16 +64,21 @@ def optimize(parameter, input_params):
                 calc_summer_mb_norm=(model.calculated_summer_mb-summer_min)/(summer_max-summer_min)
                 meas_summer_mb_norm= (np.array(model.summer_mb)-summer_min)/(summer_max-summer_min)
                 mse=np.mean((calc_summer_mb_norm-meas_summer_mb_norm)**2)
-                print("Function result: ", mse)
-                return mse
+                mse_non_norm=np.mean((model.calculated_summer_mb-model.summer_mb)**2)
+                print("Function result: ", mse_non_norm)
+                return mse_non_norm
             elif parameter == 'winter':
-                winter_min=min(np.nanmin(model.calculated_winter_mb),np.nanmin(model.winter_mb))
-                winter_max=max(np.nanmax(model.calculated_winter_mb),np.nanmax(model.winter_mb))
+                # winter_min=min(np.nanmin(model.calculated_winter_mb),np.nanmin(model.winter_mb))
+                # winter_max=max(np.nanmax(model.calculated_winter_mb),np.nanmax(model.winter_mb))
+                winter_min=np.nanmin(np.append(model.calculated_winter_mb,model.winter_mb))
+                winter_max=np.nanmax(np.append(model.calculated_winter_mb,model.winter_mb))
                 calc_winter_mb_norm=(model.calculated_winter_mb-winter_min)/(winter_max-winter_min)
                 meas_winter_mb_norm= (np.array(model.winter_mb)-winter_min)/(winter_max-winter_min)
                 mse=np.mean((calc_winter_mb_norm-meas_winter_mb_norm)**2)
-                print("Function result: ", mse)
-                return mse
+                mse_non_norm=np.mean((model.calculated_winter_mb-model.winter_mb)**2)
+                std=np.std((model.winter_mb-model.calculated_winter_mb))
+                print("Function result: ", mse_non_norm)
+                return mse_non_norm
             elif parameter == 'annual': 
                 print("Function result: ",np.sum((np.array(model.calculated_annual_mb) - np.array(model.annual_mb)) ** 2))
                 return np.sum((np.array(model.calculated_annual_mb) - np.array(model.annual_mb)) ** 2)
@@ -149,21 +158,21 @@ start_time=0
 save=1 #Needs to be 1 for the ela_list to work properly
 gamma=0.016
 quiet=True
-accumfactor_lower=0.66
-accumfactor_upper=1.7
+accumfactor_lower=0.94
+accumfactor_upper=1.44
 ice_meltfactor= -0.0038 #bounds approx 0.005-0.012
 snow_meltfactor=-0.0029 #bounds approx 0.002-0.006
 avalanche_percent=0.32
 precip_conv_factor=1.58
 lapse_rate=[-0.00334774, -0.00544884, -0.00577458, -0.00679377, -0.00661499, -0.00627995, -0.00529508, -0.00534911, -0.00495446, -0.00494315, -0.00472614, -0.00452499]
 tune_factors=[ice_meltfactor,snow_meltfactor,lapse_rate,accumfactor_lower,accumfactor_upper,avalanche_percent, precip_conv_factor]
-bounds=[(0,1),(1600,2200),(1600,2200)]
-initial_guess=[gamma, ela, ela_1900]
+bounds=[(0,2),(0,2)]
+initial_guess=[accumfactor_lower,accumfactor_upper]
 opt_method='Nelder-Mead'
 with open(f"{opt_method}-Results.txt", "a") as file:
     file.write("-------------------Optimize spinup-----------\n")
     # for opt_var in ['ela','front_var','thick','vol_change']:
-    for opt_var in ['spinup']:
+    for opt_var in ['winter']:
         result = minimize(lambda x: optimize(opt_var, x),initial_guess,method=opt_method,bounds=bounds,options={'disp': True})
         result_snow_conv=result.x
         # print("Final Gamma: ", result.x)

@@ -5,6 +5,7 @@ from math import inf
 from datetime import datetime,timedelta
 import random
 from datetime import datetime, timedelta
+import matplotlib.pyplot as plt
 
 class glacierSim():
     def __init__(self, ela=1880,ela_1900=1650,time=500,save=10,gamma=0.01,quiet=True, tune_factors=[-0.004,-0.002,0.0065,1.6,2.2,5,0.006], initial_ice=None, start_time=0, input_files=None):
@@ -56,8 +57,10 @@ class glacierSim():
         #SNOW VARS:
         self.snow_depth=np.zeros(self.num_cells) #snow depth along glacier in m
         self.snow_melt_amt=np.zeros(self.num_cells) #snow melt amount in m
+        self.monthly_precip_vol=np.zeros((self.time-start_time)*12+1) #holds daily snow volume data for all data
         self.snow_depth_list=[]
         self.avalanche_dates=[self.current_date]*4
+        self.monthly_snow_depth=np.zeros((self.time-start_time)*12+1)
         
         #TUNE FACTORS:
         self.ice_melt_factor=tune_factors[0] #factor to change how much the ice melts per degree C
@@ -87,6 +90,7 @@ class glacierSim():
         self.date_index_training=[] #holds date index for training data
         self.date_index_verif=[] #holds date index for verification data
         self.date_index_all=[] #holds date index for all data
+        self.month_index_all=[]
         
         #CALCULATED VERIF VARS:
         #MB VARS
@@ -173,9 +177,12 @@ class glacierSim():
         self.thickness_1986_verif = data_1986[:, 3] - data_1986[:, 0]
         data_2021 = np.loadtxt(self.input_files['glacier_2021'], delimiter=',', skiprows=1)
         self.thickness_2021_verif = data_2021[:, 3] - data_2021[:, 0]
-        self.thickness_1958_verif=np.interp(np.linspace(cumulative_distances[0], cumulative_distances[-1], self.num_cells), cumulative_distances, self.thickness_1958_verif) if type(self.thickness_1958_verif) is not int else np.zeros(self.num_cells)
+        self.thickness_1958_verif=(np.interp(np.linspace(cumulative_distances[0], cumulative_distances[-1], self.num_cells), cumulative_distances, self.thickness_1958_verif) if type(self.thickness_1958_verif) is not int else np.zeros(self.num_cells))
+        self.thickness_1958_verif = np.maximum(self.thickness_1958_verif, 0)  # Ensure no negative thickness
         self.thickness_1986_verif=np.interp(np.linspace(cumulative_distances[0], cumulative_distances[-1], self.num_cells), cumulative_distances, self.thickness_1986_verif) if type(self.thickness_1986_verif) is not int else np.zeros(self.num_cells)
+        self.thickness_1986_verif = np.maximum(self.thickness_1986_verif, 0)  # Ensure no negative thickness
         self.thickness_2021_verif=np.maximum(np.interp(np.linspace(cumulative_distances[0], cumulative_distances[-1], self.num_cells), cumulative_distances, self.thickness_2021_verif) if type(self.thickness_2021_verif) is not int else np.zeros(self.num_cells),0)
+        self.thickness_2021_verif = np.maximum(self.thickness_2021_verif, 0)  # Ensure no negative thickness
         
     #Calculate the initial glacier area
     def load_area_data(self):
@@ -223,9 +230,9 @@ class glacierSim():
         #Load the mass balance and ELA data
         #Skips the first 25 rows because they are before 1984
         df = pd.read_csv(self.input_files['mass_balance'], skiprows=25)
-        self.annual_mb = df.iloc[:-1, 3].astype(float).tolist()
-        self.summer_mb = df.iloc[:-1, 2].astype(float).tolist()
-        self.winter_mb = df.iloc[:-1, 1].astype(float).tolist()
+        self.annual_mb = df.iloc[:-1, 3].astype(float).to_numpy()
+        self.summer_mb = df.iloc[:-1, 2].astype(float).to_numpy()
+        self.winter_mb = df.iloc[:-1, 1].astype(float).to_numpy()
         self.ela_verif=df.iloc[5:, 4].astype(float).to_numpy()
         #Initialize the calculated mass balance arrays
         self.calculated_annual_mb=np.zeros(len(self.annual_mb))
@@ -252,6 +259,7 @@ class glacierSim():
         #Runoff all data variables
         self.measured_runoff_all = df.groupby(df['date'].dt.to_period('M'))['runoff'].sum().to_numpy()
         self.date_index_all = {date: idx for idx, date in enumerate(df['date'])}
+        self.month_index_all = sorted(set(date.strftime("%Y-%m") for date in self.date_index_all.keys()))
         self.daily_runoff_all_data = np.zeros(len(self.date_index_all))
         #Load the thickness change and front variation data
         self.thickness_change_verif = pd.read_csv(self.input_files['thickness_change']).iloc[0:, 11].astype(float).to_numpy()
@@ -278,6 +286,8 @@ class glacierSim():
         #These arrays have a bin for each month for each year from 1984-2024
         self.monthly_runoff_all[(self.current_date.year - 1984) * 12 + (self.current_date.month - 1)] += (self.glacial_melt+self.snow_melt_vol+self.rain_vol_per_step)
         self.monthly_glacier_melt[(self.current_date.year - 1984) * 12 + (self.current_date.month - 1)] += self.glacial_melt
+        self.monthly_snow_depth[(self.current_date.year - 1984) * 12 + (self.current_date.month - 1)] += np.mean(self.snow_depth)
+        self.monthly_precip_vol[(self.current_date.year - 1984) * 12 + (self.current_date.month - 1)] += self.snow_melt_vol+self.rain_vol_per_step
         #If date is the date before thickness change verification data starts then set prev_thickness to calculate thickness change
         if self.current_date==datetime(1998,12,31): self.prev_thickness=np.mean(self.ice)
         #Calculate thickness change data
@@ -396,6 +406,8 @@ class glacierSim():
             print('NaN detected in ice_slope:', self.ice_slope)
             print("MASS BALANCE: ", self.b)
             print("TIME: ", self.time)
+            plt.plot(self.x, self.ice+self.topo)
+            plt.plot(self.timestep_list)
             return
         if np.any(np.isnan(self.ice)): #and not self.quiet:
             print('NaN detected in ice:', self.ice)
@@ -406,6 +418,7 @@ class glacierSim():
             print('Ice: ',self.ice)
             print("Q: ",self.q)
             print("TIME: ", self.time)
+            plt.plot(self.timestep_list)
             return
         #Calculate ice flux
         #self.q[1:]=2e-17* ((self.p*self.g*np.sin(np.arctan(self.ice_slope)))**3)*((self.ice**5)/5) #per year
@@ -417,6 +430,7 @@ class glacierSim():
             print(self.ice)
             print("TIME: ", self.time)
             #plt.plot(self.x, self.ice+self.topo)
+            plt.plot(self.timestep_list)
             return
         #Print model status every self.save years if quiet is false
         if (self.prev_display==0.0 or ((self.time>=(self.prev_display+(self.save/365.25))*365.25) and self.time<(self.time*365.25))) and not self.quiet:

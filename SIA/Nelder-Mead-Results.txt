@@ -174,3 +174,23 @@ Final objective function value: 0.00992924920877256
 Optimized snow conversion factor: [1.57344931e-02 1.89591743e+03 1.92984913e+03]
 Final objective function value: 0.007554179655970484
 [1.57344931e-02 1.89591743e+03 1.92984913e+03]
+-------------------Optimize spinup-----------
+Optimized snow conversion factor: [0.66 1.7 ]
+Final objective function value: inf
+[0.66 1.7 ]
+-------------------Optimize spinup-----------
+Optimized snow conversion factor: [0. 0.]
+Final objective function value: 0.05397778734281667
+[0. 0.]
+-------------------Optimize spinup-----------
+Optimized snow conversion factor: [-0.00315133 -0.00315148]
+Final objective function value: 0.01598284776621366
+[-0.00315133 -0.00315148]
+-------------------Optimize spinup-----------
+Optimized snow conversion factor: [-0.00314334 -0.00315546]
+Final objective function value: 0.24623592725876686
+[-0.00314334 -0.00315546]
+-------------------Optimize spinup-----------
+Optimized snow conversion factor: [0.94064279 1.4394381 ]
+Final objective function value: 0.29156922726722045
+[0.94064279 1.4394381 ]

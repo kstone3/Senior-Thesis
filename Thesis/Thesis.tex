@@ -23,9 +23,9 @@
 \subsection{Importance of glacial melting in mountain hydrology}
 Glacial melting plays a significant role in the hydrology of mountain catchment areas as shown in Fountain and Tangborn, 1985. In order to 
 understand how the hydrology of these mountain catchment areas will evolve as glacier melt an retreat, scientists create models to predict 
-this evolution. The runoff from these mountain catchments are often used as water sources for communities down stream (reference) and as shown in 
+this evolution. The runoff from these mountain catchments are often used as water sources for communities down stream \cite{ref1} and as shown in 
 Figure 1, basins with greater glaciation produce more runoff. As the glaciers in these basins melt and retreat this change in mass takes the 
-form of meltwater. This meltwater can effect communities that rely on the runoff from these glaciated basins in a variety of ways (reference).
+form of meltwater. This meltwater can effect communities that rely on the runoff from these glaciated basins in a variety of ways \cite{ref2}.
 
 %Might need to change these figures to support statement above
 \begin{figure}[h]
@@ -179,7 +179,7 @@ state of the glacier in 1984 when weather data becomes readily available. This s
 \begin{equation}(Z_g-\text{ELA})*\gamma /365.25\end{equation}
 This uses a $\gamma$ of 0.031 to calculate the mass balance in meters per day. When the spinup hits the year 1900 the ELA is shifted up from 1900m to 1930m to simulate the 
 retreat state of the glacier. The figure below shows the model in 1958 (474 years of spinup), and 1986 (500 years of spinup and 2 years of data driven run) compared with the actual 
-glacier in 1986 and in 1958 derived from a DEM (reference). The gaps in the actual glacier lines are due to the available DEMs being incomplete over the glacier area.
+glacier in 1986 and in 1958 derived from a DEM \cite{ref3}. The gaps in the actual glacier lines are due to the available DEMs being incomplete over the glacier area.
 
 \begin{figure}[h]
     \centering
@@ -216,11 +216,11 @@ data, and ice thickness data along the bed centerline to tune the glacier spinup
 snow melt factor, lapse rate, start accumulation factor, end 
 accumulation factor, avalanche percentage and precipitation conversion factor. The methods for tuning these parameters are described later in the paper
 
-The centerline bed topography was calculated using latitude, longitude and elevation bed topography from Robert Jacobel (reference). This  was calculated using 
-ground penetrating radar. I used the ArcGIS (reference) Kriging Interpolation function to interpolate this point elevation data into a complete 
+The centerline bed topography was calculated using latitude, longitude and elevation bed topography from Robert Jacobel \cite{ref4}. This  was calculated using 
+ground penetrating radar. I used the ArcGIS \cite{ref5} Kriging Interpolation function to interpolate this point elevation data into a complete 
 bed topography across the whole glacier. I then traced a line down the center of the glacier using the interpolated bed and got bed elevation points for the line 
 from the interpolated data. I then used these new latitude, longitude, and elevation points to create the one-dimensional bed topography for 
-the model. I explored using a centerline from RGI 7.0 (reference), but ultimately chose not to use it because the RGI centerline did not go 
+the model. I explored using a centerline from RGI 7.0 \cite{ref6}, but ultimately chose not to use it because the RGI centerline did not go 
 down the center of the interpolated bed.
 
 \subsubsection{Ice Dynamics}
@@ -288,12 +288,12 @@ glacier is calculated by the equation
 \subsection{Data Used for Model}
 The temperature and precipitation data used for the model is from the Diablo Dam weather station at 272m. The data is available from 1984-2024 
 and missing 298 days of temperature measurements and 292 days of precipitation measurements. The missing temperature data was interpolated 
-using the interp function from the numpy python library (reference), the missing precipitation data was assumed to be 0. The glacier area data used in 
-the model is from the USGS (reference). The basin area data was calculated using a DEM from the USGS and the basin outline shown in figure 1.
+using the interp function from the numpy python library \cite{ref7}, the missing precipitation data was assumed to be 0. The glacier area data used in 
+the model is from the USGS \cite{ref8}. The basin area data was calculated using a DEM from the USGS and the basin outline shown in figure 1.
 
 \subsubsection{Model Calibration}
 % The spinup initial ela, ela shift and gamma were manually optimized to match the glacier extent in 1984. 
-The spinup initial ELA, ELA in 1900 and $\gamma$ were optimized using the minimize function with the Nelder-Mead method from the scipy library (reference).
+The spinup initial ELA, ELA in 1900 and $\gamma$ were optimized using the minimize function with the Nelder-Mead method from the scipy library \cite{ref9}.
 The average of the MSE of the glacier in 1958 and the modeled glacier in 1958 and the MSE of the glacier in 1986 and the modeled glacier in 1986 was minimized.
 
 The ice and snowmelt factors were calibrated using summer mass balance data available from the USGS from 1984-2024. I used the minimize function 
@@ -345,7 +345,7 @@ This figure shows the evolution of the glacier from 1984-2024
 \paragraph{Running OGGM Model for the South Cascade Glacier}
 
 The OGGM model was run using the run\_with\_hydro task from the oggm library. This model run used the GSWP3\_W5E5 historical temperature and 
-precipitation data (reference) to model the hydrology of the glacier from 1984-2019. Using the output of this model I was able to calculate the total 
+precipitation data \cite{ref10} to model the hydrology of the glacier from 1984-2019. Using the output of this model I was able to calculate the total 
 runoff from the glacier using the melt\_on\_glacier\_monthly, and liq\_precip\_on\_glacier\_monthly variables. In order 
 to calculate the runoff off the glacier the melt\_off\_glacier\_monthly, and liq\_precip\_off\_glacier\_monthly variables were averaged over the 
 SIA model glacier basin area. The MSE of the OGGM model and my model is 1.55\% and the MSE of the OGGM model and the measured runoff data is 3.22\%.
@@ -412,35 +412,64 @@ The work of this paper shows that complex models are not always required to accu
 can have applications in everything from regional glacier modeling to water resource management as glaciers are a significant source of water 
 for many communities around the world. 
 
+\section{Discussion Notes from talking with Dad}
+\begin{enumerate}
+    \item MSE is not a good way to look at error
+    \item Look at the kinds of errors other papers use for similar runoff models
+    \item Look at daily averages per month to reduce variation
+    \item Use relative RMSE to look at error, use np.sqrt(np.sum(error)**2) for RMSE
+    \item Don't reference 2 standard deviations, use 1
+    \item Qualify what I mean by the $R^2$ being good, good compared to what
+    \item Look into what KGE means more
+    \item MAE is actually just error
+    \item Error is basically just for may-october because that is when I have data
+    \item Look at error per days in the month
+    \item Large error in 11/1995 in runoff data is most likely due to the actual precip falling as rain but my model predicting it as snow due to low temps
+    \item Is error higher when temps are +/- 5 degrees of 0
+    \item Note average error for runoff, but a lot of variation
+\end{enumerate}
+
 \section{Discussion}
-\subsection{What Worked}
+While the modeled runoff data follows the trends of the measured runoff data very well the error is more than one might thing. The RMSE of the 
+data  normalized between 0 and 1 is 12.15\%, but two relative standard deviations of the is 51.43\%. This is most likely due to the error being 
+large during the winter months, but during the winter months there is such little runoff that when compared to the summer months that error is 
+negligible. When you look at the runoff on a yearly scale 2 relative standard deviations drops to 29.27\%. Other types of error also show good 
+results such as the $R^2$ has a value 0.8198 which is quite good. The KGE error is 0.8854 which shoes that the model has a high correlation 
+with observed values, a low bias and similar variability. The KGE is a good error metric to use when looking at hydrological models as it
+takes into account the variability of the data and the bias of the model. Also looking at the relative MAE error (MAE/mean) is 4.68\%. This 
+might not be the best representation of the error though since much of the error is alternating between positive and negative therefore 
+canceling each other out. This can be seen in the yearly runoff relative MAE being 26.60\%. Another important note is that the model is trained 
+on yearly mass balance data, but the model runs at a daily timestep and the runoff is calculated at a monthly timestep. Due to the mass 
+balance being tuned for a yearly timestep it is impossible to tell how accurate it is at the shorter timescale that the runoff is calculated 
+at. Since the mass balance model is temperature and precipitation driven it is likely that the mass balance model is accurate at the shorter 
+timescales, and that possible error can be seen in the shorter runoff data timescale.
+\paragraph{}
+The model used in this paper also did not account for any kind of runoff lag that can happen as water travels through the glacier. It is 
+assumed that in month timescales or longer this runoff lag is negligible, but looking at the comparison in the modeled runoff and measured 
+runoff there might be some occurrences of that. The spike in measured runoff data occurring just before 05/1996, the modeled data does not 
+approach anywhere near the same runoff. One reason for this could be due to a glacial lake outburst or a similar event. Since this model 
+accounts for temperature and precipitation driven runoff, and the model matches most of the other runoff data quite well, this event most 
+likely cannot be attributed to temperature or precipitation driven runoff. A similar event happens just before 2025, where the downward 
+trending measured runoff stays constant for a month instead of decreasing and the modeled data continues to decrease. Further support of 
+this theory of some kind of outburst event is supported by the relative error between the modeled and measured runoff over the whole 16 year 
+period being 4.68\%. Therefore the total runoff over that period is mostly accounted for. 
+\subsection{Interpretation of Results}
 The runoff was modeled very accurately using only temperature and precipitation data. The model was calibrated using mass balance data, but 
 none of the runoff data was used to tune any of the input parameters. The MSE of the modeled winter mass balance is 3.62\% and the MSE of the 
 modeled summer mass balance is 1.70\%, but the MSE of the annual mass balance is 0\%. In the parameter tuning the annual mass balance data 
 was not used, only the individual summer and winter yearly data which means that through minimizing the error of those two parts of the 
 mass balance, the yearly mas balance was modeled perfectly. 
-% This shows that even with slightly larger (compared 
-% to the runoff error) mass balance errors the model was still able to accurately model the runoff due to the snow and rainfall model. 
-% The model was calibrated using the mass balance data, 
-% but what I find very interesting is the very high corelation between the modeled glacier mass balance and the runoff data. The MSE of the 
-% model winter mass balance is 3.62\% and the MSE of the model summer mass balance is 1.73\%, but the MSE of the runoff data is 1.41\%. 
-% While this study this study did not validate the snow and rain models its accuracy can be somewhat inferred from the accuracy of the runoff 
-% model and mass balance model. On average the glacier contributed 37.94\% of the total basin runoff per month which means that the snow melt 
-% and rainfall contributed the majority of the runoff. Since the glacier melt was validated with the mass balance (average of summer and winter 
-% MSE is 2.66\% \textbf{need to use annual mass balance data instead, can't average cause proportions arent 50/50}) and the the runoff was 
-% validated with a MSE of 1.41\% and the snow/rain and glacier melt model are independent, error propagation can be used to calculate the error 
-% the error of the snow and rain model to be 2.67\% \textbf{double check this math}
-While this study this study did not validate the precipitation model its accuracy can be assumed to be equal to that of the runoff. This is 
-derived from the fact that the runoff consists of the glacier melt plus the snow melt and rainfall. If the yearly mass balance of the glacier 
-has a 0\% error then the error of the runoff must be solely due to the precipitation model. So therefore the MSE of the precipitation 
-model must be 1.41\%.
-Even though the glacier is contributing less than half of the total basin runoff on average, it contributes much more during the summer during 
-the summer months as show in figure 11. As the glacier retreats it will start contributing less water to the basin runoff resulting in a decrease in total 
+While it was not the goal of this paper, but still required to accurately model the runoff, the mass balance of the glacier was modeled 
+with similar accuracy as the runoff data. 
+\paragraph{}
+Even though the glacier is contributing less than half of the total basin runoff on average, it contributes much more during the summer 
+months as show in figure 11. As the glacier retreats it will start contributing less water to the basin runoff resulting in a decrease in total 
 basin runoff. If the precipitation stays constant over time, but the glacier continues to retreat the basin runoff will see a steep decline 
 particularly in early summer and fall when the glacier contributes most to the runoff. This is especially important considering that the 
-Cascades see the least amount of precipitation during that portion of the year (reference). 
-One might expect the glacier runoff to be reducing with time, but instead is stays constant, which I speculate is due to a 
-rapidly warming climate is causing the glacier's melt to accelerate, meaning it is loosing a greater percentage of its total mass each year. 
+Cascades see the least amount of precipitation during that portion of the year as shown in figure 12. 
+\paragraph{}
+One might expect the glacier runoff to be reducing with time, but instead it stays constant, which is most likely due to the 
+warming climate causing the glacier's melt to accelerate, meaning it is loosing a greater percentage of its total mass each year. 
 This has a critical point where eventually the glacial runoff will start to decrease even if the glacier is still melting at an increasing 
 rate, there simply isn't enough mass left to provide the same volume of runoff as the year before.
 
@@ -469,12 +498,21 @@ rate, there simply isn't enough mass left to provide the same volume of runoff a
     \caption{Average percentage from 1984-2024 that the glacier contributes to the monthly runoff}
     \label{fig:percent_glacier_runoff}
 \end{figure}
+\FloatBarrier\
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{Plots/monthly_precip.png}
+    \caption{Average amount of precipitation per month from 1984-2024 at the Diablo Dam weather station}
+    \label{fig:monthly_precip}
+\end{figure}    
 \FloatBarrier
-\subsection{What Can Be Improved}
-The largest improvement to this model would be its runtime. It currently takes about 30 seconds to run for 1984-2024, which is most likely 
-due to the use of the Python datetime library which is not very efficient. Eliminating the use of this library would make the model run 
-much faster, but would make it more difficult to run. The datetime library is very useful when using date driven data such as the temperature 
-and precipitation data in this model to keep track of the current date, but it is not very efficient.
+
+% \subsection{What Can Be Improved}
+% The largest improvement to this model would be its runtime. It currently takes about 30 seconds to run for 1984-2024, which is most likely 
+% due to the use of the Python datetime library which is not very efficient. Eliminating the use of this library would make the model run 
+% much faster, but would make it more difficult to run. The datetime library is very useful when using date driven data such as the temperature 
+% and precipitation data in this model to keep track of the current date, but it is not very efficient.
 \subsection{Future Work}
 The next step for this project would be to run the model for a glacier near the South Cascade Glacier with a similar climate to see how region specific the input 
 parameters are. Due to the input parameters being tuned for the mass balance of the glacier which largely depends on the local climate, it 
@@ -486,8 +524,69 @@ The SIA-Mass Balance model was able to accurately model the runoff from the Sout
 months from 1992-2007, while the OGGM model has an accuracy of 3.22\% for the same time period. This show that complex models are not always 
 the best way to model the runoff from small mountain glaciers. A simpler model with parameters tuned to the local climate of the glacier can 
 perform just as well, if not better than a more complex model. 
+\paragraph{}
+While some of the error results and standard deviation results from the runoff data might look like the model is performing quite poorly, 
+when you consider the incredible variability and sudden changes in runoff from one month to the next, the model captures the trends very well. 
+As you look at the error for longer and longer timescales it drastically drops, for example the sum of the relative errors for the runoff 
+data at a monthly timescale is -310.22\%, and on a yearly timescale it drops to -15.68\%, and the relative error for all the data is 4.68\%.
+While much more sophisticated models might be able to predict the runoff much more accurately at shorter timescales, the goal of this paper 
+is to explore the capabilities of simple, computationally efficient models. As with many other types of modeling, it requires more complex 
+and computationally intensive models to accurately model shorter timescale without the data at similar timescales. 
 
 \section{References}
 % (Insert references here.)
+\begin{thebibliography}{99}
+
+    \bibitem{ref1} Barnett, T.P., J.C. Adam, and D.P. Lettenmaier (2005). **Potential impacts of a warming climate on water availability in snow-dominated regions.** *Nature*, 438(7066), 303–309.
+    
+    \bibitem{ref2} Milner, A.M., K. Khamis, T.J. Battin, J.E. Brittain, et al. (2017). **Glacier shrinkage driving global changes in downstream systems.** *Proceedings of the National Academy of Sciences (PNAS)*, 114(37), 9770–9778.
+    
+    \bibitem{ref3} Krimmel, R.M. (1989). **Mass balance and volume of South Cascade Glacier, Washington, 1958–1985.** In J. Oerlemans (Ed.), *Glacier Fluctuations and Climatic Change* (pp. 193–206). Dordrecht: Kluwer Academic Publishers.
+    
+    \bibitem{ref4} Fountain, A.G., and R.W. Jacobel (1997). **Advances in ice radar studies of a temperate alpine glacier, South Cascade Glacier, Washington, USA.** *Annals of Glaciology*, 24, 303–308.
+    
+    \bibitem{ref5} ESRI (2011). *ArcGIS Desktop: Release 10*. Redlands, CA: Environmental Systems Research Institute.
+    
+    \bibitem{ref6} RGI Consortium (2023). **Randolph Glacier Inventory – A Dataset of Global Glacier Outlines: Version 7.0.** Boulder, Colorado, USA: National Snow and Ice Data Center. (doi: 10.5067/F6JMOVY5NAVZ)
+    
+    \bibitem{ref7} Rasmussen, L.A., and H. Conway (2001). **Estimating South Cascade Glacier (Washington, USA) mass balance from a distant radiosonde and comparison with Blue Glacier.** *Journal of Glaciology*, 47(159), 579–588.
+    
+    \bibitem{ref8} Harris, C.R., K.J. Millman, S.J. van der Walt, et al. (2020). **Array programming with NumPy.** *Nature*, 585, 357–362.
+    
+    \bibitem{ref9} O’Neel, S., C. McNeil, L.C. Sass, E. Florentine, et al. (2019). **Reanalysis of the U.S. Geological Survey Benchmark Glaciers: Long-term insight into climate forcing of glacier mass balance.** *Journal of Glaciology*, 65(253), 850–864.
+    
+    \bibitem{ref10} Virtanen, P., R. Gommers, T.E. Oliphant, et al. (2020). **SciPy 1.0: Fundamental algorithms for scientific computing in Python.** *Nature Methods*, 17(3), 261–272.
+    
+    \bibitem{ref11} Lange, S., C. Menz, S. Gleixner, M. Cucchi, et al. (2021). **WFDE5 over land merged with ERA5 over the ocean (W5E5 v2.0).** *Earth System Grid Federation (Data Set)*. (doi: 10.48364/ISIMIP.342217)
+   
+    \bibitem{ref12}Amaral, T., Bartholomaus, T. C., \& Enderlin, E. M. (2020). Evaluation of Iceberg Calving Models Against Observations From Greenland Outlet Glaciers. Journal of Geophysical Research: Earth Surface, 125(6), e2019JF005444. https://doi.org/10.1029/2019JF005444 
+
+    \bibitem{ref13}Auer, I., Böhm, R., Jurkovic, A., Orlik, A., Potzmann, R., Schöner, W., ... \& Zaninovic, K. (2007). HISTALP—historical instrumental climatological surface time series of the Greater Alpine Region. International Journal of Climatology, 27(1), 17-46. DOI: https://doi.org/10.1002/joc.1377. 
+
+    \bibitem{ref14}Brunner, M. I., \& Gilleland, E. (2024). Future changes in floods, droughts, and their extents in the Alps: A sensitivity analysis with a non‐stationary stochastic streamflow generator. Earth's Future, 12, e2023EF004238. https://doi.org/10.1029/2023EF004238 
+
+    \bibitem{ref15}Fountain, A. G., and W. V. Tangborn (1985), The Effect of Glaciers on Streamflow Variations, Water Resour. Res., 21(4), 579–586, doi: https://doi.org/10.1029/WR021i004p00579 
+
+    \bibitem{ref16}GlaThiDa Consortium (2020): Glacier Thickness Database 3.1.0. World Glacier Monitoring Service, Zurich, Switzerland. DOI: https://doi.org/10.5904/wgms-glathida-2020-10 
+
+    \bibitem{ref17}GLIMS Consortium, 2005. GLIMS Glacier Database, Version 1. [Analysis\_IDs 752390--756450, Paul, Frank (submitter); Frey, Holger; Le Bris, Raymond; Paul, Frank; Rastner, Philipp (analyst(s))]. Boulder, Colorado, USA. NASA National Snow and Ice Data Center Distributed Active Archive Center. DOI: https://dx.doi.org/10.7265/N5V98602 
+
+    \bibitem{ref18}Iken, A. (1981). The Effect of the Subglacial Water Pressure on the Sliding Velocity of a Glacier in an Idealized Numerical Model. Journal of Glaciology, 27(97), 407-421. doi: https://doi.org/10.3189/S0022143000011448 
+
+    \bibitem{ref19}Kessler, M. A., Anderson, R. S., \& Stock, G. M. (2006). Modeling topographic and climatic control of east-west asymmetry in Sierra Nevada glacier length during the Last Glacial Maximum. J. Geophys. Res., 111, F02002. doi: https://doi.org/10.1029/2005JF000365. 
+
+    \bibitem{ref20}E. Larour, H. Seroussi, M. Morlighem, and E. Rignot (2012), Continental scale, high order, high spatial resolution, ice sheet modeling using the Ice Sheet System Model, J. Geophys. Res., 117, F01022, doi: https://doi.org/10.1029/2011JF002140 
+
+    \bibitem{ref21}Le Meur, E., Gagliardini, O., Zwinger, T., \& Ruokolainen, J. (2004). Glacier flow modelling: a comparison of the Shallow Ice Approximation and the full-Stokes solution. Comptes Rendus Physique, 5(7), 709-722. https://doi.org/10.1016/j.crhy.2004.10.001. 
+
+    \bibitem{ref22}Naz, B. S., Frans, C. D., Clarke, G. K. C., Burns, P., \& Lettenmaier, D. P. (2014). Modeling the effect of glacier recession on streamflow response using a coupled glacio-hydrological model. Hydrol. Earth Syst. Sci., 18, 787-802. https://doi.org/10.5194/hess-18-787-2014 
+
+    \bibitem{ref23}Paterson, W. S. B. (1994), The Physics of Glaciers, 3rd ed., 481 pp., Else-vier, New York. 
+
+    \bibitem{ref24}Paul, F., Rastner, P., Azzoni, R. S., Diolaiuti, G., Fugazza, D., Le Bris, R., Nemec, J., Rabatel, A., Ramusovic, M., Schwaizer, G., \& Smiraglia, C. (2020). Glacier shrinkage in the Alps continues unabated as revealed by a new glacier inventory from Sentinel-2. Earth Syst. Sci. Data, 12, 1805-1821. https://doi.org/10.5194/essd-12-1805-2020 
+
+    \bibitem{ref25}Verbunt, M., Gurtz, J., Jasper, K., Lang, H., Warmerdam, P., \& Zappa, M. (2003). The hydrological role of snow and glaciers in alpine river basins and their distributed modeling. Journal of Hydrology, 282(1-4), 36-55. https://doi.org/10.1016/S0022-1694(03)00251-8 
+\end{thebibliography}
+    
 
 \end{document}
