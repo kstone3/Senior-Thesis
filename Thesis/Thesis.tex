@@ -425,73 +425,48 @@ for many communities around the world.
     \item Error is basically just for may-october because that is when I have data
     \item Look at error per days in the month
     \item Large error in 11/1995 in runoff data is most likely due to the actual precip falling as rain but my model predicting it as snow due to low temps
-    \item Is error higher when temps are +/- 5 degrees of 0
+    \item Is error higher when temps are +/- 5 degrees of 0 [No, there is no correlation]
     \item Note average error for runoff, but a lot of variation
 \end{enumerate}
 
 \section{Discussion}
-While the modeled runoff data follows the trends of the measured runoff data very well the error is more than one might thing. The RMSE of the 
-data  normalized between 0 and 1 is 12.15\%, but two relative standard deviations of the is 51.43\%. This is most likely due to the error being 
-large during the winter months, but during the winter months there is such little runoff that when compared to the summer months that error is 
-negligible. When you look at the runoff on a yearly scale 2 relative standard deviations drops to 29.27\%. Other types of error also show good 
-results such as the $R^2$ has a value 0.8198 which is quite good. The KGE error is 0.8854 which shoes that the model has a high correlation 
-with observed values, a low bias and similar variability. The KGE is a good error metric to use when looking at hydrological models as it
-takes into account the variability of the data and the bias of the model. Also looking at the relative MAE error (MAE/mean) is 4.68\%. This 
-might not be the best representation of the error though since much of the error is alternating between positive and negative therefore 
-canceling each other out. This can be seen in the yearly runoff relative MAE being 26.60\%. Another important note is that the model is trained 
-on yearly mass balance data, but the model runs at a daily timestep and the runoff is calculated at a monthly timestep. Due to the mass 
-balance being tuned for a yearly timestep it is impossible to tell how accurate it is at the shorter timescale that the runoff is calculated 
-at. Since the mass balance model is temperature and precipitation driven it is likely that the mass balance model is accurate at the shorter 
-timescales, and that possible error can be seen in the shorter runoff data timescale.
-\paragraph{}
-The model used in this paper also did not account for any kind of runoff lag that can happen as water travels through the glacier. It is 
-assumed that in month timescales or longer this runoff lag is negligible, but looking at the comparison in the modeled runoff and measured 
-runoff there might be some occurrences of that. The spike in measured runoff data occurring just before 05/1996, the modeled data does not 
-approach anywhere near the same runoff. One reason for this could be due to a glacial lake outburst or a similar event. Since this model 
-accounts for temperature and precipitation driven runoff, and the model matches most of the other runoff data quite well, this event most 
-likely cannot be attributed to temperature or precipitation driven runoff. A similar event happens just before 2025, where the downward 
-trending measured runoff stays constant for a month instead of decreasing and the modeled data continues to decrease. Further support of 
-this theory of some kind of outburst event is supported by the relative error between the modeled and measured runoff over the whole 16 year 
-period being 4.68\%. Therefore the total runoff over that period is mostly accounted for. 
-\subsection{Interpretation of Results}
-The runoff was modeled very accurately using only temperature and precipitation data. The model was calibrated using mass balance data, but 
-none of the runoff data was used to tune any of the input parameters. The MSE of the modeled winter mass balance is 3.62\% and the MSE of the 
-modeled summer mass balance is 1.70\%, but the MSE of the annual mass balance is 0\%. In the parameter tuning the annual mass balance data 
-was not used, only the individual summer and winter yearly data which means that through minimizing the error of those two parts of the 
-mass balance, the yearly mas balance was modeled perfectly. 
-While it was not the goal of this paper, but still required to accurately model the runoff, the mass balance of the glacier was modeled 
-with similar accuracy as the runoff data. 
-\paragraph{}
+Due to the format and availability of the measured runoff data this paper will look at the model error in terms of daily average runoff per month. 
+This is due to the measured runoff data not being complete for every month, and many months missing per year from the data. This paper will used 
+three types of error to evaluate the model, relative Root Mean Square Error (RMSE), Nash–Sutcliffe Efficiency (NSE), and Kling–Gupta Efficiency 
+(KGE), defined by the equations below. 
+\begin{equation}
+    \mathrm{RMSE} = \frac{\sqrt{\frac{1}{N}\sum_{i=1}^{N} \left( O_i - S_i \right)^2}}{\bar{O}}*100,
+\end{equation}
+
+\begin{equation}
+    \mathrm{NSE} = 1 - \frac{\sum_{i=1}^{N}\left( O_i - S_i \right)^2}{\sum_{i=1}^{N}\left( O_i - \bar{O} \right)^2},
+\end{equation}
+
+\begin{equation}
+    \mathrm{KGE} = 1 - \sqrt{ (r-1)^2 + (\alpha-1)^2 + (\beta-1)^2 },
+\end{equation}
+    
+\noindent where:
+$$O = \text{Observed data}, \quad S=\text{Simulated Data}$$
+$$r = \mbox{Correlation coefficient}, \quad \alpha = \frac{\sigma_S}{\sigma_O}, \quad \beta = \frac{\mu_S}{\mu_O}$$
+The error for these three methods are 30.70\%, 0.79 and 0.88 respectively. It is important to note that this error is only the model error for 
+roughly May-November due to the lack of runoff data outside of those months. What is interesting about this model is how good it does on longer 
+timescales. The average relative error is 4.46\%, which shows that over longer time periods the errors cancel out and the model becomes more 
+accurate.
+\subsection{Improvements}
+The largest problem with the runoff model lies with the precipitation model. This model calculates the type of precipitation that falls (rain or 
+snow), based on the temperature. It assumes that if the temperature is greater than $0^{o}$ Celsius then the precipitation is rain, and if the 
+temperature is less then $0^{o}$ Celsius then then precipitation is snow. This is a good generalization, but it isn't always true. Looking at the 
+error graph, there is a large spike in the error in November of 1995. This is entirely due to the model predicting the large amount of precipitation during that 
+month falling as snow because the temperatures are just below $0^o$ Celsius, but in reality it most likely fell as rain. This also highlights the 
+types of error that can be caused by using a proxy weather station that is not present at the glacier such as this model used. With more accurate 
+temperature data for the glacier, then the model might correctly predict the precipitation falling as rain.
+\subsection{What we can learn from the model results}
 Even though the glacier is contributing less than half of the total basin runoff on average, it contributes much more during the summer 
 months as show in figure 11. As the glacier retreats it will start contributing less water to the basin runoff resulting in a decrease in total 
 basin runoff. If the precipitation stays constant over time, but the glacier continues to retreat the basin runoff will see a steep decline 
 particularly in early summer and fall when the glacier contributes most to the runoff. This is especially important considering that the 
-Cascades see the least amount of precipitation during that portion of the year as shown in figure 12. 
-\paragraph{}
-One might expect the glacier runoff to be reducing with time, but instead it stays constant, which is most likely due to the 
-warming climate causing the glacier's melt to accelerate, meaning it is loosing a greater percentage of its total mass each year. 
-This has a critical point where eventually the glacial runoff will start to decrease even if the glacier is still melting at an increasing 
-rate, there simply isn't enough mass left to provide the same volume of runoff as the year before.
-
-\begin{figure}[h]
-    \centering
-    \begin{subfigure}[b]{\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Plots/glacier_runoff.png}
-        % \caption{Spinup comparison of the model in 1986 after 500 years of spinup and 2 years of run compared with the actual glacier in 1986.}
-        \label{fig:glacier_runoff}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Plots/all_runoff.png}
-        % \caption{Timing of peak specific runoff as a function of glacier cover.}
-        \label{fig:all_runoff}
-    \end{subfigure}
-    \caption{Comparison plots of the glacier runoff and total basin runoff.}
-    \label{fig:runoff_compare}
-\end{figure}
-\FloatBarrier
+Cascades see the least amount of precipitation during that portion of the year as shown in figure 12.
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{Plots/percent_glac_melt_month.png}
@@ -507,6 +482,64 @@ rate, there simply isn't enough mass left to provide the same volume of runoff a
     \label{fig:monthly_precip}
 \end{figure}    
 \FloatBarrier
+% \subsection{Model Error}
+% While the modeled runoff data follows the trends of the measured runoff data very well the error is more than one might thing. The RMSE of the 
+% data  normalized between 0 and 1 is 12.15\%, but two relative standard deviations of the is 51.43\%. This is most likely due to the error being 
+% large during the winter months, but during the winter months there is such little runoff that when compared to the summer months that error is 
+% negligible. When you look at the runoff on a yearly scale 2 relative standard deviations drops to 29.27\%. Other types of error also show good 
+% results such as the $R^2$ has a value 0.8198 which is quite good. The KGE error is 0.8854 which shoes that the model has a high correlation 
+% with observed values, a low bias and similar variability. The KGE is a good error metric to use when looking at hydrological models as it
+% takes into account the variability of the data and the bias of the model. Also looking at the relative MAE error (MAE/mean) is 4.68\%. This 
+% might not be the best representation of the error though since much of the error is alternating between positive and negative therefore 
+% canceling each other out. This can be seen in the yearly runoff relative MAE being 26.60\%. Another important note is that the model is trained 
+% on yearly mass balance data, but the model runs at a daily timestep and the runoff is calculated at a monthly timestep. Due to the mass 
+% balance being tuned for a yearly timestep it is impossible to tell how accurate it is at the shorter timescale that the runoff is calculated 
+% at. Since the mass balance model is temperature and precipitation driven it is likely that the mass balance model is accurate at the shorter 
+% timescales, and that possible error can be seen in the shorter runoff data timescale.
+% \paragraph{}
+% The model used in this paper also did not account for any kind of runoff lag that can happen as water travels through the glacier. It is 
+% assumed that in month timescales or longer this runoff lag is negligible, but looking at the comparison in the modeled runoff and measured 
+% runoff there might be some occurrences of that. The spike in measured runoff data occurring just before 05/1996, the modeled data does not 
+% approach anywhere near the same runoff. One reason for this could be due to a glacial lake outburst or a similar event. Since this model 
+% accounts for temperature and precipitation driven runoff, and the model matches most of the other runoff data quite well, this event most 
+% likely cannot be attributed to temperature or precipitation driven runoff. A similar event happens just before 2025, where the downward 
+% trending measured runoff stays constant for a month instead of decreasing and the modeled data continues to decrease. Further support of 
+% this theory of some kind of outburst event is supported by the relative error between the modeled and measured runoff over the whole 16 year 
+% period being 4.68\%. Therefore the total runoff over that period is mostly accounted for. 
+% \subsection{Interpretation of Results}
+% The runoff was modeled very accurately using only temperature and precipitation data. The model was calibrated using mass balance data, but 
+% none of the runoff data was used to tune any of the input parameters. The MSE of the modeled winter mass balance is 3.62\% and the MSE of the 
+% modeled summer mass balance is 1.70\%, but the MSE of the annual mass balance is 0\%. In the parameter tuning the annual mass balance data 
+% was not used, only the individual summer and winter yearly data which means that through minimizing the error of those two parts of the 
+% mass balance, the yearly mas balance was modeled perfectly. 
+% While it was not the goal of this paper, but still required to accurately model the runoff, the mass balance of the glacier was modeled 
+% with similar accuracy as the runoff data.  
+% \paragraph{}
+% One might expect the glacier runoff to be reducing with time, but instead it stays constant, which is most likely due to the 
+% warming climate causing the glacier's melt to accelerate, meaning it is loosing a greater percentage of its total mass each year. 
+% This has a critical point where eventually the glacial runoff will start to decrease even if the glacier is still melting at an increasing 
+% rate, there simply isn't enough mass left to provide the same volume of runoff as the year before.
+
+% \begin{figure}[h]
+%     \centering
+%     \begin{subfigure}[b]{\textwidth}
+%         \centering
+%         \includegraphics[width=\textwidth]{Plots/glacier_runoff.png}
+%         % \caption{Spinup comparison of the model in 1986 after 500 years of spinup and 2 years of run compared with the actual glacier in 1986.}
+%         \label{fig:glacier_runoff}
+%     \end{subfigure}
+%     \hfill
+%     \begin{subfigure}[b]{\textwidth}
+%         \centering
+%         \includegraphics[width=\textwidth]{Plots/all_runoff.png}
+%         % \caption{Timing of peak specific runoff as a function of glacier cover.}
+%         \label{fig:all_runoff}
+%     \end{subfigure}
+%     \caption{Comparison plots of the glacier runoff and total basin runoff.}
+%     \label{fig:runoff_compare}
+% \end{figure}
+% \FloatBarrier
+
 
 % \subsection{What Can Be Improved}
 % The largest improvement to this model would be its runtime. It currently takes about 30 seconds to run for 1984-2024, which is most likely 
@@ -533,8 +566,6 @@ While much more sophisticated models might be able to predict the runoff much mo
 is to explore the capabilities of simple, computationally efficient models. As with many other types of modeling, it requires more complex 
 and computationally intensive models to accurately model shorter timescale without the data at similar timescales. 
 
-\section{References}
-% (Insert references here.)
 \begin{thebibliography}{99}
 
     \bibitem{ref1} Barnett, T.P., J.C. Adam, and D.P. Lettenmaier (2005). **Potential impacts of a warming climate on water availability in snow-dominated regions.** *Nature*, 438(7066), 303–309.
