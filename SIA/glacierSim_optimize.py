@@ -5,6 +5,9 @@ import numpy as np
 from math import inf
 import matplotlib
 from glacierSim import glacierSim
+from matplotlib.animation import FuncAnimation
+from IPython.core.display import HTML
+from IPython.display import display
 matplotlib.use("TkAgg")
 
 def optimize(parameter, input_params):
@@ -17,24 +20,24 @@ def optimize(parameter, input_params):
         # print("SNOW MELT AMPLITUDE: ", input_params[4])
         # print("ICE MELT AMPLITUDE: ", input_params[5])
         # print("LAPSE RATE: ", input_params[1])
-        print("ACCUMFACTOR LOWER: ", input_params[0])
-        print("ACCUMFACTOR UPPER: ", input_params[1])
+        # print("ACCUMFACTOR LOWER: ", input_params[0])
+        # print("ACCUMFACTOR UPPER: ", input_params[1])
         # print("PRECIP LAPSE RATE: ", input_params[0])
-        # print("GAMMA: ", input_params[0])
-        # print("ELA: ", input_params[1])
-        # print("ELA 1900: ", input_params[2])
+        print("GAMMA: ", input_params[0])
+        print("ELA: ", input_params[1])
+        print("ELA 1900: ", input_params[2])
         print(input_params)
         #print("GAMMA: ", input_params[0])
-        gamma=0.0309
-        ela=1903
-        ela_1900=1930
-        time = 540
+        gamma=input_params[0] #0.016 #0.012 #0.016
+        ela=input_params[1] #1903 #1903
+        ela_1900=input_params[2] #1930 #1930
+        time = 502
         save = 1 #Needs to be 1 to calculate ela list
         # gamma=input_params[0] #0.016 #0.012 #0.016
         # accumfactor_lower=0.66
         # accumfactor_upper=1.7
-        accumfactor_lower=input_params[0] #0.66 #0.66
-        accumfactor_upper=input_params[1] #1.7 #1.7
+        accumfactor_lower=0.94 #0.66 #0.66
+        accumfactor_upper=1.44 #1.7 #1.7
         ice_meltfactor=-0.00314334
         snow_meltfactor=-0.00315546 #bounds approx 0.002-0.006
         avalanche_percent=0.32
@@ -42,7 +45,7 @@ def optimize(parameter, input_params):
         lapse_rate=[-0.00334774, -0.00544884, -0.00577458, -0.00679377, -0.00661499, -0.00627995, -0.00529508, -0.00534911, -0.00495446, -0.00494315, -0.00472614, -0.00452499]
         tune_factors=[ice_meltfactor,snow_meltfactor,lapse_rate,accumfactor_lower,accumfactor_upper,avalanche_percent, precip_conv_factor]
         quiet = True
-        start_time = 500
+        start_time = 0
         # ice = [ 53.89550985, 61.2302675, 68.52805603, 72.16752233, 78.19477103,
         #     86.57434438, 94.52278703, 113.00567764, 124.65045342, 131.1336047,
         #     132.61805723, 126.05975829, 117.01403765, 110.72201024, 107.36448442,
@@ -57,6 +60,17 @@ def optimize(parameter, input_params):
         model.init(ela=ela, ela_1900=ela_1900,time=time, save=save,gamma=gamma,quiet=quiet, tune_factors=tune_factors, initial_ice=ice, start_time=start_time, input_files=input_files)
         for i in range(0,model.frames):
             model.run_model(i)
+        # fig, ax = plt.subplots() #initialize plotting variables
+        # _ = plt.close(fig) #used to prevent an empty plot from displaying
+        # plt.rcParams['animation.embed_limit'] = 40
+        # def frame_generator(): 
+        #     for i in range(0,model.frames): yield i
+        # anim = FuncAnimation(fig, model.func, frames=frame_generator, fargs=(ax,), blit=False, repeat=False, save_count=model.frames)
+        # vid = HTML(anim.to_jshtml())
+        # display(vid)
+        # anim.save("animation.mp4", writer="ffmpeg")
+        # plt.plot(model.timestep_list)
+        # plt.show()
         try:
             if parameter == 'summer':
                 summer_min=min(np.nanmin(model.calculated_summer_mb),np.nanmin(model.summer_mb))
@@ -111,17 +125,27 @@ def optimize(parameter, input_params):
                 print("Function result: ",np.mean(model.snow_depth_list))
                 return np.mean(model.snow_depth_list)
             elif parameter == 'spinup':
+                meas_area_1958=model.thickness_1958_verif[~np.isnan(model.thickness_1958_verif)]*model.dx
+                meas_area_1986=model.thickness_1986_verif[~np.isnan(model.thickness_1986_verif)]*model.dx
+                calc_area_1958=model.ice_1958[~np.isnan(model.thickness_1958_verif)]*model.dx
+                calc_area_1986=model.ice_1986[~np.isnan(model.thickness_1986_verif)]*model.dx
                 glacier_min=min(np.nanmin(model.thickness_1958_verif), np.nanmin(model.thickness_1986_verif), np.nanmin(model.ice_1958), np.nanmin(model.ice_1986))
                 glacier_max=max(np.nanmax(model.thickness_1958_verif), np.nanmax(model.thickness_1986_verif), np.nanmax(model.ice_1958), np.nanmax(model.ice_1986))
                 ice_norm_1958_verif=(model.thickness_1958_verif[~np.isnan(model.thickness_1958_verif)]-glacier_min)/(glacier_max-glacier_min)
                 ice_norm_1986_verif=(model.thickness_1986_verif[~np.isnan(model.thickness_1986_verif)]-glacier_min)/(glacier_max-glacier_min)
                 ice_norm_1958_calc=(model.ice_1958[~np.isnan(model.thickness_1958_verif)]-glacier_min)/(glacier_max-glacier_min)
                 ice_norm_1986_calc=(model.ice_1986[~np.isnan(model.thickness_1986_verif)]-glacier_min)/(glacier_max-glacier_min)
-                mse_1958=np.mean((ice_norm_1958_calc-ice_norm_1958_verif)**2)
-                mse_1986=np.mean((ice_norm_1986_calc-ice_norm_1986_verif)**2)
+                mse_1958_norm=np.mean((ice_norm_1958_verif-ice_norm_1958_calc)**2)
+                mse_1986_norm=np.mean((ice_norm_1986_verif-ice_norm_1986_calc)**2)
+                mse_1958=np.mean((model.thickness_1958_verif[~np.isnan(model.thickness_1958_verif)]-model.ice_1958[~np.isnan(model.thickness_1958_verif)])**2)
+                mse_1986=np.mean((model.thickness_1986_verif[~np.isnan(model.thickness_1986_verif)]-model.ice_1986[~np.isnan(model.thickness_1986_verif)])**2)
+                mse_1958_area=np.mean((meas_area_1958-calc_area_1958)**2)
+                mse_1986_area=np.mean((meas_area_1986-calc_area_1986)**2)
+                avg_mse_norm=(mse_1958_norm+mse_1986_norm)/2
                 avg_mse=(mse_1958+mse_1986)/2
-                print("Function result: ",avg_mse)
-                return avg_mse
+                avg_mse_area=(mse_1958_area+mse_1986_area)/2
+                print("Function result: ",avg_mse_area)
+                return avg_mse_area
             else: raise ValueError("Invalid parameter. Choose from 'summer', 'winter', 'annual', 'summer_winter', 'vol_change'.")
         except Exception as e:
             print("Error during function calculation:", e) 
@@ -134,8 +158,8 @@ def optimize(parameter, input_params):
 
 #Initialize the input files variables
 input_files={}
-# input_files['bed']='Data/centerlineBed.csv' #FORMAT: csv with columns, elevation, longitude, latitude
-input_files['bed']='Data/rgi7_centerline_bed.csv'
+input_files['bed']='Data/centerlineBed.csv' #FORMAT: csv with columns, elevation, longitude, latitude
+# input_files['bed']='Data/rgi7_centerline_bed.csv'
 input_files['area']='Data/Input_SouthCascade_Area_Altitude_Distribution.csv' #FORMAT: csv with first row mean elevation of bin, then columns of year, area per bin
 input_files['temp_precip']='Data/Input_SouthCascade_Daily_Weather.csv' #FORMAT: csv with columns date, temperature, precipitation
 input_files['mass_balance']='Data/Output_SouthCascade_Glacier_Wide_solutions_calibrated.csv' #FORMAT: csv with columns year, winter mass balance, summer mass balance, annual mass balance, ela
@@ -144,35 +168,35 @@ input_files['thickness_change']='Data/thickness_change.csv' #FORMAT: csv with co
 input_files['front_variation']='Data/front_variation_change.csv' #FORMAT: csv with columns date, front variation change
 #Fix basin_area file to represent the new polygon in arcgis
 input_files['basin_area']='Data/basin_wide_area_elev_bands.csv' #FORMAT: csv with columns area, mean elevation of bin
-# input_files['glacier_1958']='Data/centerlineThickness_1958.csv' #FORMAT: csv with columns bed elevation, longitude, latitude, elevation in 1986
-# input_files['glacier_1986']='Data/centerlineThickness_1986.csv' #FORMAT: csv with columns bed elevation, longitude, latitude, elevation in 1986
-# input_files['glacier_2021']='Data/centerlineThickness_2021.csv' #FORMAT: csv with columns bed elevation, longitude, latitude, elevation in 2021
-input_files['glacier_1958']='Data/rgi7_centerlineThickness_1958.csv' #FORMAT: csv with columns bed elevation, longitude, latitude, elevation in 1986
-input_files['glacier_1986']='Data/rgi7_centerlineThickness_1986.csv' #FORMAT: csv with columns bed elevation, longitude, latitude, elevation in 1986
-input_files['glacier_2021']='Data/rgi7_centerlineThickness_2021.csv' #FORMAT: csv with columns bed elevation, longitude, latitude, elevation in 2021
+input_files['glacier_1958']='Data/centerlineThickness_1958.csv' #FORMAT: csv with columns bed elevation, longitude, latitude, elevation in 1986
+input_files['glacier_1986']='Data/centerlineThickness_1986.csv' #FORMAT: csv with columns bed elevation, longitude, latitude, elevation in 1986
+input_files['glacier_2021']='Data/centerlineThickness_2021.csv' #FORMAT: csv with columns bed elevation, longitude, latitude, elevation in 2021
+# input_files['glacier_1958']='Data/rgi7_centerlineThickness_1958.csv' #FORMAT: csv with columns bed elevation, longitude, latitude, elevation in 1986
+# input_files['glacier_1986']='Data/rgi7_centerlineThickness_1986.csv' #FORMAT: csv with columns bed elevation, longitude, latitude, elevation in 1986
+# input_files['glacier_2021']='Data/rgi7_centerlineThickness_2021.csv' #FORMAT: csv with columns bed elevation, longitude, latitude, elevation in 2021
 
-ela=1880
+ela=1903
 ela_1900=1930
 run_time=502
 start_time=0
 save=1 #Needs to be 1 for the ela_list to work properly
-gamma=0.016
+gamma=0.0309
 quiet=True
 accumfactor_lower=0.94
 accumfactor_upper=1.44
-ice_meltfactor= -0.0038 #bounds approx 0.005-0.012
-snow_meltfactor=-0.0029 #bounds approx 0.002-0.006
+ice_meltfactor=-0.00314334
+snow_meltfactor=-0.00315546
 avalanche_percent=0.32
 precip_conv_factor=1.58
 lapse_rate=[-0.00334774, -0.00544884, -0.00577458, -0.00679377, -0.00661499, -0.00627995, -0.00529508, -0.00534911, -0.00495446, -0.00494315, -0.00472614, -0.00452499]
 tune_factors=[ice_meltfactor,snow_meltfactor,lapse_rate,accumfactor_lower,accumfactor_upper,avalanche_percent, precip_conv_factor]
-bounds=[(0,2),(0,2)]
-initial_guess=[accumfactor_lower,accumfactor_upper]
+bounds=[(0,1),(1800,2000),(1800,2000)] #bounds for ela, ela_1900, gamma
+initial_guess=[gamma,ela,ela_1900]
 opt_method='Nelder-Mead'
 with open(f"{opt_method}-Results.txt", "a") as file:
     file.write("-------------------Optimize spinup-----------\n")
     # for opt_var in ['ela','front_var','thick','vol_change']:
-    for opt_var in ['winter']:
+    for opt_var in ['spinup']:
         result = minimize(lambda x: optimize(opt_var, x),initial_guess,method=opt_method,bounds=bounds,options={'disp': True})
         result_snow_conv=result.x
         # print("Final Gamma: ", result.x)

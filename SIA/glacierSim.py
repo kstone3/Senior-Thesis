@@ -44,7 +44,8 @@ class glacierSim():
         self.save = save*365.25 #timestep interval in days
         self.frames = ((int)((self.time-start_time)/(self.save/365.25)))+1 #number of frames the animation will run for
         self.timestep_list=[] #days
-        
+        self.month_count=np.zeros((self.time-start_time)*12+1)
+
         #MASS BALANCE VARS:
         self.b_max = float(-inf) #maximum yearly mass balance value for whole run
         self.b_min = float(inf) #minimum yearly mass balance valeu for whole run
@@ -117,6 +118,7 @@ class glacierSim():
         self.monthly_runoff_all=np.zeros((self.time-start_time)*12+1) #holds daily runoff data for all data
         self.monthly_glacier_melt=np.zeros((self.time-start_time)*12+1) #holds daily runoff data for all data
         self.precip_accum=np.zeros(41)
+        self.glacier_melt_runoff_data=[]
         
         #PREV VARS:
         self.prev_thickness=np.mean(self.ice) #previous avg ice thickness used to calculate thickness change
@@ -217,7 +219,7 @@ class glacierSim():
     def load_weather_data(self):
         #Load temperature and precipitation data
         df = pd.read_csv(self.input_files['temp_precip'])
-        self.dates = pd.to_datetime(df.iloc[:, 0], format="%Y/%m/%d").tolist()
+        self.weather_dates = pd.to_datetime(df.iloc[:, 0], format="%Y/%m/%d").tolist()
         self.temps = df.iloc[:, 1].astype(float).to_numpy()
         self.precip = df.iloc[:, 2].apply(lambda x: float(x) if not np.isnan(float(x)) else 0).to_numpy()
         #MAKE NOTE OF THIS IN THESIS, SOME OF THE TEMPERATURE DATA IS INTERPOLATED BECAUSE ITS MISSING
@@ -261,6 +263,7 @@ class glacierSim():
         self.date_index_all = {date: idx for idx, date in enumerate(df['date'])}
         self.month_index_all = sorted(set(date.strftime("%Y-%m") for date in self.date_index_all.keys()))
         self.daily_runoff_all_data = np.zeros(len(self.date_index_all))
+        self.glacier_melt_runoff_data=np.zeros(len(self.date_index_all))
         #Load the thickness change and front variation data
         self.thickness_change_verif = pd.read_csv(self.input_files['thickness_change']).iloc[0:, 11].astype(float).to_numpy()
         self.front_variation_verif = pd.read_csv(self.input_files['front_variation']).iloc[0:, 9].astype(float).to_numpy()
@@ -278,6 +281,7 @@ class glacierSim():
         #If date is in the list of volume verification dates, calculate the total runoff
         if current_date_key in self.date_index_all: 
             self.daily_runoff_all_data[self.date_index_all[current_date_key]] += (self.glacial_melt+self.snow_melt_vol+self.rain_vol_per_step)
+            self.glacier_melt_runoff_data[self.date_index_all[current_date_key]]+=self.glacial_melt
         if current_date_key in self.date_index_training: 
             self.daily_runoff_training[self.date_index_training[current_date_key]] += (self.glacial_melt+self.snow_melt_vol+self.rain_vol_per_step)
         if current_date_key in self.date_index_verif: 
@@ -288,6 +292,7 @@ class glacierSim():
         self.monthly_glacier_melt[(self.current_date.year - 1984) * 12 + (self.current_date.month - 1)] += self.glacial_melt
         self.monthly_snow_depth[(self.current_date.year - 1984) * 12 + (self.current_date.month - 1)] += np.mean(self.snow_depth)
         self.monthly_precip_vol[(self.current_date.year - 1984) * 12 + (self.current_date.month - 1)] += self.snow_melt_vol+self.rain_vol_per_step
+        self.month_count[(self.current_date.year - 1984) * 12 + (self.current_date.month - 1)]+=1
         #If date is the date before thickness change verification data starts then set prev_thickness to calculate thickness change
         if self.current_date==datetime(1998,12,31): self.prev_thickness=np.mean(self.ice)
         #Calculate thickness change data
@@ -364,8 +369,8 @@ class glacierSim():
     def update_b(self, timestep):
         if self.current_date>=datetime(1984,1,2):
             #Calculate which index to get weather data from
-            if self.current_date<datetime(2024,10,1): index=self.dates.index(pd.Timestamp(self.current_date.replace(hour=0, minute=0, second=0, microsecond=0)))
-            else: index=self.dates.index(pd.Timestamp(datetime(2024, 9, 30)))
+            if self.current_date<datetime(2024,10,1): index=self.weather_dates.index(pd.Timestamp(self.current_date.replace(hour=0, minute=0, second=0, microsecond=0)))
+            else: index=self.weather_dates.index(pd.Timestamp(datetime(2024, 9, 30)))
             #Calculates temperatures for every self.x value and varies temp with elevation
             if type(self.temp_lapse_rate) is int: x_temps=self.temps[index]+self.temp_lapse_rate*(self.ice+self.topo-272) #weather station elevation is 272m
             else: x_temps=self.temps[index]+self.temp_lapse_rate[self.current_date.month-1]*(self.ice+self.topo-272)
@@ -396,6 +401,10 @@ class glacierSim():
             return mb
         else: 
             #Used to spin up the glacier. Glacier starts retreating in 1900
+            # print(self.gamma)
+            # print(self.curr_ela)
+            # print(self.ice)
+            # print(self.topo)
             return ((self.topo+self.ice-self.curr_ela)*self.gamma)/365.25 #meters per day
     
     def calc_q(self):
@@ -579,4 +588,4 @@ class glacierSim():
         self.ice_line=ax.plot(self.ice_line_list[i][0],self.ice_line_list[i][1], color=self.ice_line_list[i][2], label=self.ice_line_list[i][3])
         # self.snow_line=ax.plot(self.snow_line_list[i][0],self.snow_line_list[i][1], color=self.snow_line_list[i][2], label=self.snow_line_list[i][3])
         ax.legend()
-        return self.ice_line_list,self.ela_line_list       
+        return self.ice_line_list,self.ela_line_list         
