@@ -51,6 +51,8 @@ INPUT c:/texlive/2024/texmf-dist/tex/latex/tools/array.sty
 INPUT c:/texlive/2024/texmf-dist/tex/latex/tools/array.sty
 INPUT c:/texlive/2024/texmf-dist/tex/latex/enumitem/enumitem.sty
 INPUT c:/texlive/2024/texmf-dist/tex/latex/enumitem/enumitem.sty
+INPUT c:/texlive/2024/texmf-dist/tex/latex/base/textcomp.sty
+INPUT c:/texlive/2024/texmf-dist/tex/latex/base/textcomp.sty
 INPUT c:/texlive/2024/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 INPUT c:/texlive/2024/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 INPUT ./Thesis.aux
@@ -113,14 +115,6 @@ INPUT ./Plots/1986_glacier_comparison.png
 INPUT ./Plots/1986_glacier_comparison.png
 INPUT ./Plots/1986_glacier_comparison.png
 INPUT ./Plots/1986_glacier_comparison.png
-INPUT ./Plots/1958_glacier_comparison.png
-INPUT ./Plots/1958_glacier_comparison.png
-INPUT ./Plots/1958_glacier_comparison.png
-INPUT ./Plots/1958_glacier_comparison.png
-INPUT ./Plots/1986_glacier_comparison.png
-INPUT ./Plots/1986_glacier_comparison.png
-INPUT ./Plots/1986_glacier_comparison.png
-INPUT ./Plots/1986_glacier_comparison.png
 INPUT ./Plots/winter_mb_compare.png
 INPUT ./Plots/winter_mb_compare.png
 INPUT ./Plots/winter_mb_compare.png
@@ -131,11 +125,6 @@ INPUT ./Plots/summer_mb_compare.png
 INPUT ./Plots/summer_mb_compare.png
 INPUT ./Plots/summer_mb_compare.png
 INPUT ./Plots/summer_mb_compare.png
-INPUT ./Plots/oggm_vs_calculated.png
-INPUT ./Plots/oggm_vs_calculated.png
-INPUT ./Plots/oggm_vs_calculated.png
-INPUT ./Plots/oggm_vs_calculated.png
-INPUT ./Plots/oggm_vs_calculated.png
 INPUT ./Plots/calc_vs_measured.png
 INPUT ./Plots/calc_vs_measured.png
 INPUT ./Plots/calc_vs_measured.png
@@ -146,6 +135,11 @@ INPUT ./Plots/oggm_vs_measured.png
 INPUT ./Plots/oggm_vs_measured.png
 INPUT ./Plots/oggm_vs_measured.png
 INPUT ./Plots/oggm_vs_measured.png
+INPUT ./Plots/oggm_vs_calculated.png
+INPUT ./Plots/oggm_vs_calculated.png
+INPUT ./Plots/oggm_vs_calculated.png
+INPUT ./Plots/oggm_vs_calculated.png
+INPUT ./Plots/oggm_vs_calculated.png
 INPUT ./Plots/percent_glac_melt_month.png
 INPUT ./Plots/percent_glac_melt_month.png
 INPUT ./Plots/percent_glac_melt_month.png

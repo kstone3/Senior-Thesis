@@ -5,9 +5,7 @@ import numpy as np
 from math import inf
 import matplotlib
 from glacierSim import glacierSim
-from matplotlib.animation import FuncAnimation
-from IPython.core.display import HTML
-from IPython.display import display
+import math
 matplotlib.use("TkAgg")
 
 def optimize(parameter, input_params):
@@ -125,10 +123,10 @@ def optimize(parameter, input_params):
                 print("Function result: ",np.mean(model.snow_depth_list))
                 return np.mean(model.snow_depth_list)
             elif parameter == 'spinup':
-                meas_area_1958=model.thickness_1958_verif[~np.isnan(model.thickness_1958_verif)]*model.dx
-                meas_area_1986=model.thickness_1986_verif[~np.isnan(model.thickness_1986_verif)]*model.dx
-                calc_area_1958=model.ice_1958[~np.isnan(model.thickness_1958_verif)]*model.dx
-                calc_area_1986=model.ice_1986[~np.isnan(model.thickness_1986_verif)]*model.dx
+                meas_area_1958=np.sum(model.thickness_1958_verif[~np.isnan(model.thickness_1958_verif)]*model.dx)
+                meas_area_1986=np.sum(model.thickness_1986_verif[~np.isnan(model.thickness_1986_verif)]*model.dx)
+                calc_area_1958=np.sum(model.ice_1958[~np.isnan(model.thickness_1958_verif)]*model.dx)
+                calc_area_1986=np.sum(model.ice_1986[~np.isnan(model.thickness_1986_verif)]*model.dx)
                 glacier_min=min(np.nanmin(model.thickness_1958_verif), np.nanmin(model.thickness_1986_verif), np.nanmin(model.ice_1958), np.nanmin(model.ice_1986))
                 glacier_max=max(np.nanmax(model.thickness_1958_verif), np.nanmax(model.thickness_1986_verif), np.nanmax(model.ice_1958), np.nanmax(model.ice_1986))
                 ice_norm_1958_verif=(model.thickness_1958_verif[~np.isnan(model.thickness_1958_verif)]-glacier_min)/(glacier_max-glacier_min)
@@ -144,8 +142,14 @@ def optimize(parameter, input_params):
                 avg_mse_norm=(mse_1958_norm+mse_1986_norm)/2
                 avg_mse=(mse_1958+mse_1986)/2
                 avg_mse_area=(mse_1958_area+mse_1986_area)/2
-                print("Function result: ",avg_mse_area)
-                return avg_mse_area
+                avg_rmse_area=((math.sqrt((meas_area_1958-calc_area_1958)**2)/meas_area_1958*100)+(math.sqrt((meas_area_1986-calc_area_1986)**2)/meas_area_1986*100))/2
+                meas_area_1958=model.thickness_1958_verif[~np.isnan(model.thickness_1958_verif)]*model.dx
+                meas_area_1986=model.thickness_1986_verif[~np.isnan(model.thickness_1986_verif)]*model.dx
+                calc_area_1958=model.ice_1958[~np.isnan(model.thickness_1958_verif)]*model.dx
+                calc_area_1986=model.ice_1986[~np.isnan(model.thickness_1986_verif)]*model.dx
+                avg_rmse_area2=((math.sqrt(np.sum((meas_area_1958-calc_area_1958)**2)/len(meas_area_1958))/np.mean(meas_area_1958)*100)+(math.sqrt(np.sum((meas_area_1986-calc_area_1986)**2)/len(meas_area_1986))/np.mean(meas_area_1986)*100))/2
+                print("Function result: ",avg_rmse_area2)
+                return avg_rmse_area2
             else: raise ValueError("Invalid parameter. Choose from 'summer', 'winter', 'annual', 'summer_winter', 'vol_change'.")
         except Exception as e:
             print("Error during function calculation:", e) 

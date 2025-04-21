@@ -323,9 +323,9 @@ class glacierSim():
                 self.front_variation_calc[int(self.current_date.year-1984)]+=self.prev_front-self.x[0]
                 self.prev_front=self.x[0]
         #Calcualte ice thickness data for 1986 and 2021
-        if self.current_date.year==1958: self.ice_1958=self.ice.copy()
-        if self.current_date.year==1986: self.ice_1986=self.ice.copy()
-        if self.current_date.year==2021: self.ice_2021=self.ice.copy()
+        if current_date_key==datetime(1958,8,13): self.ice_1958=self.ice.copy()
+        if current_date_key==datetime(1986,9,5): self.ice_1986=self.ice.copy()
+        if current_date_key==datetime(2021,8,13): self.ice_2021=self.ice.copy()
         #Add mass balance to verification arrays
         if 1984<=self.current_date.year<2024:
             date=int(self.current_date.year-1984)

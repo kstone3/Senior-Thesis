@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1745110760.86344 "c:/Users/bookn/Downloads/Senior-Thesis/Thesis/Thesis.tex" "Thesis.pdf" "Thesis" 1745110772.55134 0
+["pdflatex"] 1745200377.4949 "c:/Users/bookn/Downloads/Senior-Thesis/Thesis/Thesis.tex" "Thesis.pdf" "Thesis" 1745200386.41101 0
   "Plots/1958_glacier_comparison.png" 1745079472 48615 7813c821e16e82a85f7409d342c12273 ""
   "Plots/1986_glacier_comparison.png" 1745079480 47102 888729467431efa9e07079cbdb31d07c ""
   "Plots/SouthCascadeGlacierMap.pdf" 1743714242 1720846 0903546fd608c781b1821fc6c50b14f3 ""
@@ -7,14 +7,14 @@
   "Plots/fountain_1985_fig3.png" 1741323943 75620 db429d8aaac0dc7a5b9b3e5349567763 ""
   "Plots/fountain_1985_fig4.png" 1741323714 32607 5e9b863438c9d796a0de41bbd2aa54e8 ""
   "Plots/monthly_precip.png" 1744161208 43609 5985a64b987e2f9b170fbca7fce86e35 ""
-  "Plots/oggm_vs_calculated.png" 1745103179 1452577 20d12d89b5899d14da6243b85de18259 ""
+  "Plots/oggm_vs_calculated.png" 1745190777 729495 65d18343d6e1f197e6ab5b0e47b9c351 ""
   "Plots/oggm_vs_measured.png" 1744919156 120137 7ea7013fb48bf4c7763f8fa21d1df121 ""
   "Plots/percent_glac_melt_month.png" 1744828099 54660 83481de5ee1178fe6c2594e711112493 ""
   "Plots/summer_mb_compare.png" 1745101447 421352 285ede70f8b33d87829acd03e384160a ""
   "Plots/winter_mb_compare.png" 1745101438 515230 a9c5a3567b38d57a65dca082d694b4e5 ""
-  "Thesis.aux" 1745110772 10268 401b9eaffe34eedec9d2b46b41050d70 "pdflatex"
-  "Thesis.tex" 1745110686 53144 424c8452e622002142ad295d617a3427 ""
-  "c:/Users/bookn/Downloads/Senior-Thesis/Thesis/Thesis.tex" 1745110686 53144 424c8452e622002142ad295d617a3427 ""
+  "Thesis.aux" 1745200386 9819 48abe2ac1012483177f20efa453970b5 "pdflatex"
+  "Thesis.tex" 1745200356 55049 3fd12431529c535b449a91d1d67d1fec ""
+  "c:/Users/bookn/Downloads/Senior-Thesis/Thesis/Thesis.tex" 1745200356 55049 3fd12431529c535b449a91d1d67d1fec ""
   "c:/texlive/2024/texmf-dist/fonts/map/fontname/texfonts.map" 1737010095 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "c:/texlive/2024/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm" 1737001620 1004 54797486969f23fa377b128694d548df ""
   "c:/texlive/2024/texmf-dist/fonts/tfm/public/amsfonts/cmextra/cmex8.tfm" 1737001620 988 bdf658c3bfc2d96d3c8b02cfc1c94c20 ""
@@ -53,6 +53,7 @@
   "c:/texlive/2024/texmf-dist/tex/latex/base/article.cls" 1737013899 20144 d7d3a15c7efd9458741458961c8a96e7 ""
   "c:/texlive/2024/texmf-dist/tex/latex/base/inputenc.sty" 1737013899 5048 7ebf0f2edf1ef6783e8fe2201a95d0e8 ""
   "c:/texlive/2024/texmf-dist/tex/latex/base/size10.clo" 1737013899 8448 bd43e47d84d3704b7eabd59a92e43bf1 ""
+  "c:/texlive/2024/texmf-dist/tex/latex/base/textcomp.sty" 1737013899 2846 50113a9b2387b6447504672739a4a25b ""
   "c:/texlive/2024/texmf-dist/tex/latex/caption/caption.sty" 1737004510 56128 c2ccf1a29d78c33bc553880402e4fb9a ""
   "c:/texlive/2024/texmf-dist/tex/latex/caption/caption3.sty" 1737004510 72619 ee90b6612147680fd73c3b1406a74245 ""
   "c:/texlive/2024/texmf-dist/tex/latex/caption/subcaption.sty" 1737004510 12494 0c0cdb824278a4d51cefeb2e79901315 ""
