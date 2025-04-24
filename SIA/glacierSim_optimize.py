@@ -12,8 +12,8 @@ def optimize(parameter, input_params):
     try:
         # print("Optimizing: ", parameter)
         #print("ACCUMFACTOR: ", input_params[0])
-        # print("ICE MELTFACTOR: ", input_params[0])
-        # print("SNOW MELTFACTOR: ", input_params[1])
+        print("ICE MELTFACTOR: ", input_params[0])
+        print("SNOW MELTFACTOR: ", input_params[1])
         # print("AVALANCHE PERCENTAGE: ", input_params[0])
         # print("SNOW MELT AMPLITUDE: ", input_params[4])
         # print("ICE MELT AMPLITUDE: ", input_params[5])
@@ -21,14 +21,17 @@ def optimize(parameter, input_params):
         # print("ACCUMFACTOR LOWER: ", input_params[0])
         # print("ACCUMFACTOR UPPER: ", input_params[1])
         # print("PRECIP LAPSE RATE: ", input_params[0])
-        print("GAMMA: ", input_params[0])
-        print("ELA: ", input_params[1])
-        print("ELA 1900: ", input_params[2])
+        # print("GAMMA: ", input_params[0])
+        # print("ELA: ", input_params[1])
+        # print("ELA 1900: ", input_params[2])
         print(input_params)
         #print("GAMMA: ", input_params[0])
-        gamma=input_params[0] #0.016 #0.012 #0.016
-        ela=input_params[1] #1903 #1903
-        ela_1900=input_params[2] #1930 #1930
+        # gamma=input_params[0] #0.016 #0.012 #0.016
+        # ela=input_params[1] #1903 #1903
+        # ela_1900=input_params[2] #1930 #1930
+        gamma=0.0309
+        ela=1903
+        ela_1900=1930
         time = 502
         save = 1 #Needs to be 1 to calculate ela list
         # gamma=input_params[0] #0.016 #0.012 #0.016
@@ -36,8 +39,10 @@ def optimize(parameter, input_params):
         # accumfactor_upper=1.7
         accumfactor_lower=0.94 #0.66 #0.66
         accumfactor_upper=1.44 #1.7 #1.7
-        ice_meltfactor=-0.00314334
-        snow_meltfactor=-0.00315546 #bounds approx 0.002-0.006
+        # ice_meltfactor=-0.00314334
+        # snow_meltfactor=-0.00315546 #bounds approx 0.002-0.006
+        ice_meltfactor=input_params[0] #0.00314334 #0.00315546 #bounds approx 0.002-0.006
+        snow_meltfactor=input_params[1] #0.00315546 #0.00315546 #bounds approx 0.002-0.006
         avalanche_percent=0.32
         precip_conv_factor=1.58
         lapse_rate=[-0.00334774, -0.00544884, -0.00577458, -0.00679377, -0.00661499, -0.00627995, -0.00529508, -0.00534911, -0.00495446, -0.00494315, -0.00472614, -0.00452499]
@@ -76,7 +81,7 @@ def optimize(parameter, input_params):
                 calc_summer_mb_norm=(model.calculated_summer_mb-summer_min)/(summer_max-summer_min)
                 meas_summer_mb_norm= (np.array(model.summer_mb)-summer_min)/(summer_max-summer_min)
                 mse=np.mean((calc_summer_mb_norm-meas_summer_mb_norm)**2)
-                mse_non_norm=np.mean((model.calculated_summer_mb-model.summer_mb)**2)
+                mse_non_norm=np.sum((model.calculated_summer_mb-model.summer_mb)**2)
                 print("Function result: ", mse_non_norm)
                 return mse_non_norm
             elif parameter == 'winter':
@@ -194,13 +199,13 @@ avalanche_percent=0.32
 precip_conv_factor=1.58
 lapse_rate=[-0.00334774, -0.00544884, -0.00577458, -0.00679377, -0.00661499, -0.00627995, -0.00529508, -0.00534911, -0.00495446, -0.00494315, -0.00472614, -0.00452499]
 tune_factors=[ice_meltfactor,snow_meltfactor,lapse_rate,accumfactor_lower,accumfactor_upper,avalanche_percent, precip_conv_factor]
-bounds=[(0,1),(1800,2000),(1800,2000)] #bounds for ela, ela_1900, gamma
-initial_guess=[gamma,ela,ela_1900]
+bounds=[(-1,0),(-1,0)] #bounds for ela, ela_1900, gamma
+initial_guess=[ice_meltfactor,snow_meltfactor]
 opt_method='Nelder-Mead'
 with open(f"{opt_method}-Results.txt", "a") as file:
-    file.write("-------------------Optimize spinup-----------\n")
+    file.write("-------------------Optimize summer-----------\n")
     # for opt_var in ['ela','front_var','thick','vol_change']:
-    for opt_var in ['spinup']:
+    for opt_var in ['summer']:
         result = minimize(lambda x: optimize(opt_var, x),initial_guess,method=opt_method,bounds=bounds,options={'disp': True})
         result_snow_conv=result.x
         # print("Final Gamma: ", result.x)
