@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
 
 class glacierSim():
-    def __init__(self, ela=1880,ela_1900=1650,time=500,save=10,gamma=0.01,quiet=True, tune_factors=[-0.004,-0.002,0.0065,1.6,2.2,5,0.006], initial_ice=None, start_time=0, input_files=None):
+    def __init__(self, ela=1880,ela_1900=1650,end_time=540,save=10,gamma=0.01,quiet=True, tune_factors=[-0.004,-0.002,0.0065,1.6,2.2,5,0.006], initial_ice=None, start_time=0, input_files=None):
         #MODEL VARS:
         self.valley_length=0 #in m, defined in calc_topo
         self.start_ela = ela #in m
@@ -35,17 +35,17 @@ class glacierSim():
         self.ice_slope = np.zeros(self.num_cells) #initialize ice_slope
         
         #TIME VARS:
-        self.time=start_time*365.25 #DAYS
+        self.time=math.floor(start_time*365.25) #DAYS
         self.prev_display=0 #used for displaying model data while running when quiet=false
-        self.time = time #simulation time in years
+        self.start_time=self.time
         # self.current_date=datetime(1484,1,1)+timedelta(days=start_time*365.25)
         if start_time==0: self.current_date=datetime(1484,1,1)
         else: self.current_date=datetime(1984,1,1)
         self.save = save*365.25 #timestep interval in days
-        self.frames = ((int)((self.time-start_time)/(self.save/365.25)))+1 #number of frames the animation will run for
+        self.frames = ((int)((end_time-start_time)/(self.save/365.25)))+1 #number of frames the animation will run for
         self.timestep_list=[] #days
-        self.month_count=np.zeros((self.time-start_time)*12+1)
-
+        self.month_count=np.zeros((end_time-start_time)*12+1)
+        
         #MASS BALANCE VARS:
         self.b_max = float(-inf) #maximum yearly mass balance value for whole run
         self.b_min = float(inf) #minimum yearly mass balance valeu for whole run
@@ -58,10 +58,10 @@ class glacierSim():
         #SNOW VARS:
         self.snow_depth=np.zeros(self.num_cells) #snow depth along glacier in m
         self.snow_melt_amt=np.zeros(self.num_cells) #snow melt amount in m
-        self.monthly_precip_vol=np.zeros((self.time-start_time)*12+1) #holds daily snow volume data for all data
+        self.monthly_precip_vol=np.zeros((end_time-start_time)*12+1) #holds daily snow volume data for all data
         self.snow_depth_list=[]
         self.avalanche_dates=[self.current_date]*4
-        self.monthly_snow_depth=np.zeros((self.time-start_time)*12+1)
+        self.monthly_snow_depth=np.zeros((end_time-start_time)*12+1)
         
         #TUNE FACTORS:
         self.ice_melt_factor=tune_factors[0] #factor to change how much the ice melts per degree C
@@ -98,7 +98,7 @@ class glacierSim():
         self.calculated_annual_mb=np.zeros(40, dtype=np.float64) #used to verify annual mass balance
         self.calculated_winter_mb=np.zeros(40, dtype=np.float64) #used to verify winter (positive) mass balance
         self.calculated_summer_mb=np.zeros(40, dtype=np.float64) #used to verify summer (negative) mass balance
-        self.year_mb=np.zeros(len(self.b)) #keeps track of the mb for the current year to calculate ela line
+        self.year_mb=np.zeros((math.ceil(40*365.25)+1,self.num_cells)) #keeps track of the mb for the current year to calculate ela line
         #GLACIER VARS
         self.front_variation_calc=np.zeros(100) #model calculated front variation
         self.thickness_change=np.zeros(4) #model thickness change
@@ -115,8 +115,8 @@ class glacierSim():
         self.daily_runoff_training=[] #holds daily runoff data for training
         self.daily_runoff_verif=[] #holds daily runoff data for verification
         self.daily_runoff_all_data=[]
-        self.monthly_runoff_all=np.zeros((self.time-start_time)*12+1) #holds daily runoff data for all data
-        self.monthly_glacier_melt=np.zeros((self.time-start_time)*12+1) #holds daily runoff data for all data
+        self.monthly_runoff_all=np.zeros((end_time-start_time)*12+1) #holds daily runoff data for all data
+        self.monthly_glacier_melt=np.zeros((end_time-start_time)*12+1) #holds daily runoff data for all data
         self.precip_accum=np.zeros(41)
         self.glacier_melt_runoff_data=[]
         
@@ -135,8 +135,8 @@ class glacierSim():
         if input_files is not None: self.input_files=input_files #list of input files for glacier data
         else: print("No input files provided")
         
-    def init(self, ela=1880,ela_1900=1650,valley_length=3668, time=500,save=10,gamma=0.008, quiet=True, tune_factors=[-0.004,-0.002,0.0065,1.6,2.2,5,0.006], initial_ice=None, start_time=0, input_files=None): 
-        self.__init__(ela, ela_1900, time, save, gamma, quiet, tune_factors, initial_ice, start_time, input_files)
+    def init(self, ela=1880,ela_1900=1650,valley_length=3668, end_time=500,save=10,gamma=0.008, quiet=True, tune_factors=[-0.004,-0.002,0.0065,1.6,2.2,5,0.006], initial_ice=None, start_time=0, input_files=None): 
+        self.__init__(ela, ela_1900, end_time, save, gamma, quiet, tune_factors, initial_ice, start_time, input_files)
         self.load_verif_data()
         self.calc_topo()
         self.load_area_data()
@@ -322,7 +322,7 @@ class glacierSim():
             else:
                 self.front_variation_calc[int(self.current_date.year-1984)]+=self.prev_front-self.x[0]
                 self.prev_front=self.x[0]
-        #Calcualte ice thickness data for 1986 and 2021
+        #Calculate ice thickness data for 1986 and 2021
         if current_date_key==datetime(1958,8,13): self.ice_1958=self.ice.copy()
         if current_date_key==datetime(1986,9,5): self.ice_1986=self.ice.copy()
         if current_date_key==datetime(2021,8,13): self.ice_2021=self.ice.copy()
@@ -378,11 +378,18 @@ class glacierSim():
             #Melts ice for temps greater than 0
             #Above the ELA the snow melt factor is used and below the ELA a linear gradient is defined 
             #starting with the snow melt factor at the ELA and gradually shifts to the ice melt factor at the base of the glacier
-            melt_arr=self.snow_melt_factor+((self.curr_ela-(self.ice+self.topo))/(self.curr_ela-np.nanmin(self.topo+self.ice)))*(self.ice_melt_factor-self.snow_melt_factor)
+            if self.current_date.year>=1985:
+                prev_days=math.floor(self.time-self.start_time-365.25)
+                prev_year_mb=self.year_mb[prev_days:math.floor(self.time-self.start_time+1),:].sum(axis=0) 
+                if np.all(prev_year_mb>0): curr_ela=float(self.topo[-1])
+                elif np.all(prev_year_mb<0): curr_ela=float(self.topo[0])
+                else: curr_ela = float(self.topo[np.where(np.sign(prev_year_mb[:-1]) != np.sign(prev_year_mb[1:]))[0][0]])
+            else: curr_ela=1900
+            melt_arr=self.snow_melt_factor+((curr_ela-(self.ice+self.topo))/(curr_ela-np.nanmin(self.topo+self.ice)))*(self.ice_melt_factor-self.snow_melt_factor)
             melt_arr[melt_arr<self.ice_melt_factor]=self.ice_melt_factor
-            mb[np.where((x_temps>0)&((self.ice+self.topo)>=self.curr_ela))[0]]=self.snow_melt_factor*x_temps[np.where((x_temps>0)&((self.ice+self.topo)>self.curr_ela))[0]]
+            mb[np.where((x_temps>0)&((self.ice+self.topo)>=curr_ela))[0]]=self.snow_melt_factor*x_temps[np.where((x_temps>0)&((self.ice+self.topo)>=curr_ela))[0]]
             # mb[np.where((x_temps>0)&((self.ice+self.topo)<self.curr_ela))[0]]=melt_arr[np.where((x_temps>0)&((self.ice+self.topo)<self.curr_ela))[0]]*x_temps[np.where((x_temps>0)&((self.ice+self.topo)<self.curr_ela))[0]]
-            mb[np.where((x_temps>0)&((self.ice+self.topo)<self.curr_ela))[0]]=melt_arr[np.where((x_temps>0)&((self.ice+self.topo)<self.curr_ela))[0]]*x_temps[np.where((x_temps>0)&((self.ice+self.topo)<self.curr_ela))[0]]
+            mb[np.where((x_temps>0)&((self.ice+self.topo)<curr_ela))[0]]=melt_arr[np.where((x_temps>0)&((self.ice+self.topo)<curr_ela))[0]]*x_temps[np.where((x_temps>0)&((self.ice+self.topo)<curr_ela))[0]]
             #Calculates snow melt and accumulation
             self.snow_model(index,timestep)
             #The accumulation factor (precipitation to ice) is also defined by a linear gradient.
@@ -401,10 +408,6 @@ class glacierSim():
             return mb
         else: 
             #Used to spin up the glacier. Glacier starts retreating in 1900
-            # print(self.gamma)
-            # print(self.curr_ela)
-            # print(self.ice)
-            # print(self.topo)
             return ((self.topo+self.ice-self.curr_ela)*self.gamma)/365.25 #meters per day
     
     def calc_q(self):
@@ -499,7 +502,7 @@ class glacierSim():
             #Calculate verification data
             self.calc_verif(timestep)
             #Update mass balance for current year
-            self.year_mb+=self.b*timestep
+            if self.current_date.year>=1984: self.year_mb[math.floor(self.time-self.start_time),:]=self.b*timestep
             #Set new b_min and b_max
             self.b_max = max(np.max(self.b*365.25),self.b_max)
             self.b_min = min(np.min(self.b*365.25),self.b_min)
@@ -533,7 +536,7 @@ class glacierSim():
             #Calculate verification data
             self.calc_verif(timestep)
             #Update mass balance for current year
-            self.year_mb+=self.b*timestep
+            if self.current_date.year>=1984: self.year_mb[math.floor(self.time-self.start_time),:]=self.b*timestep
             #Set new b_min and b_max
             self.b_max = max(np.max(self.b*365.25),self.b_max)
             self.b_min = min(np.min(self.b*365.25),self.b_min)
@@ -543,13 +546,18 @@ class glacierSim():
         #If the weather data is being used (starts in 1984) for the mass balance then calculate ela
         if self.current_date.year>=1984:
             #If all of the mass balance is positive the the ELA is at the bottom of the glacier
-            if np.all(self.year_mb>0): curr_ela=float(self.topo[-1])
+            prev_days=math.floor(self.time-self.start_time-365.25)
+            prev_year_mb=self.year_mb[prev_days:math.floor(self.time-self.start_time+1),:].sum(axis=0) 
+            if np.all(prev_year_mb>0): curr_ela=float(self.topo[-1])
+            elif np.all(prev_year_mb<0): curr_ela=float(self.topo[0])
+            # if np.all(self.year_mb>0): curr_ela=float(self.topo[-1])
             #If all of the mass balance is negative then the ELA is at the top of the glacier
-            elif np.all(self.year_mb<0): curr_ela=float(self.topo[0])
+            # elif np.all(self.year_mb<0): curr_ela=float(self.topo[0])
             #Otherwise find the ELA using the mass balance value that is on the border of positive and negative
             #If for some bizarre reason there is multiple transitions from positive to negative this will chose the one highest on the glacier
             #But that shouldn't be possible
-            else: curr_ela = float(self.topo[np.where(np.sign(self.year_mb[:-1]) != np.sign(self.year_mb[1:]))[0][0]])
+            # else: curr_ela = float(self.topo[np.where(np.sign(self.year_mb[:-1]) != np.sign(self.year_mb[1:]))[0][0]])
+            else: curr_ela = float(self.topo[np.where(np.sign(prev_year_mb[:-1]) != np.sign(prev_year_mb[1:]))[0][0]])
             #Add to ela list after 1989 because that's when ela verification data starts
             if self.current_date.year>1989: self.ela_list.append(curr_ela)
             #Reset year_mb to 0 for the next year
@@ -562,7 +570,7 @@ class glacierSim():
         #Otherwise set ela to the start ela
         else: curr_ela=self.curr_ela
         #Make sure to reset year_mb to 0 on the first of the year
-        if self.current_date.month==1 and 1<=self.current_date.day<=2: self.year_mb.fill(0)
+        # if self.current_date.month==1 and 1<=self.current_date.day<=2: self.year_mb.fill(0)
         curr_ela_plt=[curr_ela]*self.num_cells
         #If the current date is the end date then report final values
         if(self.current_date.year==1484+self.time): self.report_final_values(u)
@@ -582,10 +590,10 @@ class glacierSim():
         ax.set_ylabel("Height (m)")
         ax.set_xlabel("Distance (m)")
         ax.set_aspect('equal', adjustable='datalim')
-        ax.plot(self.x, self.topo, color="b", label="Topography")
+        ax.plot(self.x, self.topo, color="b", label="Bed Topography")
         ax.set_title(self.title_list[i])
         self.ela_line=ax.plot(self.ela_line_list[i][0],self.ela_line_list[i][1], color=self.ela_line_list[i][2], linestyle=self.ela_line_list[i][3], label=self.ela_line_list[i][4])
         self.ice_line=ax.plot(self.ice_line_list[i][0],self.ice_line_list[i][1], color=self.ice_line_list[i][2], label=self.ice_line_list[i][3])
         # self.snow_line=ax.plot(self.snow_line_list[i][0],self.snow_line_list[i][1], color=self.snow_line_list[i][2], label=self.snow_line_list[i][3])
         ax.legend()
-        return self.ice_line_list,self.ela_line_list         
+        return self.ice_line_list,self.ela_line_list        
