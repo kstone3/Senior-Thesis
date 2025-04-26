@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1745628039.54889 "c:/Users/bookn/Downloads/Senior-Thesis/Thesis/Thesis.tex" "Thesis.pdf" "Thesis" 1745628045.81688 0
+["pdflatex"] 1745685656.889 "c:/Users/bookn/Downloads/Senior-Thesis/Thesis/Thesis.tex" "Thesis.pdf" "Thesis" 1745685663.9689 0
   "Plots/1958_glacier_comparison.png" 1745079472 48615 7813c821e16e82a85f7409d342c12273 ""
   "Plots/1986_glacier_comparison.png" 1745079480 47102 888729467431efa9e07079cbdb31d07c ""
   "Plots/SouthCascadeGlacierMap.pdf" 1745460125 1834714 6916756d4f7b104933f65084cb1edd64 ""
@@ -10,10 +10,10 @@
   "Plots/percent_glac_melt_month.png" 1744828099 54660 83481de5ee1178fe6c2594e711112493 ""
   "Plots/summer_mb_compare.png" 1745364407 200091 58aac3991d79292bba87143c3a1e1f19 ""
   "Plots/winter_mb_compare.png" 1745364418 205091 69ac19f4154ae577b3261c39c6bbce17 ""
-  "Thesis.aux" 1745628045 13985 ebd47fd255e28550278780a3381d9730 "pdflatex"
-  "Thesis.out" 1745628045 6923 9f51f71ed09d92f3f3a9496f70ab2435 "pdflatex"
-  "Thesis.tex" 1745627997 51886 fa4df79b696388c21fafe24034f63d7c ""
-  "c:/Users/bookn/Downloads/Senior-Thesis/Thesis/Thesis.tex" 1745627997 51886 fa4df79b696388c21fafe24034f63d7c ""
+  "Thesis.aux" 1745685663 14452 5dc99359882d76bf9e9d2faa56011e50 "pdflatex"
+  "Thesis.out" 1745685663 6923 9f51f71ed09d92f3f3a9496f70ab2435 "pdflatex"
+  "Thesis.tex" 1745685655 55030 643dcfefc36544f278132507c9429305 ""
+  "c:/Users/bookn/Downloads/Senior-Thesis/Thesis/Thesis.tex" 1745685655 55030 643dcfefc36544f278132507c9429305 ""
   "c:/texlive/2024/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1737005387 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "c:/texlive/2024/texmf-dist/fonts/map/fontname/texfonts.map" 1737010095 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "c:/texlive/2024/texmf-dist/fonts/tfm/jknappen/ec/tcrm1000.tfm" 1737008030 1536 e07581a4bb3136ece9eeb4c3ffab8233 ""

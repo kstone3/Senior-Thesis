@@ -206,3 +206,11 @@ Final objective function value: 65.07316587287588
 Optimized snow conversion factor: [-0.00331751 -0.00283142]
 Final objective function value: 604.4008608838833
 [-0.00331751 -0.00283142]
+-------------------Optimize summer-----------
+Optimized snow conversion factor: [-0.00314334 -0.00315546]
+Final objective function value: inf
+[-0.00314334 -0.00315546]
+-------------------Optimize winter-----------
+Optimized snow conversion factor: [0.94 1.  ]
+Final objective function value: inf
+[0.94 1.  ]

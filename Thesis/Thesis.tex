@@ -271,7 +271,7 @@ rate was empirically calculated using data (Baker et al., 2018) from a weather s
       $-5.30$ & $-5.35$ & $-4.95$ & $-4.94$ & $-4.73$ & $-4.52$ \\
       \hline
     \end{tabular}
-    \caption{Monthly lapse rates ($^\circ$C/km)}
+    \caption{Monthly temperature lapse rates ($^\circ$C/km)}
     \label{tab:temp_lapse_rates}
   \end{table}
 \FloatBarrier
@@ -485,6 +485,14 @@ if there was no precipitation for December or January when lack of snowfall coul
 \FloatBarrier
 These two examples illustrate that missing precipitation data may be much more detrimental to model accuracy than missing temperature data, 
 due to temperature data being much easier to interpolate than precipitation data.
+\paragraph{}
+The model shows significant improvement in modeling the runoff on longer timescales. The relative RMSE drops from 29.25\% to 15.21\% when the 
+daily average runoff per month data is aggregated into daily average runoff per year. Part of the improvement may be due to all of the 
+precipitation being accounted for over the course of a year. If the model calculates the precipitation falling as the wrong type for a certain 
+month than the error will be off for that month, but over the course of a year that precipitation will be accounted for. If it actually fell as 
+rain but the model calculates it falling as snow, once the summer is over, that snow will have melted and included in the runoff. This is further 
+proved by the relative RMSE of the summed runoff data over the whole period being 4.48\% showing that on even longer timescales (16 years) the model 
+performs even better.  
 \subsection{Interpretations of Model Results}
 Even though the glacier is contributing slightly less than half of the total basin runoff on average (47.56\%), it contributes much more during the summer 
 months as show in Figure 7. Due to the setup of the mass balance model there is no way to easily distinguish how much of the glacier melt is made 
@@ -503,8 +511,12 @@ with some of the lowest average monthly precipitation amounts as shown in Figure
     \label{fig:monthly_precip}
 \end{figure}    
 \FloatBarrier
-\textbf{Add paragraph about how the model does on longer timescales. I think I had a paragraph about this before, look for it on github}
-\subsection{Overall Model Performance}\textbf{Add paragraph about sia model performing well}
+% \textbf{Add paragraph about how the model does on longer timescales. I think I had a paragraph about this before, look for it on github}
+\subsection{Overall Model Performance}
+% \textbf{Add paragraph about sia model performing well}
+On longer timescales (yearly to decadal) this SIA-Mass Balance model performs quite well. The error in the runoff data drops quite significantly. 
+The factors that contribute to the error on shorter (monthly) timescales such as the precipitation are better accounted for on longer timescales 
+and also are rendered less significant due to the averaging of the data.
 \subsection{Implications of Research}
 \subsubsection{Importance of Simplified Ice Dynamics in Numerical Glacier Modeling}
 These results show that complicated and computationally intensive mass balance and ice dynamics are not required to accurately model the 
@@ -543,29 +555,49 @@ To answer the thesis question of this paper--yes--a simple SIA - Mass Balance mo
 it works best on longer timescales.
 The SIA-Mass Balance model is able to model the runoff from the South Cascade Glacier with a RMSE, NSE and KGE of 29.26\%, 0.81 and 0.88 respectively, 
 for 16 months from 1992-2007, while OGGM errors of 45.96\%, 0.53 and 0.72 for the same time period. 
-\textbf{fix these next two sentences}
-This show that complex models are not always 
-the best way to model the runoff from small mountain glaciers. A simpler model with parameters tuned to the local climate of the glacier can 
-perform just as well, if not better than a more complex model. 
+% \textbf{fix these next two sentences}
+This shows that while complex models like OGGM might work well on much larger regions, for a single glacier basin, a simpler model like the SIA-Mass 
+Balance model used in this paper can work just as well, if not better.
+% This show that complex models are not always 
+% the best way to model the runoff from small mountain glaciers. A simpler model with parameters tuned to the local climate of the glacier can 
+% perform just as well, if not better than a more complex model. 
 \paragraph{}
 From looking at the model error on various time scales, one can see that on longer time scales the SIA-Mass Balance model does quite well. More 
 advanced models may be able to model the runoff on shorter timescales with more advanced methods and higher model resolution, but simple models 
 like the one used in this study can work well on longer (yearly to decade) timescales.
-\textbf{add better concluding paragraph}
-
-\section*{Appendix}\
-\textbf{Add the rest of the model params}
+% \textbf{add better concluding paragraph}
+\paragraph{}
+The simple SIA-Mass Balance model used in this study has potential to work well for modeling the runoff from glaciated mountain basins on longer 
+timescales and shorter timescales with less accuracy. There are many ways this model could be improved to be more accurate, while still 
+remaining simple and computationally efficient. The model could also be used to model the runoff from other small mountain glaciers with similar climates, 
+likely with limited tuning of the input parameters, but more work needs to be done to confirm this. 
+% The simple SIA-Mass Balance model used by this study is able to model the runoff from a single glaciated mountain basin with somewhat limited accuracy 
+% on monthly timescales and much better accuracy on yearly and decadal timescales. It performs much better than the more advanced OGGM model likely due 
+% to the SIA-Mass Balance model being tuned to the local climate of the glacier and using real-world temperature and precipitation data.
+\section*{Appendix}
 \begin{table}[h!]
     \centering
-    \begin{tabular}{|c|c|c|c|c|c|}
+    \begin{tabular}{|c|c|c|}
         \hline
-        Parameter & $M_s$ &$M_i$ & ${Accum}_l$ & ${Accum}_u$ & Avalanche percentage \\
+        ELA &ELA 1900 & $\gamma$ \\
         \hline
-        Value & -0.00316 & -0.00314 & 0.94 & 1.44 & 32\%  \\
+        1903 & 1930 &0.0309\\
         \hline
     \end{tabular}
-    \caption{Model Input Parameters}
-    \label{tab:model_input_parameters}
+    \caption{Spinup Run Input Parameters}
+    \label{tab:spinup_run_input_parameters}
+\end{table}
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|c|}
+        \hline
+         $M_s$ &$M_i$ & ${Accum}_l$ & ${Accum}_u$ & Avalanche \% & $\alpha$ & Lapse rates\\
+        \hline
+        -0.00316 & -0.00314 & 0.94 & 1.44 & 32\%  &1.58&\hyperref[tab:temp_lapse_rates]{Table ~\ref{tab:temp_lapse_rates}}\\
+        \hline
+    \end{tabular}
+    \caption{Data Driven Run Input Parameters}
+    \label{tab:dat_run_input_parameters}
 \end{table}
 
 \section*{Acknowledgements}
@@ -576,6 +608,8 @@ stream gauge was installed just below the glacier to track the runoff from the b
 
 Thank you to Robert Jacobel for providing the bed topography data for the South Cascade Glacier, which was essential to this project.
 
+Thank you to everyone who supported me throughout this project, especially my advisors, Jed Brown, Robert Anderson and Bradley Markle, and my parents, Kevin 
+and Eileen Stone. I also want to thank Simon Bantugan for reviewing this paper and providing helpful feedback.
 \begin{thebibliography}{}
 
     % A

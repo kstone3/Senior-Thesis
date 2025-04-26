@@ -32,13 +32,15 @@ def optimize(parameter, input_params):
         gamma=0.0309
         ela=1903
         ela_1900=1930
-        time = 502
+        time = 540
         save = 1 #Needs to be 1 to calculate ela list
         # gamma=input_params[0] #0.016 #0.012 #0.016
         # accumfactor_lower=0.66
         # accumfactor_upper=1.7
         accumfactor_lower=0.94 #0.66 #0.66
         accumfactor_upper=1.44 #1.7 #1.7
+        # accumfactor_lower=input_params[0] #0.94 #0.66 #0.66
+        # accumfactor_upper=input_params[1] #1.44 #1.7 #1.7
         # ice_meltfactor=-0.00314334
         # snow_meltfactor=-0.00315546 #bounds approx 0.002-0.006
         ice_meltfactor=input_params[0] #0.00314334 #0.00315546 #bounds approx 0.002-0.006
@@ -48,7 +50,7 @@ def optimize(parameter, input_params):
         lapse_rate=[-0.00334774, -0.00544884, -0.00577458, -0.00679377, -0.00661499, -0.00627995, -0.00529508, -0.00534911, -0.00495446, -0.00494315, -0.00472614, -0.00452499]
         tune_factors=[ice_meltfactor,snow_meltfactor,lapse_rate,accumfactor_lower,accumfactor_upper,avalanche_percent, precip_conv_factor]
         quiet = True
-        start_time = 0
+        start_time = 500
         # ice = [ 53.89550985, 61.2302675, 68.52805603, 72.16752233, 78.19477103,
         #     86.57434438, 94.52278703, 113.00567764, 124.65045342, 131.1336047,
         #     132.61805723, 126.05975829, 117.01403765, 110.72201024, 107.36448442,
@@ -58,9 +60,10 @@ def optimize(parameter, input_params):
         #     142.71479768, 122.66643947, 105.65745331, 89.73132543, 84.64598526,
         #     84.39967405, 78.27781775, 70.24575207, 57.81117783, 43.58883439,
         #     34.64893057, 15.29705107, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ]
-        ice=[64.50665454, 73.34825753, 82.14677938, 87.1479015, 94.7306883, 104.5882329, 113.70294678, 133.07943541, 144.98064389, 151.46297586, 152.82095652, 146.08286833, 136.91565242, 130.65094348, 127.48133943, 133.66396017, 147.77059641, 171.2134459, 167.71477891, 154.67101123, 151.65240415, 149.12263247, 146.956214, 147.08248738, 147.85770221, 153.72402157, 159.62910372, 163.73136372, 166.02527862, 164.61263013, 153.6902369, 132.39018704, 113.84097541, 95.95253908, 88.15995433, 84.34092379, 73.81852984, 59.65209497, 37.52930102, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0,0]
-        model = glacierSim(ela=ela, ela_1900=ela_1900,time=time, save=save,gamma=gamma,quiet=quiet, tune_factors=tune_factors, initial_ice=ice, start_time=start_time, input_files=input_files)
-        model.init(ela=ela, ela_1900=ela_1900,time=time, save=save,gamma=gamma,quiet=quiet, tune_factors=tune_factors, initial_ice=ice, start_time=start_time, input_files=input_files)
+        # ice=[64.50665454, 73.34825753, 82.14677938, 87.1479015, 94.7306883, 104.5882329, 113.70294678, 133.07943541, 144.98064389, 151.46297586, 152.82095652, 146.08286833, 136.91565242, 130.65094348, 127.48133943, 133.66396017, 147.77059641, 171.2134459, 167.71477891, 154.67101123, 151.65240415, 149.12263247, 146.956214, 147.08248738, 147.85770221, 153.72402157, 159.62910372, 163.73136372, 166.02527862, 164.61263013, 153.6902369, 132.39018704, 113.84097541, 95.95253908, 88.15995433, 84.34092379, 73.81852984, 59.65209497, 37.52930102, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,0,0]
+        ice=np.loadtxt("Data/ice19840101.csv", delimiter=',')
+        model = glacierSim(ela=ela, ela_1900=ela_1900,end_time=time, save=save,gamma=gamma,quiet=quiet, tune_factors=tune_factors, initial_ice=ice, start_time=start_time, input_files=input_files)
+        model.init(ela=ela, ela_1900=ela_1900,end_time=time, save=save,gamma=gamma,quiet=quiet, tune_factors=tune_factors, initial_ice=ice, start_time=start_time, input_files=input_files)
         for i in range(0,model.frames):
             model.run_model(i)
         # fig, ax = plt.subplots() #initialize plotting variables
@@ -81,7 +84,7 @@ def optimize(parameter, input_params):
                 calc_summer_mb_norm=(model.calculated_summer_mb-summer_min)/(summer_max-summer_min)
                 meas_summer_mb_norm= (np.array(model.summer_mb)-summer_min)/(summer_max-summer_min)
                 mse=np.mean((calc_summer_mb_norm-meas_summer_mb_norm)**2)
-                mse_non_norm=np.sum((model.calculated_summer_mb-model.summer_mb)**2)
+                mse_non_norm=np.mean((model.summer_mb-model.calculated_summer_mb)**2)
                 print("Function result: ", mse_non_norm)
                 return mse_non_norm
             elif parameter == 'winter':
@@ -92,7 +95,8 @@ def optimize(parameter, input_params):
                 calc_winter_mb_norm=(model.calculated_winter_mb-winter_min)/(winter_max-winter_min)
                 meas_winter_mb_norm= (np.array(model.winter_mb)-winter_min)/(winter_max-winter_min)
                 mse=np.mean((calc_winter_mb_norm-meas_winter_mb_norm)**2)
-                mse_non_norm=np.mean((model.calculated_winter_mb-model.winter_mb)**2)
+                mse_non_norm=np.mean((model.winter_mb-model.calculated_winter_mb)**2)
+                rmse= math.sqrt(np.sum((model.winter_mb-model.calculated_winter_mb)**2)/len(model.winter_mb))/np.mean(model.winter_mb)
                 std=np.std((model.winter_mb-model.calculated_winter_mb))
                 print("Function result: ", mse_non_norm)
                 return mse_non_norm

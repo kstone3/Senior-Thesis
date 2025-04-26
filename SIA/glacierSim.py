@@ -141,7 +141,7 @@ class glacierSim():
         self.calc_topo()
         self.load_area_data()
         self.load_weather_data()
-        self.ela_list.append(self.topo[-1]) 
+        self.ela_list.append(self.topo[-1])
     
     #Used to calculate distance between two lat lon points to interpolate bed topo
     def haversine(self, lat1, lon1, lat2, lon2):
@@ -378,9 +378,9 @@ class glacierSim():
             #Melts ice for temps greater than 0
             #Above the ELA the snow melt factor is used and below the ELA a linear gradient is defined 
             #starting with the snow melt factor at the ELA and gradually shifts to the ice melt factor at the base of the glacier
-            if self.current_date.year>=1985:
-                prev_days=math.floor(self.time-self.start_time-365.25)
-                prev_year_mb=self.year_mb[prev_days:math.floor(self.time-self.start_time+1),:].sum(axis=0) 
+            if self.current_date>=datetime(1985,1,2):
+                prev_days=math.floor((self.current_date - datetime(1984, 1, 2)).days-365.25)
+                prev_year_mb=self.year_mb[prev_days:(self.current_date - datetime(1984, 1, 2)).days+1,:].sum(axis=0) 
                 if np.all(prev_year_mb>0): curr_ela=float(self.topo[-1])
                 elif np.all(prev_year_mb<0): curr_ela=float(self.topo[0])
                 else: curr_ela = float(self.topo[np.where(np.sign(prev_year_mb[:-1]) != np.sign(prev_year_mb[1:]))[0][0]])
@@ -502,7 +502,7 @@ class glacierSim():
             #Calculate verification data
             self.calc_verif(timestep)
             #Update mass balance for current year
-            if self.current_date.year>=1984: self.year_mb[math.floor(self.time-self.start_time),:]=self.b*timestep
+            if self.current_date.year>=1984: self.year_mb[(self.current_date - datetime(1984, 1, 2)).days,:]=self.b*timestep
             #Set new b_min and b_max
             self.b_max = max(np.max(self.b*365.25),self.b_max)
             self.b_min = min(np.min(self.b*365.25),self.b_min)
@@ -536,7 +536,7 @@ class glacierSim():
             #Calculate verification data
             self.calc_verif(timestep)
             #Update mass balance for current year
-            if self.current_date.year>=1984: self.year_mb[math.floor(self.time-self.start_time),:]=self.b*timestep
+            if self.current_date.year>=1984: self.year_mb[(self.current_date - datetime(1984, 1, 2)).days,:]=self.b*timestep
             #Set new b_min and b_max
             self.b_max = max(np.max(self.b*365.25),self.b_max)
             self.b_min = min(np.min(self.b*365.25),self.b_min)
@@ -544,10 +544,10 @@ class glacierSim():
             # if self.current_date>=datetime(1950,1,1) and self.current_date.day==1 and self.current_date.month==1: self.update_areas()
             if self.current_date.year==1900: self.curr_ela=self.ela_1900
         #If the weather data is being used (starts in 1984) for the mass balance then calculate ela
-        if self.current_date.year>=1984:
+        if self.current_date.year>=1985:
             #If all of the mass balance is positive the the ELA is at the bottom of the glacier
-            prev_days=math.floor(self.time-self.start_time-365.25)
-            prev_year_mb=self.year_mb[prev_days:math.floor(self.time-self.start_time+1),:].sum(axis=0) 
+            prev_days=(self.current_date - datetime(1984, 1, 2)).days-365
+            prev_year_mb=self.year_mb[prev_days:(self.current_date - datetime(1984, 1, 2)).days+1,:].sum(axis=0) 
             if np.all(prev_year_mb>0): curr_ela=float(self.topo[-1])
             elif np.all(prev_year_mb<0): curr_ela=float(self.topo[0])
             # if np.all(self.year_mb>0): curr_ela=float(self.topo[-1])
@@ -596,4 +596,4 @@ class glacierSim():
         self.ice_line=ax.plot(self.ice_line_list[i][0],self.ice_line_list[i][1], color=self.ice_line_list[i][2], label=self.ice_line_list[i][3])
         # self.snow_line=ax.plot(self.snow_line_list[i][0],self.snow_line_list[i][1], color=self.snow_line_list[i][2], label=self.snow_line_list[i][3])
         ax.legend()
-        return self.ice_line_list,self.ela_line_list        
+        return self.ice_line_list,self.ela_line_list          

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2025.1.16)  25 APR 2025 18:40
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2025.1.16)  26 APR 2025 10:40
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -451,17 +451,23 @@ Package pdftex.def Info: Plots/percent_glac_melt_month.png  used on input line 4
 [15 <./Plots/winter_mb_compare.png> <./Plots/summer_mb_compare.png>]
 
 [16 <./Plots/percent_glac_melt_month.png>]
-<Plots/monthly_precip.png, id=424, 411.939pt x 363.5181pt>
+<Plots/monthly_precip.png, id=425, 411.939pt x 363.5181pt>
 File: Plots/monthly_precip.png Graphic file (type png)
 <use Plots/monthly_precip.png>
-Package pdftex.def Info: Plots/monthly_precip.png  used on input line 501.
+Package pdftex.def Info: Plots/monthly_precip.png  used on input line 509.
 (pdftex.def)             Requested size: 345.0pt x 304.44344pt.
 
 
-[17 <./Plots/monthly_precip.png>]
+LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-[18]
-Overfull \hbox (11.86215pt too wide) in paragraph at lines 560--567
+
+
+[17]
+
+[18 <./Plots/monthly_precip.png>]
+
+[19]
+Overfull \hbox (7.92882pt too wide) in paragraph at lines 592--599
  [][] 
  []
 
@@ -470,45 +476,45 @@ LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 
 
-[19]
-
 [20]
-Underfull \hbox (badness 2103) in paragraph at lines 606--607
+
+[21]
+Underfull \hbox (badness 2103) in paragraph at lines 640--641
 \OT1/cmr/m/n/10 of con-cept and val-i-da-tion. *Fron-tiers in Earth Sci-ence, 9*, 595755.
  []
 
 
-Underfull \hbox (badness 2318) in paragraph at lines 623--624
+Underfull \hbox (badness 2318) in paragraph at lines 657--658
 \OT1/cmr/m/n/10 set]. World Glacier Mon-i-tor-ing Ser-vice. https://doi.org/10.5904/wgms-
  []
 
 
-Underfull \hbox (badness 4531) in paragraph at lines 630--631
+Underfull \hbox (badness 4531) in paragraph at lines 664--665
 []\OT1/cmr/m/n/10 Harris, C. R., Mill-man, K. J., van der Walt, S. J., et al.
  []
 
 
 
-[21]
-
 [22]
-Underfull \hbox (badness 10000) in paragraph at lines 694--695
+
+[23]
+Underfull \hbox (badness 10000) in paragraph at lines 728--729
 []\OT1/cmr/m/n/10 Rasmussen, L. A. (2009). South Cas-cade Glacier mass bal-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 694--695
+Underfull \hbox (badness 10000) in paragraph at lines 728--729
 \OT1/cmr/m/n/10 ance, 1935{2006. *An-nals of Glaciol-ogy, 50*(50), 215{220.
  []
 
 
-Underfull \hbox (badness 1590) in paragraph at lines 698--699
+Underfull \hbox (badness 1590) in paragraph at lines 732--733
 []\OT1/cmr/m/n/10 U.S. Ge-o-log-i-cal Sur-vey Bench-mark Glacier Pro-gram. (2020). USGS
  []
 
 
 
-[23] (./Thesis.aux)
+[24] (./Thesis.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 1
 L3 programming layer <2024-12-25>
@@ -517,18 +523,18 @@ Package rerunfilecheck Info: File `Thesis.out' has not changed.
 (rerunfilecheck)             Checksum: 9F51F71ED09D92F3F3A9496F70AB2435;6923.
  ) 
 Here is how much of TeX's memory you used:
- 11547 strings out of 473207
- 184926 string characters out of 5720461
- 591228 words of memory out of 5000000
- 34508 multiletter control sequences out of 15000+600000
+ 11552 strings out of 473207
+ 185006 string characters out of 5720461
+ 591308 words of memory out of 5000000
+ 34509 multiletter control sequences out of 15000+600000
  566397 words of font info for 62 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,15n,79p,546b,560s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,15n,79p,546b,562s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbxti10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb>
-Output written on Thesis.pdf (23 pages, 3870493 bytes).
+Output written on Thesis.pdf (24 pages, 3872082 bytes).
 PDF statistics:
- 609 PDF objects out of 1000 (max. 8388607)
- 506 compressed objects within 6 object streams
- 153 named destinations out of 1000 (max. 500000)
+ 619 PDF objects out of 1000 (max. 8388607)
+ 515 compressed objects within 6 object streams
+ 157 named destinations out of 1000 (max. 500000)
  355 words of extra memory for PDF output out of 10000 (max. 10000000)
 
