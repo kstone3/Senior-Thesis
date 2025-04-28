@@ -12,9 +12,9 @@ def optimize(parameter, input_params):
     try:
         # print("Optimizing: ", parameter)
         #print("ACCUMFACTOR: ", input_params[0])
-        print("ICE MELTFACTOR: ", input_params[0])
-        print("SNOW MELTFACTOR: ", input_params[1])
-        # print("AVALANCHE PERCENTAGE: ", input_params[0])
+        # print("ICE MELTFACTOR: ", input_params[0])
+        # print("SNOW MELTFACTOR: ", input_params[1])
+        print("AVALANCHE PERCENTAGE: ", input_params[0])
         # print("SNOW MELT AMPLITUDE: ", input_params[4])
         # print("ICE MELT AMPLITUDE: ", input_params[5])
         # print("LAPSE RATE: ", input_params[1])
@@ -37,15 +37,20 @@ def optimize(parameter, input_params):
         # gamma=input_params[0] #0.016 #0.012 #0.016
         # accumfactor_lower=0.66
         # accumfactor_upper=1.7
-        accumfactor_lower=0.94 #0.66 #0.66
-        accumfactor_upper=1.44 #1.7 #1.7
+        # accumfactor_lower=0.94 #0.66 #0.66
+        # accumfactor_upper=1.44 #1.7 #1.7
         # accumfactor_lower=input_params[0] #0.94 #0.66 #0.66
         # accumfactor_upper=input_params[1] #1.44 #1.7 #1.7
-        # ice_meltfactor=-0.00314334
-        # snow_meltfactor=-0.00315546 #bounds approx 0.002-0.006
-        ice_meltfactor=input_params[0] #0.00314334 #0.00315546 #bounds approx 0.002-0.006
-        snow_meltfactor=input_params[1] #0.00315546 #0.00315546 #bounds approx 0.002-0.006
-        avalanche_percent=0.32
+        accumfactor_lower=0.91
+        accumfactor_upper=1.41
+        # accumfactor_lower=0.94
+        # accumfactor_upper=1.44
+        #Brute force optimized: -0.0039,-0.0024
+        ice_meltfactor= -0.0035
+        snow_meltfactor=-0.003
+        # ice_meltfactor=input_params[0] #0.00314334 #0.00315546 #bounds approx 0.002-0.006
+        # snow_meltfactor=input_params[1] #0.00315546 #0.00315546 #bounds approx 0.002-0.006
+        avalanche_percent=input_params[0] #0.32 #0.32 #0.32
         precip_conv_factor=1.58
         lapse_rate=[-0.00334774, -0.00544884, -0.00577458, -0.00679377, -0.00661499, -0.00627995, -0.00529508, -0.00534911, -0.00495446, -0.00494315, -0.00472614, -0.00452499]
         tune_factors=[ice_meltfactor,snow_meltfactor,lapse_rate,accumfactor_lower,accumfactor_upper,avalanche_percent, precip_conv_factor]
@@ -203,13 +208,13 @@ avalanche_percent=0.32
 precip_conv_factor=1.58
 lapse_rate=[-0.00334774, -0.00544884, -0.00577458, -0.00679377, -0.00661499, -0.00627995, -0.00529508, -0.00534911, -0.00495446, -0.00494315, -0.00472614, -0.00452499]
 tune_factors=[ice_meltfactor,snow_meltfactor,lapse_rate,accumfactor_lower,accumfactor_upper,avalanche_percent, precip_conv_factor]
-bounds=[(-1,0),(-1,0)] #bounds for ela, ela_1900, gamma
-initial_guess=[ice_meltfactor,snow_meltfactor]
+bounds=[(0,1)] #bounds for ela, ela_1900, gamma
+initial_guess=[avalanche_percent]
 opt_method='Nelder-Mead'
 with open(f"{opt_method}-Results.txt", "a") as file:
-    file.write("-------------------Optimize summer-----------\n")
+    file.write("-------------------Optimize avalanche percent-----------\n")
     # for opt_var in ['ela','front_var','thick','vol_change']:
-    for opt_var in ['summer']:
+    for opt_var in ['avalanche_percent']:
         result = minimize(lambda x: optimize(opt_var, x),initial_guess,method=opt_method,bounds=bounds,options={'disp': True})
         result_snow_conv=result.x
         # print("Final Gamma: ", result.x)
