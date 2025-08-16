@@ -211,7 +211,7 @@ tune_factors=[ice_meltfactor,snow_meltfactor,lapse_rate,accumfactor_lower,accumf
 bounds=[(0,1)] #bounds for ela, ela_1900, gamma
 initial_guess=[avalanche_percent]
 opt_method='Nelder-Mead'
-with open(f"{opt_method}-Results.txt", "a") as file:
+with open(f"optimize_results.txt", "a") as file:
     file.write("-------------------Optimize avalanche percent-----------\n")
     # for opt_var in ['ela','front_var','thick','vol_change']:
     for opt_var in ['avalanche_percent']:
